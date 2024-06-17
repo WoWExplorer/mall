@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.DeliveryMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.Delivery">
+		<!-- ID -->
+		<result column="dvy_id" property="dvyId" />
+		<!-- 物流公司名称 -->
+		<result column="dvy_name" property="dvyName" />
+		<!-- 公司主页 -->
+		<result column="company_home_url" property="companyHomeUrl" />
+		<!-- 建立时间 -->
+		<result column="rec_time" property="recTime" />
+		<!-- 修改时间 -->
+		<result column="modify_time" property="modifyTime" />
+		<!-- 物流查询接口 -->
+		<result column="query_url" property="queryUrl" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		dvy_id,dvy_name,company_home_url,rec_time,modify_time,query_url
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.dvyId != null ">
+			and dvy_id = #{query.dvyId}
+		</if>
+		<if test="query.dvyName != null and query.dvyName != ''">
+			and dvy_name = #{query.dvyName}
+		</if>
+		<if test="query.companyHomeUrl != null and query.companyHomeUrl != ''">
+			and company_home_url = #{query.companyHomeUrl}
+		</if>
+		<if test="query.recTime != null ">
+			and rec_time = #{query.recTime}
+		</if>
+		<if test="query.modifyTime != null ">
+			and modify_time = #{query.modifyTime}
+		</if>
+		<if test="query.queryUrl != null and query.queryUrl != ''">
+			and query_url = #{query.queryUrl}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+		<if test="query.dvyNameFuzzy != null and query.dvyNameFuzzy != ''">
+			and dvyNameFuzzy like concat('%',#{query.dvyNameFuzzy}, '%')
+		</if>
+		<if test="query.companyHomeUrlFuzzy != null and query.companyHomeUrlFuzzy != ''">
+			and companyHomeUrlFuzzy like concat('%',#{query.companyHomeUrlFuzzy}, '%')
+		</if>
+		<if test="query.recTimeStart != null and query.recTimeStart != ''">
+			<![CDATA[and rec_time >= str_to_date(#{recTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.recTimeEnd != null and query.recTimeEnd != ''">
+			<![CDATA[and rec_time >= str_to_date(#{recTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.modifyTimeStart != null and query.modifyTimeStart != ''">
+			<![CDATA[and modify_time >= str_to_date(#{modifyTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.modifyTimeEnd != null and query.modifyTimeEnd != ''">
+			<![CDATA[and modify_time >= str_to_date(#{modifyTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.queryUrlFuzzy != null and query.queryUrlFuzzy != ''">
+			and queryUrlFuzzy like concat('%',#{query.queryUrlFuzzy}, '%')
+		</if>
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_delivery <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_delivery <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.Delivery">
+		<selectKey keyProperty="bean.dvy_id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_delivery
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.dvyId != null">
+				`dvy_id`,
+			</if>
+			<if test="bean.dvyName != null">
+				`dvy_name`,
+			</if>
+			<if test="bean.companyHomeUrl != null">
+				`company_home_url`,
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time`,
+			</if>
+			<if test="bean.modifyTime != null">
+				`modify_time`,
+			</if>
+			<if test="bean.queryUrl != null">
+				`query_url`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.dvyId != null">
+				#{bean.dvyId},
+			</if>
+			<if test="bean.dvyName != null">
+				#{bean.dvyName},
+			</if>
+			<if test="bean.companyHomeUrl != null">
+				#{bean.companyHomeUrl},
+			</if>
+			<if test="bean.recTime != null">
+				#{bean.recTime},
+			</if>
+			<if test="bean.modifyTime != null">
+				#{bean.modifyTime},
+			</if>
+			<if test="bean.queryUrl != null">
+				#{bean.queryUrl},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.Delivery">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.dvyId != null">
+				`dvy_id`,
+			</if>
+			<if test="bean.dvyName != null">
+				`dvy_name`,
+			</if>
+			<if test="bean.companyHomeUrl != null">
+				`company_home_url`,
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time`,
+			</if>
+			<if test="bean.modifyTime != null">
+				`modify_time`,
+			</if>
+			<if test="bean.queryUrl != null">
+				`query_url`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.dvyId != null">
+				#{bean.dvyId},
+			</if>
+			<if test="bean.dvyName != null">
+				#{bean.dvyName},
+			</if>
+			<if test="bean.companyHomeUrl != null">
+				#{bean.companyHomeUrl},
+			</if>
+			<if test="bean.recTime != null">
+				#{bean.recTime},
+			</if>
+			<if test="bean.modifyTime != null">
+				#{bean.modifyTime},
+			</if>
+			<if test="bean.queryUrl != null">
+				#{bean.queryUrl},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.dvyName != null">
+				`dvy_name` = VALUES(`dvy_name`),
+			</if>
+			<if test="bean.companyHomeUrl != null">
+				`company_home_url` = VALUES(`company_home_url`),
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time` = VALUES(`rec_time`),
+			</if>
+			<if test="bean.modifyTime != null">
+				`modify_time` = VALUES(`modify_time`),
+			</if>
+			<if test="bean.queryUrl != null">
+				`query_url` = VALUES(`query_url`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.Delivery">
+		INSERT INTO tz_delivery (`dvy_name`,`company_home_url`,`rec_time`,`modify_time`,`query_url`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.dvyName},#{bean.companyHomeUrl},#{bean.recTime},#{bean.modifyTime},#{bean.queryUrl})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.Delivery">
+		INSERT INTO tz_delivery (`dvy_name`,`company_home_url`,`rec_time`,`modify_time`,`query_url`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.dvyName},#{bean.companyHomeUrl},#{bean.recTime},#{bean.modifyTime},#{bean.queryUrl})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `dvy_id`=VALUES(`dvy_id`), `dvy_name`=VALUES(`dvy_name`), `company_home_url`=VALUES(`company_home_url`), `rec_time`=VALUES(`rec_time`), `modify_time`=VALUES(`modify_time`), `query_url`=VALUES(`query_url`)
+	</insert>
+
+	<!-- "根据"DvyId"查询" -->
+	<select id="selectByDvyId" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_delivery` WHERE dvy_id=#{dvyId};
+	</select>
+
+	<!-- "根据"DvyId"删除" -->
+	<delete id="deleteByDvyId">
+		DELETE FROM `tz_delivery` WHERE dvy_id=#{dvyId};
+	</delete>
+
+	<!-- "根据"DvyId"更新" -->
+	<update id="updateByDvyId" parameterType="com.mall.entity.po.Delivery">
+		UPDATE `tz_delivery`
+		<set>
+			<if test="bean.dvyId != null">
+				`dvy_id` = #{bean.dvyId}, 
+			</if>
+			<if test="bean.dvyName != null">
+				`dvy_name` = #{bean.dvyName}, 
+			</if>
+			<if test="bean.companyHomeUrl != null">
+				`company_home_url` = #{bean.companyHomeUrl}, 
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time` = #{bean.recTime}, 
+			</if>
+			<if test="bean.modifyTime != null">
+				`modify_time` = #{bean.modifyTime}, 
+			</if>
+			<if test="bean.queryUrl != null">
+				`query_url` = #{bean.queryUrl}, 
+			</if>
+		</set>
+		WHERE dvy_id=#{dvyId};
+	</update>
+
+</mapper>

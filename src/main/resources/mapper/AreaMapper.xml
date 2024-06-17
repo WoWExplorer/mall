@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.AreaMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.Area">
+		<!--  -->
+		<result column="area_id" property="areaId" />
+		<!--  -->
+		<result column="area_name" property="areaName" />
+		<!--  -->
+		<result column="parent_id" property="parentId" />
+		<!--  -->
+		<result column="level" property="level" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		area_id,area_name,parent_id,level
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.areaId != null ">
+			and area_id = #{query.areaId}
+		</if>
+		<if test="query.areaName != null and query.areaName != ''">
+			and area_name = #{query.areaName}
+		</if>
+		<if test="query.parentId != null ">
+			and parent_id = #{query.parentId}
+		</if>
+		<if test="query.level != null ">
+			and level = #{query.level}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+		<if test="query.areaNameFuzzy != null and query.areaNameFuzzy != ''">
+			and areaNameFuzzy like concat('%',#{query.areaNameFuzzy}, '%')
+		</if>
+	</sql>
+
+	<select id="getAllRegions" resultType="map">
+		SELECT
+			province.area_id AS province_id,
+			province.area_name AS province_name,
+			city.area_id AS city_id,
+			city.area_name AS city_name,
+			district.area_id AS district_id,
+			district.area_name AS district_name
+		FROM
+			tz_area AS province
+				LEFT JOIN
+			tz_area AS city ON city.parent_id = province.area_id AND city.level = 2
+				LEFT JOIN
+			tz_area AS district ON district.parent_id = city.area_id AND district.level = 3
+		WHERE
+			province.level = 1
+	</select>
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_area <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_area <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.Area">
+		<selectKey keyProperty="bean.area_id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_area
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.areaId != null">
+				`area_id`,
+			</if>
+			<if test="bean.areaName != null">
+				`area_name`,
+			</if>
+			<if test="bean.parentId != null">
+				`parent_id`,
+			</if>
+			<if test="bean.level != null">
+				`level`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.areaId != null">
+				#{bean.areaId},
+			</if>
+			<if test="bean.areaName != null">
+				#{bean.areaName},
+			</if>
+			<if test="bean.parentId != null">
+				#{bean.parentId},
+			</if>
+			<if test="bean.level != null">
+				#{bean.level},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.Area">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.areaId != null">
+				`area_id`,
+			</if>
+			<if test="bean.areaName != null">
+				`area_name`,
+			</if>
+			<if test="bean.parentId != null">
+				`parent_id`,
+			</if>
+			<if test="bean.level != null">
+				`level`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.areaId != null">
+				#{bean.areaId},
+			</if>
+			<if test="bean.areaName != null">
+				#{bean.areaName},
+			</if>
+			<if test="bean.parentId != null">
+				#{bean.parentId},
+			</if>
+			<if test="bean.level != null">
+				#{bean.level},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.areaName != null">
+				`area_name` = VALUES(`area_name`),
+			</if>
+			<if test="bean.parentId != null">
+				`parent_id` = VALUES(`parent_id`),
+			</if>
+			<if test="bean.level != null">
+				`level` = VALUES(`level`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.Area">
+		INSERT INTO tz_area (`area_name`,`parent_id`,`level`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.areaName},#{bean.parentId},#{bean.level})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.Area">
+		INSERT INTO tz_area (`area_name`,`parent_id`,`level`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.areaName},#{bean.parentId},#{bean.level})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `area_id`=VALUES(`area_id`), `area_name`=VALUES(`area_name`), `parent_id`=VALUES(`parent_id`), `level`=VALUES(`level`)
+	</insert>
+
+	<!-- "根据"AreaId"查询" -->
+	<select id="selectByAreaId" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_area` WHERE area_id=#{areaId};
+	</select>
+
+	<!-- "根据"AreaId"删除" -->
+	<delete id="deleteByAreaId">
+		DELETE FROM `tz_area` WHERE area_id=#{areaId};
+	</delete>
+
+	<!-- "根据"AreaId"更新" -->
+	<update id="updateByAreaId" parameterType="com.mall.entity.po.Area">
+		UPDATE `tz_area`
+		<set>
+			<if test="bean.areaId != null">
+				`area_id` = #{bean.areaId}, 
+			</if>
+			<if test="bean.areaName != null">
+				`area_name` = #{bean.areaName}, 
+			</if>
+			<if test="bean.parentId != null">
+				`parent_id` = #{bean.parentId}, 
+			</if>
+			<if test="bean.level != null">
+				`level` = #{bean.level}, 
+			</if>
+		</set>
+		WHERE area_id=#{areaId};
+	</update>
+
+</mapper>

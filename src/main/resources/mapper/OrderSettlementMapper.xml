@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.OrderSettlementMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.OrderSettlement">
+		<!-- 支付结算单据ID -->
+		<result column="settlement_id" property="settlementId" />
+		<!-- 支付单号 -->
+		<result column="pay_no" property="payNo" />
+		<!-- 外部订单流水号 -->
+		<result column="biz_pay_no" property="bizPayNo" />
+		<!-- order表中的订单号 -->
+		<result column="order_number" property="orderNumber" />
+		<!-- 支付方式 1 微信支付 2 支付宝 -->
+		<result column="pay_type" property="payType" />
+		<!-- 支付方式名称 -->
+		<result column="pay_type_name" property="payTypeName" />
+		<!-- 支付金额 -->
+		<result column="pay_amount" property="payAmount" />
+		<!-- 是否清算 0:否 1:是 -->
+		<result column="is_clearing" property="isClearing" />
+		<!-- 用户ID -->
+		<result column="user_id" property="userId" />
+		<!-- 创建时间 -->
+		<result column="create_time" property="createTime" />
+		<!-- 清算时间 -->
+		<result column="clearing_time" property="clearingTime" />
+		<!-- 版本号 -->
+		<result column="version" property="version" />
+		<!-- 支付状态 -->
+		<result column="pay_status" property="payStatus" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		settlement_id,pay_no,biz_pay_no,order_number,pay_type,pay_type_name,pay_amount,is_clearing,user_id,create_time,clearing_time,version,pay_status
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.settlementId != null ">
+			and settlement_id = #{query.settlementId}
+		</if>
+		<if test="query.payNo != null and query.payNo != ''">
+			and pay_no = #{query.payNo}
+		</if>
+		<if test="query.bizPayNo != null and query.bizPayNo != ''">
+			and biz_pay_no = #{query.bizPayNo}
+		</if>
+		<if test="query.orderNumber != null and query.orderNumber != ''">
+			and order_number = #{query.orderNumber}
+		</if>
+		<if test="query.payType != null ">
+			and pay_type = #{query.payType}
+		</if>
+		<if test="query.payTypeName != null and query.payTypeName != ''">
+			and pay_type_name = #{query.payTypeName}
+		</if>
+		<if test="query.payAmount != null ">
+			and pay_amount = #{query.payAmount}
+		</if>
+		<if test="query.isClearing != null ">
+			and is_clearing = #{query.isClearing}
+		</if>
+		<if test="query.userId != null and query.userId != ''">
+			and user_id = #{query.userId}
+		</if>
+		<if test="query.createTime != null ">
+			and create_time = #{query.createTime}
+		</if>
+		<if test="query.clearingTime != null ">
+			and clearing_time = #{query.clearingTime}
+		</if>
+		<if test="query.version != null ">
+			and version = #{query.version}
+		</if>
+		<if test="query.payStatus != null ">
+			and pay_status = #{query.payStatus}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+		<if test="query.payNoFuzzy != null and query.payNoFuzzy != ''">
+			and payNoFuzzy like concat('%',#{query.payNoFuzzy}, '%')
+		</if>
+		<if test="query.bizPayNoFuzzy != null and query.bizPayNoFuzzy != ''">
+			and bizPayNoFuzzy like concat('%',#{query.bizPayNoFuzzy}, '%')
+		</if>
+		<if test="query.orderNumberFuzzy != null and query.orderNumberFuzzy != ''">
+			and orderNumberFuzzy like concat('%',#{query.orderNumberFuzzy}, '%')
+		</if>
+		<if test="query.payTypeNameFuzzy != null and query.payTypeNameFuzzy != ''">
+			and payTypeNameFuzzy like concat('%',#{query.payTypeNameFuzzy}, '%')
+		</if>
+		<if test="query.userIdFuzzy != null and query.userIdFuzzy != ''">
+			and userIdFuzzy like concat('%',#{query.userIdFuzzy}, '%')
+		</if>
+		<if test="query.createTimeStart != null and query.createTimeStart != ''">
+			<![CDATA[and create_time >= str_to_date(#{createTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.createTimeEnd != null and query.createTimeEnd != ''">
+			<![CDATA[and create_time >= str_to_date(#{createTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.clearingTimeStart != null and query.clearingTimeStart != ''">
+			<![CDATA[and clearing_time >= str_to_date(#{clearingTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.clearingTimeEnd != null and query.clearingTimeEnd != ''">
+			<![CDATA[and clearing_time >= str_to_date(#{clearingTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_order_settlement <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_order_settlement <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.OrderSettlement">
+		<selectKey keyProperty="bean.settlement_id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_order_settlement
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.settlementId != null">
+				`settlement_id`,
+			</if>
+			<if test="bean.payNo != null">
+				`pay_no`,
+			</if>
+			<if test="bean.bizPayNo != null">
+				`biz_pay_no`,
+			</if>
+			<if test="bean.orderNumber != null">
+				`order_number`,
+			</if>
+			<if test="bean.payType != null">
+				`pay_type`,
+			</if>
+			<if test="bean.payTypeName != null">
+				`pay_type_name`,
+			</if>
+			<if test="bean.payAmount != null">
+				`pay_amount`,
+			</if>
+			<if test="bean.isClearing != null">
+				`is_clearing`,
+			</if>
+			<if test="bean.userId != null">
+				`user_id`,
+			</if>
+			<if test="bean.createTime != null">
+				`create_time`,
+			</if>
+			<if test="bean.clearingTime != null">
+				`clearing_time`,
+			</if>
+			<if test="bean.version != null">
+				`version`,
+			</if>
+			<if test="bean.payStatus != null">
+				`pay_status`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.settlementId != null">
+				#{bean.settlementId},
+			</if>
+			<if test="bean.payNo != null">
+				#{bean.payNo},
+			</if>
+			<if test="bean.bizPayNo != null">
+				#{bean.bizPayNo},
+			</if>
+			<if test="bean.orderNumber != null">
+				#{bean.orderNumber},
+			</if>
+			<if test="bean.payType != null">
+				#{bean.payType},
+			</if>
+			<if test="bean.payTypeName != null">
+				#{bean.payTypeName},
+			</if>
+			<if test="bean.payAmount != null">
+				#{bean.payAmount},
+			</if>
+			<if test="bean.isClearing != null">
+				#{bean.isClearing},
+			</if>
+			<if test="bean.userId != null">
+				#{bean.userId},
+			</if>
+			<if test="bean.createTime != null">
+				#{bean.createTime},
+			</if>
+			<if test="bean.clearingTime != null">
+				#{bean.clearingTime},
+			</if>
+			<if test="bean.version != null">
+				#{bean.version},
+			</if>
+			<if test="bean.payStatus != null">
+				#{bean.payStatus},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.OrderSettlement">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.settlementId != null">
+				`settlement_id`,
+			</if>
+			<if test="bean.payNo != null">
+				`pay_no`,
+			</if>
+			<if test="bean.bizPayNo != null">
+				`biz_pay_no`,
+			</if>
+			<if test="bean.orderNumber != null">
+				`order_number`,
+			</if>
+			<if test="bean.payType != null">
+				`pay_type`,
+			</if>
+			<if test="bean.payTypeName != null">
+				`pay_type_name`,
+			</if>
+			<if test="bean.payAmount != null">
+				`pay_amount`,
+			</if>
+			<if test="bean.isClearing != null">
+				`is_clearing`,
+			</if>
+			<if test="bean.userId != null">
+				`user_id`,
+			</if>
+			<if test="bean.createTime != null">
+				`create_time`,
+			</if>
+			<if test="bean.clearingTime != null">
+				`clearing_time`,
+			</if>
+			<if test="bean.version != null">
+				`version`,
+			</if>
+			<if test="bean.payStatus != null">
+				`pay_status`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.settlementId != null">
+				#{bean.settlementId},
+			</if>
+			<if test="bean.payNo != null">
+				#{bean.payNo},
+			</if>
+			<if test="bean.bizPayNo != null">
+				#{bean.bizPayNo},
+			</if>
+			<if test="bean.orderNumber != null">
+				#{bean.orderNumber},
+			</if>
+			<if test="bean.payType != null">
+				#{bean.payType},
+			</if>
+			<if test="bean.payTypeName != null">
+				#{bean.payTypeName},
+			</if>
+			<if test="bean.payAmount != null">
+				#{bean.payAmount},
+			</if>
+			<if test="bean.isClearing != null">
+				#{bean.isClearing},
+			</if>
+			<if test="bean.userId != null">
+				#{bean.userId},
+			</if>
+			<if test="bean.createTime != null">
+				#{bean.createTime},
+			</if>
+			<if test="bean.clearingTime != null">
+				#{bean.clearingTime},
+			</if>
+			<if test="bean.version != null">
+				#{bean.version},
+			</if>
+			<if test="bean.payStatus != null">
+				#{bean.payStatus},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.payNo != null">
+				`pay_no` = VALUES(`pay_no`),
+			</if>
+			<if test="bean.bizPayNo != null">
+				`biz_pay_no` = VALUES(`biz_pay_no`),
+			</if>
+			<if test="bean.payType != null">
+				`pay_type` = VALUES(`pay_type`),
+			</if>
+			<if test="bean.payTypeName != null">
+				`pay_type_name` = VALUES(`pay_type_name`),
+			</if>
+			<if test="bean.payAmount != null">
+				`pay_amount` = VALUES(`pay_amount`),
+			</if>
+			<if test="bean.isClearing != null">
+				`is_clearing` = VALUES(`is_clearing`),
+			</if>
+			<if test="bean.userId != null">
+				`user_id` = VALUES(`user_id`),
+			</if>
+			<if test="bean.createTime != null">
+				`create_time` = VALUES(`create_time`),
+			</if>
+			<if test="bean.clearingTime != null">
+				`clearing_time` = VALUES(`clearing_time`),
+			</if>
+			<if test="bean.version != null">
+				`version` = VALUES(`version`),
+			</if>
+			<if test="bean.payStatus != null">
+				`pay_status` = VALUES(`pay_status`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.OrderSettlement">
+		INSERT INTO tz_order_settlement (`pay_no`,`biz_pay_no`,`order_number`,`pay_type`,`pay_type_name`,`pay_amount`,`is_clearing`,`user_id`,`create_time`,`clearing_time`,`version`,`pay_status`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.payNo},#{bean.bizPayNo},#{bean.orderNumber},#{bean.payType},#{bean.payTypeName},#{bean.payAmount},#{bean.isClearing},#{bean.userId},#{bean.createTime},#{bean.clearingTime},#{bean.version},#{bean.payStatus})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.OrderSettlement">
+		INSERT INTO tz_order_settlement (`pay_no`,`biz_pay_no`,`order_number`,`pay_type`,`pay_type_name`,`pay_amount`,`is_clearing`,`user_id`,`create_time`,`clearing_time`,`version`,`pay_status`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.payNo},#{bean.bizPayNo},#{bean.orderNumber},#{bean.payType},#{bean.payTypeName},#{bean.payAmount},#{bean.isClearing},#{bean.userId},#{bean.createTime},#{bean.clearingTime},#{bean.version},#{bean.payStatus})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `settlement_id`=VALUES(`settlement_id`), `pay_no`=VALUES(`pay_no`), `biz_pay_no`=VALUES(`biz_pay_no`), `order_number`=VALUES(`order_number`), `pay_type`=VALUES(`pay_type`), `pay_type_name`=VALUES(`pay_type_name`), `pay_amount`=VALUES(`pay_amount`), `is_clearing`=VALUES(`is_clearing`), `user_id`=VALUES(`user_id`), `create_time`=VALUES(`create_time`), `clearing_time`=VALUES(`clearing_time`), `version`=VALUES(`version`), `pay_status`=VALUES(`pay_status`)
+	</insert>
+
+	<!-- "根据"SettlementId"查询" -->
+	<select id="selectBySettlementId" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_order_settlement` WHERE settlement_id=#{settlementId};
+	</select>
+
+	<!-- "根据"SettlementId"删除" -->
+	<delete id="deleteBySettlementId">
+		DELETE FROM `tz_order_settlement` WHERE settlement_id=#{settlementId};
+	</delete>
+
+	<!-- "根据"SettlementId"更新" -->
+	<update id="updateBySettlementId" parameterType="com.mall.entity.po.OrderSettlement">
+		UPDATE `tz_order_settlement`
+		<set>
+			<if test="bean.settlementId != null">
+				`settlement_id` = #{bean.settlementId}, 
+			</if>
+			<if test="bean.payNo != null">
+				`pay_no` = #{bean.payNo}, 
+			</if>
+			<if test="bean.bizPayNo != null">
+				`biz_pay_no` = #{bean.bizPayNo}, 
+			</if>
+			<if test="bean.orderNumber != null">
+				`order_number` = #{bean.orderNumber}, 
+			</if>
+			<if test="bean.payType != null">
+				`pay_type` = #{bean.payType}, 
+			</if>
+			<if test="bean.payTypeName != null">
+				`pay_type_name` = #{bean.payTypeName}, 
+			</if>
+			<if test="bean.payAmount != null">
+				`pay_amount` = #{bean.payAmount}, 
+			</if>
+			<if test="bean.isClearing != null">
+				`is_clearing` = #{bean.isClearing}, 
+			</if>
+			<if test="bean.userId != null">
+				`user_id` = #{bean.userId}, 
+			</if>
+			<if test="bean.createTime != null">
+				`create_time` = #{bean.createTime}, 
+			</if>
+			<if test="bean.clearingTime != null">
+				`clearing_time` = #{bean.clearingTime}, 
+			</if>
+			<if test="bean.version != null">
+				`version` = #{bean.version}, 
+			</if>
+			<if test="bean.payStatus != null">
+				`pay_status` = #{bean.payStatus}, 
+			</if>
+		</set>
+		WHERE settlement_id=#{settlementId};
+	</update>
+
+	<!-- "根据"OrderNumber"查询" -->
+	<select id="selectByOrderNumber" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_order_settlement` WHERE order_number=#{orderNumber};
+	</select>
+
+	<!-- "根据"OrderNumber"删除" -->
+	<delete id="deleteByOrderNumber">
+		DELETE FROM `tz_order_settlement` WHERE order_number=#{orderNumber};
+	</delete>
+
+	<!-- "根据"OrderNumber"更新" -->
+	<update id="updateByOrderNumber" parameterType="com.mall.entity.po.OrderSettlement">
+		UPDATE `tz_order_settlement`
+		<set>
+			<if test="bean.settlementId != null">
+				`settlement_id` = #{bean.settlementId}, 
+			</if>
+			<if test="bean.payNo != null">
+				`pay_no` = #{bean.payNo}, 
+			</if>
+			<if test="bean.bizPayNo != null">
+				`biz_pay_no` = #{bean.bizPayNo}, 
+			</if>
+			<if test="bean.orderNumber != null">
+				`order_number` = #{bean.orderNumber}, 
+			</if>
+			<if test="bean.payType != null">
+				`pay_type` = #{bean.payType}, 
+			</if>
+			<if test="bean.payTypeName != null">
+				`pay_type_name` = #{bean.payTypeName}, 
+			</if>
+			<if test="bean.payAmount != null">
+				`pay_amount` = #{bean.payAmount}, 
+			</if>
+			<if test="bean.isClearing != null">
+				`is_clearing` = #{bean.isClearing}, 
+			</if>
+			<if test="bean.userId != null">
+				`user_id` = #{bean.userId}, 
+			</if>
+			<if test="bean.createTime != null">
+				`create_time` = #{bean.createTime}, 
+			</if>
+			<if test="bean.clearingTime != null">
+				`clearing_time` = #{bean.clearingTime}, 
+			</if>
+			<if test="bean.version != null">
+				`version` = #{bean.version}, 
+			</if>
+			<if test="bean.payStatus != null">
+				`pay_status` = #{bean.payStatus}, 
+			</if>
+		</set>
+		WHERE order_number=#{orderNumber};
+	</update>
+
+</mapper>

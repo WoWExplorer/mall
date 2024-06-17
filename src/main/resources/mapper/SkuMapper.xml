@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.SkuMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.Sku">
+		<!-- 单品ID -->
+		<result column="sku_id" property="skuId" />
+		<!-- 商品ID -->
+		<result column="prod_id" property="prodId" />
+		<!-- 销售属性组合字符串 格式是p1:v1;p2:v2 -->
+		<result column="properties" property="properties" />
+		<!-- 原价 -->
+		<result column="ori_price" property="oriPrice" />
+		<!-- 价格 -->
+		<result column="price" property="price" />
+		<!-- 商品在付款减库存的状态下，该sku上未付款的订单数量 -->
+		<result column="stocks" property="stocks" />
+		<!-- 实际库存 -->
+		<result column="actual_stocks" property="actualStocks" />
+		<!-- 修改时间 -->
+		<result column="update_time" property="updateTime" />
+		<!-- 记录时间 -->
+		<result column="rec_time" property="recTime" />
+		<!-- 商家编码 -->
+		<result column="party_code" property="partyCode" />
+		<!-- 商品条形码 -->
+		<result column="model_id" property="modelId" />
+		<!-- sku图片 -->
+		<result column="pic" property="pic" />
+		<!-- sku名称 -->
+		<result column="sku_name" property="skuName" />
+		<!-- 商品名称 -->
+		<result column="prod_name" property="prodName" />
+		<!-- 版本号 -->
+		<result column="version" property="version" />
+		<!-- 商品重量 -->
+		<result column="weight" property="weight" />
+		<!-- 商品体积 -->
+		<result column="volume" property="volume" />
+		<!-- 0 禁用 1 启用 -->
+		<result column="status" property="status" />
+		<!-- 0 正常 1 已被删除 -->
+		<result column="is_delete" property="isDelete" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		sku_id,prod_id,properties,ori_price,price,stocks,actual_stocks,update_time,rec_time,party_code,model_id,pic,sku_name,prod_name,version,weight,volume,status,is_delete
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.skuId != null ">
+			and sku_id = #{query.skuId}
+		</if>
+		<if test="query.prodId != null ">
+			and prod_id = #{query.prodId}
+		</if>
+		<if test="query.properties != null and query.properties != ''">
+			and properties = #{query.properties}
+		</if>
+		<if test="query.oriPrice != null ">
+			and ori_price = #{query.oriPrice}
+		</if>
+		<if test="query.price != null ">
+			and price = #{query.price}
+		</if>
+		<if test="query.stocks != null ">
+			and stocks = #{query.stocks}
+		</if>
+		<if test="query.actualStocks != null ">
+			and actual_stocks = #{query.actualStocks}
+		</if>
+		<if test="query.updateTime != null ">
+			and update_time = #{query.updateTime}
+		</if>
+		<if test="query.recTime != null ">
+			and rec_time = #{query.recTime}
+		</if>
+		<if test="query.partyCode != null and query.partyCode != ''">
+			and party_code = #{query.partyCode}
+		</if>
+		<if test="query.modelId != null and query.modelId != ''">
+			and model_id = #{query.modelId}
+		</if>
+		<if test="query.pic != null and query.pic != ''">
+			and pic = #{query.pic}
+		</if>
+		<if test="query.skuName != null and query.skuName != ''">
+			and sku_name = #{query.skuName}
+		</if>
+		<if test="query.prodName != null and query.prodName != ''">
+			and prod_name = #{query.prodName}
+		</if>
+		<if test="query.version != null ">
+			and version = #{query.version}
+		</if>
+		<if test="query.weight != null ">
+			and weight = #{query.weight}
+		</if>
+		<if test="query.volume != null ">
+			and volume = #{query.volume}
+		</if>
+		<if test="query.status != null ">
+			and status = #{query.status}
+		</if>
+		<if test="query.isDelete != null ">
+			and is_delete = #{query.isDelete}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+		<if test="query.propertiesFuzzy != null and query.propertiesFuzzy != ''">
+			and propertiesFuzzy like concat('%',#{query.propertiesFuzzy}, '%')
+		</if>
+		<if test="query.updateTimeStart != null and query.updateTimeStart != ''">
+			<![CDATA[and update_time >= str_to_date(#{updateTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.updateTimeEnd != null and query.updateTimeEnd != ''">
+			<![CDATA[and update_time >= str_to_date(#{updateTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.recTimeStart != null and query.recTimeStart != ''">
+			<![CDATA[and rec_time >= str_to_date(#{recTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.recTimeEnd != null and query.recTimeEnd != ''">
+			<![CDATA[and rec_time >= str_to_date(#{recTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.partyCodeFuzzy != null and query.partyCodeFuzzy != ''">
+			and partyCodeFuzzy like concat('%',#{query.partyCodeFuzzy}, '%')
+		</if>
+		<if test="query.modelIdFuzzy != null and query.modelIdFuzzy != ''">
+			and modelIdFuzzy like concat('%',#{query.modelIdFuzzy}, '%')
+		</if>
+		<if test="query.picFuzzy != null and query.picFuzzy != ''">
+			and picFuzzy like concat('%',#{query.picFuzzy}, '%')
+		</if>
+		<if test="query.skuNameFuzzy != null and query.skuNameFuzzy != ''">
+			and skuNameFuzzy like concat('%',#{query.skuNameFuzzy}, '%')
+		</if>
+		<if test="query.prodNameFuzzy != null and query.prodNameFuzzy != ''">
+			and prodNameFuzzy like concat('%',#{query.prodNameFuzzy}, '%')
+		</if>
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_sku <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_sku <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.Sku">
+		<selectKey keyProperty="bean.sku_id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_sku
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.skuId != null">
+				`sku_id`,
+			</if>
+			<if test="bean.prodId != null">
+				`prod_id`,
+			</if>
+			<if test="bean.properties != null">
+				`properties`,
+			</if>
+			<if test="bean.oriPrice != null">
+				`ori_price`,
+			</if>
+			<if test="bean.price != null">
+				`price`,
+			</if>
+			<if test="bean.stocks != null">
+				`stocks`,
+			</if>
+			<if test="bean.actualStocks != null">
+				`actual_stocks`,
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time`,
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time`,
+			</if>
+			<if test="bean.partyCode != null">
+				`party_code`,
+			</if>
+			<if test="bean.modelId != null">
+				`model_id`,
+			</if>
+			<if test="bean.pic != null">
+				`pic`,
+			</if>
+			<if test="bean.skuName != null">
+				`sku_name`,
+			</if>
+			<if test="bean.prodName != null">
+				`prod_name`,
+			</if>
+			<if test="bean.version != null">
+				`version`,
+			</if>
+			<if test="bean.weight != null">
+				`weight`,
+			</if>
+			<if test="bean.volume != null">
+				`volume`,
+			</if>
+			<if test="bean.status != null">
+				`status`,
+			</if>
+			<if test="bean.isDelete != null">
+				`is_delete`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.skuId != null">
+				#{bean.skuId},
+			</if>
+			<if test="bean.prodId != null">
+				#{bean.prodId},
+			</if>
+			<if test="bean.properties != null">
+				#{bean.properties},
+			</if>
+			<if test="bean.oriPrice != null">
+				#{bean.oriPrice},
+			</if>
+			<if test="bean.price != null">
+				#{bean.price},
+			</if>
+			<if test="bean.stocks != null">
+				#{bean.stocks},
+			</if>
+			<if test="bean.actualStocks != null">
+				#{bean.actualStocks},
+			</if>
+			<if test="bean.updateTime != null">
+				#{bean.updateTime},
+			</if>
+			<if test="bean.recTime != null">
+				#{bean.recTime},
+			</if>
+			<if test="bean.partyCode != null">
+				#{bean.partyCode},
+			</if>
+			<if test="bean.modelId != null">
+				#{bean.modelId},
+			</if>
+			<if test="bean.pic != null">
+				#{bean.pic},
+			</if>
+			<if test="bean.skuName != null">
+				#{bean.skuName},
+			</if>
+			<if test="bean.prodName != null">
+				#{bean.prodName},
+			</if>
+			<if test="bean.version != null">
+				#{bean.version},
+			</if>
+			<if test="bean.weight != null">
+				#{bean.weight},
+			</if>
+			<if test="bean.volume != null">
+				#{bean.volume},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+			<if test="bean.isDelete != null">
+				#{bean.isDelete},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.Sku">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.skuId != null">
+				`sku_id`,
+			</if>
+			<if test="bean.prodId != null">
+				`prod_id`,
+			</if>
+			<if test="bean.properties != null">
+				`properties`,
+			</if>
+			<if test="bean.oriPrice != null">
+				`ori_price`,
+			</if>
+			<if test="bean.price != null">
+				`price`,
+			</if>
+			<if test="bean.stocks != null">
+				`stocks`,
+			</if>
+			<if test="bean.actualStocks != null">
+				`actual_stocks`,
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time`,
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time`,
+			</if>
+			<if test="bean.partyCode != null">
+				`party_code`,
+			</if>
+			<if test="bean.modelId != null">
+				`model_id`,
+			</if>
+			<if test="bean.pic != null">
+				`pic`,
+			</if>
+			<if test="bean.skuName != null">
+				`sku_name`,
+			</if>
+			<if test="bean.prodName != null">
+				`prod_name`,
+			</if>
+			<if test="bean.version != null">
+				`version`,
+			</if>
+			<if test="bean.weight != null">
+				`weight`,
+			</if>
+			<if test="bean.volume != null">
+				`volume`,
+			</if>
+			<if test="bean.status != null">
+				`status`,
+			</if>
+			<if test="bean.isDelete != null">
+				`is_delete`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.skuId != null">
+				#{bean.skuId},
+			</if>
+			<if test="bean.prodId != null">
+				#{bean.prodId},
+			</if>
+			<if test="bean.properties != null">
+				#{bean.properties},
+			</if>
+			<if test="bean.oriPrice != null">
+				#{bean.oriPrice},
+			</if>
+			<if test="bean.price != null">
+				#{bean.price},
+			</if>
+			<if test="bean.stocks != null">
+				#{bean.stocks},
+			</if>
+			<if test="bean.actualStocks != null">
+				#{bean.actualStocks},
+			</if>
+			<if test="bean.updateTime != null">
+				#{bean.updateTime},
+			</if>
+			<if test="bean.recTime != null">
+				#{bean.recTime},
+			</if>
+			<if test="bean.partyCode != null">
+				#{bean.partyCode},
+			</if>
+			<if test="bean.modelId != null">
+				#{bean.modelId},
+			</if>
+			<if test="bean.pic != null">
+				#{bean.pic},
+			</if>
+			<if test="bean.skuName != null">
+				#{bean.skuName},
+			</if>
+			<if test="bean.prodName != null">
+				#{bean.prodName},
+			</if>
+			<if test="bean.version != null">
+				#{bean.version},
+			</if>
+			<if test="bean.weight != null">
+				#{bean.weight},
+			</if>
+			<if test="bean.volume != null">
+				#{bean.volume},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+			<if test="bean.isDelete != null">
+				#{bean.isDelete},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.prodId != null">
+				`prod_id` = VALUES(`prod_id`),
+			</if>
+			<if test="bean.properties != null">
+				`properties` = VALUES(`properties`),
+			</if>
+			<if test="bean.oriPrice != null">
+				`ori_price` = VALUES(`ori_price`),
+			</if>
+			<if test="bean.price != null">
+				`price` = VALUES(`price`),
+			</if>
+			<if test="bean.stocks != null">
+				`stocks` = VALUES(`stocks`),
+			</if>
+			<if test="bean.actualStocks != null">
+				`actual_stocks` = VALUES(`actual_stocks`),
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time` = VALUES(`update_time`),
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time` = VALUES(`rec_time`),
+			</if>
+			<if test="bean.partyCode != null">
+				`party_code` = VALUES(`party_code`),
+			</if>
+			<if test="bean.modelId != null">
+				`model_id` = VALUES(`model_id`),
+			</if>
+			<if test="bean.pic != null">
+				`pic` = VALUES(`pic`),
+			</if>
+			<if test="bean.skuName != null">
+				`sku_name` = VALUES(`sku_name`),
+			</if>
+			<if test="bean.prodName != null">
+				`prod_name` = VALUES(`prod_name`),
+			</if>
+			<if test="bean.version != null">
+				`version` = VALUES(`version`),
+			</if>
+			<if test="bean.weight != null">
+				`weight` = VALUES(`weight`),
+			</if>
+			<if test="bean.volume != null">
+				`volume` = VALUES(`volume`),
+			</if>
+			<if test="bean.status != null">
+				`status` = VALUES(`status`),
+			</if>
+			<if test="bean.isDelete != null">
+				`is_delete` = VALUES(`is_delete`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.Sku">
+		INSERT INTO tz_sku (`prod_id`,`properties`,`ori_price`,`price`,`stocks`,`actual_stocks`,`update_time`,`rec_time`,`party_code`,`model_id`,`pic`,`sku_name`,`prod_name`,`version`,`weight`,`volume`,`status`,`is_delete`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.prodId},#{bean.properties},#{bean.oriPrice},#{bean.price},#{bean.stocks},#{bean.actualStocks},#{bean.updateTime},#{bean.recTime},#{bean.partyCode},#{bean.modelId},#{bean.pic},#{bean.skuName},#{bean.prodName},#{bean.version},#{bean.weight},#{bean.volume},#{bean.status},#{bean.isDelete})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.Sku">
+		INSERT INTO tz_sku (`prod_id`,`properties`,`ori_price`,`price`,`stocks`,`actual_stocks`,`update_time`,`rec_time`,`party_code`,`model_id`,`pic`,`sku_name`,`prod_name`,`version`,`weight`,`volume`,`status`,`is_delete`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.prodId},#{bean.properties},#{bean.oriPrice},#{bean.price},#{bean.stocks},#{bean.actualStocks},#{bean.updateTime},#{bean.recTime},#{bean.partyCode},#{bean.modelId},#{bean.pic},#{bean.skuName},#{bean.prodName},#{bean.version},#{bean.weight},#{bean.volume},#{bean.status},#{bean.isDelete})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `sku_id`=VALUES(`sku_id`), `prod_id`=VALUES(`prod_id`), `properties`=VALUES(`properties`), `ori_price`=VALUES(`ori_price`), `price`=VALUES(`price`), `stocks`=VALUES(`stocks`), `actual_stocks`=VALUES(`actual_stocks`), `update_time`=VALUES(`update_time`), `rec_time`=VALUES(`rec_time`), `party_code`=VALUES(`party_code`), `model_id`=VALUES(`model_id`), `pic`=VALUES(`pic`), `sku_name`=VALUES(`sku_name`), `prod_name`=VALUES(`prod_name`), `version`=VALUES(`version`), `weight`=VALUES(`weight`), `volume`=VALUES(`volume`), `status`=VALUES(`status`), `is_delete`=VALUES(`is_delete`)
+	</insert>
+
+	<!-- "根据"SkuId"查询" -->
+	<select id="selectBySkuId" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_sku` WHERE sku_id=#{skuId};
+	</select>
+
+	<!-- "根据"SkuId"删除" -->
+	<delete id="deleteBySkuId">
+		DELETE FROM `tz_sku` WHERE sku_id=#{skuId};
+	</delete>
+
+	<!-- "根据"SkuId"更新" -->
+	<update id="updateBySkuId" parameterType="com.mall.entity.po.Sku">
+		UPDATE `tz_sku`
+		<set>
+			<if test="bean.skuId != null">
+				`sku_id` = #{bean.skuId}, 
+			</if>
+			<if test="bean.prodId != null">
+				`prod_id` = #{bean.prodId}, 
+			</if>
+			<if test="bean.properties != null">
+				`properties` = #{bean.properties}, 
+			</if>
+			<if test="bean.oriPrice != null">
+				`ori_price` = #{bean.oriPrice}, 
+			</if>
+			<if test="bean.price != null">
+				`price` = #{bean.price}, 
+			</if>
+			<if test="bean.stocks != null">
+				`stocks` = #{bean.stocks}, 
+			</if>
+			<if test="bean.actualStocks != null">
+				`actual_stocks` = #{bean.actualStocks}, 
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time` = #{bean.updateTime}, 
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time` = #{bean.recTime}, 
+			</if>
+			<if test="bean.partyCode != null">
+				`party_code` = #{bean.partyCode}, 
+			</if>
+			<if test="bean.modelId != null">
+				`model_id` = #{bean.modelId}, 
+			</if>
+			<if test="bean.pic != null">
+				`pic` = #{bean.pic}, 
+			</if>
+			<if test="bean.skuName != null">
+				`sku_name` = #{bean.skuName}, 
+			</if>
+			<if test="bean.prodName != null">
+				`prod_name` = #{bean.prodName}, 
+			</if>
+			<if test="bean.version != null">
+				`version` = #{bean.version}, 
+			</if>
+			<if test="bean.weight != null">
+				`weight` = #{bean.weight}, 
+			</if>
+			<if test="bean.volume != null">
+				`volume` = #{bean.volume}, 
+			</if>
+			<if test="bean.status != null">
+				`status` = #{bean.status}, 
+			</if>
+			<if test="bean.isDelete != null">
+				`is_delete` = #{bean.isDelete}, 
+			</if>
+		</set>
+		WHERE sku_id=#{skuId};
+	</update>
+
+</mapper>

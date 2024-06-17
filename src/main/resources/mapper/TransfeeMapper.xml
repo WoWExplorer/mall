@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.TransfeeMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.Transfee">
+		<!-- 运费项id -->
+		<result column="transfee_id" property="transfeeId" />
+		<!-- 运费模板id -->
+		<result column="transport_id" property="transportId" />
+		<!-- 续件数量 -->
+		<result column="continuous_piece" property="continuousPiece" />
+		<!-- 首件数量 -->
+		<result column="first_piece" property="firstPiece" />
+		<!-- 续件费用 -->
+		<result column="continuous_fee" property="continuousFee" />
+		<!-- 首件费用 -->
+		<result column="first_fee" property="firstFee" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		transfee_id,transport_id,continuous_piece,first_piece,continuous_fee,first_fee
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.transfeeId != null ">
+			and transfee_id = #{query.transfeeId}
+		</if>
+		<if test="query.transportId != null ">
+			and transport_id = #{query.transportId}
+		</if>
+		<if test="query.continuousPiece != null ">
+			and continuous_piece = #{query.continuousPiece}
+		</if>
+		<if test="query.firstPiece != null ">
+			and first_piece = #{query.firstPiece}
+		</if>
+		<if test="query.continuousFee != null ">
+			and continuous_fee = #{query.continuousFee}
+		</if>
+		<if test="query.firstFee != null ">
+			and first_fee = #{query.firstFee}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_transfee <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_transfee <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.Transfee">
+		<selectKey keyProperty="bean.transfee_id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_transfee
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.transfeeId != null">
+				`transfee_id`,
+			</if>
+			<if test="bean.transportId != null">
+				`transport_id`,
+			</if>
+			<if test="bean.continuousPiece != null">
+				`continuous_piece`,
+			</if>
+			<if test="bean.firstPiece != null">
+				`first_piece`,
+			</if>
+			<if test="bean.continuousFee != null">
+				`continuous_fee`,
+			</if>
+			<if test="bean.firstFee != null">
+				`first_fee`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.transfeeId != null">
+				#{bean.transfeeId},
+			</if>
+			<if test="bean.transportId != null">
+				#{bean.transportId},
+			</if>
+			<if test="bean.continuousPiece != null">
+				#{bean.continuousPiece},
+			</if>
+			<if test="bean.firstPiece != null">
+				#{bean.firstPiece},
+			</if>
+			<if test="bean.continuousFee != null">
+				#{bean.continuousFee},
+			</if>
+			<if test="bean.firstFee != null">
+				#{bean.firstFee},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.Transfee">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.transfeeId != null">
+				`transfee_id`,
+			</if>
+			<if test="bean.transportId != null">
+				`transport_id`,
+			</if>
+			<if test="bean.continuousPiece != null">
+				`continuous_piece`,
+			</if>
+			<if test="bean.firstPiece != null">
+				`first_piece`,
+			</if>
+			<if test="bean.continuousFee != null">
+				`continuous_fee`,
+			</if>
+			<if test="bean.firstFee != null">
+				`first_fee`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.transfeeId != null">
+				#{bean.transfeeId},
+			</if>
+			<if test="bean.transportId != null">
+				#{bean.transportId},
+			</if>
+			<if test="bean.continuousPiece != null">
+				#{bean.continuousPiece},
+			</if>
+			<if test="bean.firstPiece != null">
+				#{bean.firstPiece},
+			</if>
+			<if test="bean.continuousFee != null">
+				#{bean.continuousFee},
+			</if>
+			<if test="bean.firstFee != null">
+				#{bean.firstFee},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.transportId != null">
+				`transport_id` = VALUES(`transport_id`),
+			</if>
+			<if test="bean.continuousPiece != null">
+				`continuous_piece` = VALUES(`continuous_piece`),
+			</if>
+			<if test="bean.firstPiece != null">
+				`first_piece` = VALUES(`first_piece`),
+			</if>
+			<if test="bean.continuousFee != null">
+				`continuous_fee` = VALUES(`continuous_fee`),
+			</if>
+			<if test="bean.firstFee != null">
+				`first_fee` = VALUES(`first_fee`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.Transfee">
+		INSERT INTO tz_transfee (`transport_id`,`continuous_piece`,`first_piece`,`continuous_fee`,`first_fee`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.transportId},#{bean.continuousPiece},#{bean.firstPiece},#{bean.continuousFee},#{bean.firstFee})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.Transfee">
+		INSERT INTO tz_transfee (`transport_id`,`continuous_piece`,`first_piece`,`continuous_fee`,`first_fee`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.transportId},#{bean.continuousPiece},#{bean.firstPiece},#{bean.continuousFee},#{bean.firstFee})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `transfee_id`=VALUES(`transfee_id`), `transport_id`=VALUES(`transport_id`), `continuous_piece`=VALUES(`continuous_piece`), `first_piece`=VALUES(`first_piece`), `continuous_fee`=VALUES(`continuous_fee`), `first_fee`=VALUES(`first_fee`)
+	</insert>
+
+	<!-- "根据"TransfeeId"查询" -->
+	<select id="selectByTransfeeId" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_transfee` WHERE transfee_id=#{transfeeId};
+	</select>
+
+	<!-- "根据"TransfeeId"删除" -->
+	<delete id="deleteByTransfeeId">
+		DELETE FROM `tz_transfee` WHERE transfee_id=#{transfeeId};
+	</delete>
+
+	<!-- "根据"TransfeeId"更新" -->
+	<update id="updateByTransfeeId" parameterType="com.mall.entity.po.Transfee">
+		UPDATE `tz_transfee`
+		<set>
+			<if test="bean.transfeeId != null">
+				`transfee_id` = #{bean.transfeeId}, 
+			</if>
+			<if test="bean.transportId != null">
+				`transport_id` = #{bean.transportId}, 
+			</if>
+			<if test="bean.continuousPiece != null">
+				`continuous_piece` = #{bean.continuousPiece}, 
+			</if>
+			<if test="bean.firstPiece != null">
+				`first_piece` = #{bean.firstPiece}, 
+			</if>
+			<if test="bean.continuousFee != null">
+				`continuous_fee` = #{bean.continuousFee}, 
+			</if>
+			<if test="bean.firstFee != null">
+				`first_fee` = #{bean.firstFee}, 
+			</if>
+		</set>
+		WHERE transfee_id=#{transfeeId};
+	</update>
+
+</mapper>

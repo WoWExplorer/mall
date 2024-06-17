@@ -1,0 +1,996 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.OrderMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.Order">
+		<!-- 订单ID -->
+		<result column="order_id" property="orderId" />
+		<!-- 店铺id -->
+		<result column="shop_id" property="shopId" />
+		<!-- 产品名称,多个产品将会以逗号隔开 -->
+		<result column="prod_name" property="prodName" />
+		<!-- 订购用户ID -->
+		<result column="user_id" property="userId" />
+		<!-- 订购流水号 -->
+		<result column="order_number" property="orderNumber" />
+		<!-- 总值 -->
+		<result column="total" property="total" />
+		<!-- 实际总值 -->
+		<result column="actual_total" property="actualTotal" />
+		<!-- 支付方式 0 手动代付 1 微信支付 2 支付宝 -->
+		<result column="pay_type" property="payType" />
+		<!-- 订单备注 -->
+		<result column="remarks" property="remarks" />
+		<!-- 订单状态 1:待付款 2:待发货 3:待收货 4:待评价 5:成功 6:失败 -->
+		<result column="status" property="status" />
+		<!-- 配送类型 -->
+		<result column="dvy_type" property="dvyType" />
+		<!-- 配送方式ID -->
+		<result column="dvy_id" property="dvyId" />
+		<!-- 物流单号 -->
+		<result column="dvy_flow_id" property="dvyFlowId" />
+		<!-- 订单运费 -->
+		<result column="freight_amount" property="freightAmount" />
+		<!-- 用户订单地址Id -->
+		<result column="addr_order_id" property="addrOrderId" />
+		<!-- 订单商品总数 -->
+		<result column="product_nums" property="productNums" />
+		<!-- 订购时间 -->
+		<result column="create_time" property="createTime" />
+		<!-- 订单更新时间 -->
+		<result column="update_time" property="updateTime" />
+		<!-- 付款时间 -->
+		<result column="pay_time" property="payTime" />
+		<!-- 发货时间 -->
+		<result column="dvy_time" property="dvyTime" />
+		<!-- 完成时间 -->
+		<result column="finally_time" property="finallyTime" />
+		<!-- 取消时间 -->
+		<result column="cancel_time" property="cancelTime" />
+		<!-- 是否已经支付，1：已经支付过，0：，没有支付过 -->
+		<result column="is_payed" property="isPayed" />
+		<!-- 用户订单删除状态，0：没有删除， 1：回收站， 2：永久删除 -->
+		<result column="delete_status" property="deleteStatus" />
+		<!-- 0:默认,1:在处理,2:处理完成 -->
+		<result column="refund_sts" property="refundSts" />
+		<!-- 优惠总额 -->
+		<result column="reduce_amount" property="reduceAmount" />
+		<!-- 订单类型 -->
+		<result column="order_type" property="orderType" />
+		<!-- 订单关闭原因 1-超时未支付 2-退款关闭 4-买家取消 15-已通过货到付款交易 -->
+		<result column="close_type" property="closeType" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		order_id,shop_id,prod_name,user_id,order_number,total,actual_total,pay_type,remarks,status,dvy_type,dvy_id,dvy_flow_id,freight_amount,addr_order_id,product_nums,create_time,update_time,pay_time,dvy_time,finally_time,cancel_time,is_payed,delete_status,refund_sts,reduce_amount,order_type,close_type
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.orderId != null ">
+			and order_id = #{query.orderId}
+		</if>
+		<if test="query.shopId != null ">
+			and shop_id = #{query.shopId}
+		</if>
+		<if test="query.prodName != null and query.prodName != ''">
+			and prod_name = #{query.prodName}
+		</if>
+		<if test="query.userId != null and query.userId != ''">
+			and user_id = #{query.userId}
+		</if>
+		<if test="query.orderNumber != null and query.orderNumber != ''">
+			and order_number = #{query.orderNumber}
+		</if>
+		<if test="query.total != null ">
+			and total = #{query.total}
+		</if>
+		<if test="query.actualTotal != null ">
+			and actual_total = #{query.actualTotal}
+		</if>
+		<if test="query.payType != null ">
+			and pay_type = #{query.payType}
+		</if>
+		<if test="query.remarks != null and query.remarks != ''">
+			and remarks = #{query.remarks}
+		</if>
+		<if test="query.status != null ">
+			and status = #{query.status}
+		</if>
+		<if test="query.dvyType != null and query.dvyType != ''">
+			and dvy_type = #{query.dvyType}
+		</if>
+		<if test="query.dvyId != null ">
+			and dvy_id = #{query.dvyId}
+		</if>
+		<if test="query.dvyFlowId != null and query.dvyFlowId != ''">
+			and dvy_flow_id = #{query.dvyFlowId}
+		</if>
+		<if test="query.freightAmount != null ">
+			and freight_amount = #{query.freightAmount}
+		</if>
+		<if test="query.addrOrderId != null ">
+			and addr_order_id = #{query.addrOrderId}
+		</if>
+		<if test="query.productNums != null ">
+			and product_nums = #{query.productNums}
+		</if>
+		<if test="query.createTime != null ">
+			and create_time = #{query.createTime}
+		</if>
+		<if test="query.updateTime != null ">
+			and update_time = #{query.updateTime}
+		</if>
+		<if test="query.payTime != null ">
+			and pay_time = #{query.payTime}
+		</if>
+		<if test="query.dvyTime != null ">
+			and dvy_time = #{query.dvyTime}
+		</if>
+		<if test="query.finallyTime != null ">
+			and finally_time = #{query.finallyTime}
+		</if>
+		<if test="query.cancelTime != null ">
+			and cancel_time = #{query.cancelTime}
+		</if>
+		<if test="query.isPayed != null ">
+			and is_payed = #{query.isPayed}
+		</if>
+		<if test="query.deleteStatus != null ">
+			and delete_status = #{query.deleteStatus}
+		</if>
+		<if test="query.refundSts != null ">
+			and refund_sts = #{query.refundSts}
+		</if>
+		<if test="query.reduceAmount != null ">
+			and reduce_amount = #{query.reduceAmount}
+		</if>
+		<if test="query.orderType != null ">
+			and order_type = #{query.orderType}
+		</if>
+		<if test="query.closeType != null ">
+			and close_type = #{query.closeType}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+		<if test="query.prodNameFuzzy != null and query.prodNameFuzzy != ''">
+			and prodNameFuzzy like concat('%',#{query.prodNameFuzzy}, '%')
+		</if>
+		<if test="query.userIdFuzzy != null and query.userIdFuzzy != ''">
+			and userIdFuzzy like concat('%',#{query.userIdFuzzy}, '%')
+		</if>
+		<if test="query.orderNumberFuzzy != null and query.orderNumberFuzzy != ''">
+			and orderNumberFuzzy like concat('%',#{query.orderNumberFuzzy}, '%')
+		</if>
+		<if test="query.remarksFuzzy != null and query.remarksFuzzy != ''">
+			and remarksFuzzy like concat('%',#{query.remarksFuzzy}, '%')
+		</if>
+		<if test="query.dvyTypeFuzzy != null and query.dvyTypeFuzzy != ''">
+			and dvyTypeFuzzy like concat('%',#{query.dvyTypeFuzzy}, '%')
+		</if>
+		<if test="query.dvyFlowIdFuzzy != null and query.dvyFlowIdFuzzy != ''">
+			and dvyFlowIdFuzzy like concat('%',#{query.dvyFlowIdFuzzy}, '%')
+		</if>
+		<if test="query.createTimeStart != null and query.createTimeStart != ''">
+			<![CDATA[and create_time >= str_to_date(#{createTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.createTimeEnd != null and query.createTimeEnd != ''">
+			<![CDATA[and create_time >= str_to_date(#{createTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.updateTimeStart != null and query.updateTimeStart != ''">
+			<![CDATA[and update_time >= str_to_date(#{updateTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.updateTimeEnd != null and query.updateTimeEnd != ''">
+			<![CDATA[and update_time >= str_to_date(#{updateTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.payTimeStart != null and query.payTimeStart != ''">
+			<![CDATA[and pay_time >= str_to_date(#{payTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.payTimeEnd != null and query.payTimeEnd != ''">
+			<![CDATA[and pay_time >= str_to_date(#{payTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.dvyTimeStart != null and query.dvyTimeStart != ''">
+			<![CDATA[and dvy_time >= str_to_date(#{dvyTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.dvyTimeEnd != null and query.dvyTimeEnd != ''">
+			<![CDATA[and dvy_time >= str_to_date(#{dvyTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.finallyTimeStart != null and query.finallyTimeStart != ''">
+			<![CDATA[and finally_time >= str_to_date(#{finallyTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.finallyTimeEnd != null and query.finallyTimeEnd != ''">
+			<![CDATA[and finally_time >= str_to_date(#{finallyTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.cancelTimeStart != null and query.cancelTimeStart != ''">
+			<![CDATA[and cancel_time >= str_to_date(#{cancelTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.cancelTimeEnd != null and query.cancelTimeEnd != ''">
+			<![CDATA[and cancel_time >= str_to_date(#{cancelTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_order <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_order <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.Order">
+		<selectKey keyProperty="bean.order_id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_order
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.orderId != null">
+				`order_id`,
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id`,
+			</if>
+			<if test="bean.prodName != null">
+				`prod_name`,
+			</if>
+			<if test="bean.userId != null">
+				`user_id`,
+			</if>
+			<if test="bean.orderNumber != null">
+				`order_number`,
+			</if>
+			<if test="bean.total != null">
+				`total`,
+			</if>
+			<if test="bean.actualTotal != null">
+				`actual_total`,
+			</if>
+			<if test="bean.payType != null">
+				`pay_type`,
+			</if>
+			<if test="bean.remarks != null">
+				`remarks`,
+			</if>
+			<if test="bean.status != null">
+				`status`,
+			</if>
+			<if test="bean.dvyType != null">
+				`dvy_type`,
+			</if>
+			<if test="bean.dvyId != null">
+				`dvy_id`,
+			</if>
+			<if test="bean.dvyFlowId != null">
+				`dvy_flow_id`,
+			</if>
+			<if test="bean.freightAmount != null">
+				`freight_amount`,
+			</if>
+			<if test="bean.addrOrderId != null">
+				`addr_order_id`,
+			</if>
+			<if test="bean.productNums != null">
+				`product_nums`,
+			</if>
+			<if test="bean.createTime != null">
+				`create_time`,
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time`,
+			</if>
+			<if test="bean.payTime != null">
+				`pay_time`,
+			</if>
+			<if test="bean.dvyTime != null">
+				`dvy_time`,
+			</if>
+			<if test="bean.finallyTime != null">
+				`finally_time`,
+			</if>
+			<if test="bean.cancelTime != null">
+				`cancel_time`,
+			</if>
+			<if test="bean.isPayed != null">
+				`is_payed`,
+			</if>
+			<if test="bean.deleteStatus != null">
+				`delete_status`,
+			</if>
+			<if test="bean.refundSts != null">
+				`refund_sts`,
+			</if>
+			<if test="bean.reduceAmount != null">
+				`reduce_amount`,
+			</if>
+			<if test="bean.orderType != null">
+				`order_type`,
+			</if>
+			<if test="bean.closeType != null">
+				`close_type`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.orderId != null">
+				#{bean.orderId},
+			</if>
+			<if test="bean.shopId != null">
+				#{bean.shopId},
+			</if>
+			<if test="bean.prodName != null">
+				#{bean.prodName},
+			</if>
+			<if test="bean.userId != null">
+				#{bean.userId},
+			</if>
+			<if test="bean.orderNumber != null">
+				#{bean.orderNumber},
+			</if>
+			<if test="bean.total != null">
+				#{bean.total},
+			</if>
+			<if test="bean.actualTotal != null">
+				#{bean.actualTotal},
+			</if>
+			<if test="bean.payType != null">
+				#{bean.payType},
+			</if>
+			<if test="bean.remarks != null">
+				#{bean.remarks},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+			<if test="bean.dvyType != null">
+				#{bean.dvyType},
+			</if>
+			<if test="bean.dvyId != null">
+				#{bean.dvyId},
+			</if>
+			<if test="bean.dvyFlowId != null">
+				#{bean.dvyFlowId},
+			</if>
+			<if test="bean.freightAmount != null">
+				#{bean.freightAmount},
+			</if>
+			<if test="bean.addrOrderId != null">
+				#{bean.addrOrderId},
+			</if>
+			<if test="bean.productNums != null">
+				#{bean.productNums},
+			</if>
+			<if test="bean.createTime != null">
+				#{bean.createTime},
+			</if>
+			<if test="bean.updateTime != null">
+				#{bean.updateTime},
+			</if>
+			<if test="bean.payTime != null">
+				#{bean.payTime},
+			</if>
+			<if test="bean.dvyTime != null">
+				#{bean.dvyTime},
+			</if>
+			<if test="bean.finallyTime != null">
+				#{bean.finallyTime},
+			</if>
+			<if test="bean.cancelTime != null">
+				#{bean.cancelTime},
+			</if>
+			<if test="bean.isPayed != null">
+				#{bean.isPayed},
+			</if>
+			<if test="bean.deleteStatus != null">
+				#{bean.deleteStatus},
+			</if>
+			<if test="bean.refundSts != null">
+				#{bean.refundSts},
+			</if>
+			<if test="bean.reduceAmount != null">
+				#{bean.reduceAmount},
+			</if>
+			<if test="bean.orderType != null">
+				#{bean.orderType},
+			</if>
+			<if test="bean.closeType != null">
+				#{bean.closeType},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.Order">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.orderId != null">
+				`order_id`,
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id`,
+			</if>
+			<if test="bean.prodName != null">
+				`prod_name`,
+			</if>
+			<if test="bean.userId != null">
+				`user_id`,
+			</if>
+			<if test="bean.orderNumber != null">
+				`order_number`,
+			</if>
+			<if test="bean.total != null">
+				`total`,
+			</if>
+			<if test="bean.actualTotal != null">
+				`actual_total`,
+			</if>
+			<if test="bean.payType != null">
+				`pay_type`,
+			</if>
+			<if test="bean.remarks != null">
+				`remarks`,
+			</if>
+			<if test="bean.status != null">
+				`status`,
+			</if>
+			<if test="bean.dvyType != null">
+				`dvy_type`,
+			</if>
+			<if test="bean.dvyId != null">
+				`dvy_id`,
+			</if>
+			<if test="bean.dvyFlowId != null">
+				`dvy_flow_id`,
+			</if>
+			<if test="bean.freightAmount != null">
+				`freight_amount`,
+			</if>
+			<if test="bean.addrOrderId != null">
+				`addr_order_id`,
+			</if>
+			<if test="bean.productNums != null">
+				`product_nums`,
+			</if>
+			<if test="bean.createTime != null">
+				`create_time`,
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time`,
+			</if>
+			<if test="bean.payTime != null">
+				`pay_time`,
+			</if>
+			<if test="bean.dvyTime != null">
+				`dvy_time`,
+			</if>
+			<if test="bean.finallyTime != null">
+				`finally_time`,
+			</if>
+			<if test="bean.cancelTime != null">
+				`cancel_time`,
+			</if>
+			<if test="bean.isPayed != null">
+				`is_payed`,
+			</if>
+			<if test="bean.deleteStatus != null">
+				`delete_status`,
+			</if>
+			<if test="bean.refundSts != null">
+				`refund_sts`,
+			</if>
+			<if test="bean.reduceAmount != null">
+				`reduce_amount`,
+			</if>
+			<if test="bean.orderType != null">
+				`order_type`,
+			</if>
+			<if test="bean.closeType != null">
+				`close_type`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.orderId != null">
+				#{bean.orderId},
+			</if>
+			<if test="bean.shopId != null">
+				#{bean.shopId},
+			</if>
+			<if test="bean.prodName != null">
+				#{bean.prodName},
+			</if>
+			<if test="bean.userId != null">
+				#{bean.userId},
+			</if>
+			<if test="bean.orderNumber != null">
+				#{bean.orderNumber},
+			</if>
+			<if test="bean.total != null">
+				#{bean.total},
+			</if>
+			<if test="bean.actualTotal != null">
+				#{bean.actualTotal},
+			</if>
+			<if test="bean.payType != null">
+				#{bean.payType},
+			</if>
+			<if test="bean.remarks != null">
+				#{bean.remarks},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+			<if test="bean.dvyType != null">
+				#{bean.dvyType},
+			</if>
+			<if test="bean.dvyId != null">
+				#{bean.dvyId},
+			</if>
+			<if test="bean.dvyFlowId != null">
+				#{bean.dvyFlowId},
+			</if>
+			<if test="bean.freightAmount != null">
+				#{bean.freightAmount},
+			</if>
+			<if test="bean.addrOrderId != null">
+				#{bean.addrOrderId},
+			</if>
+			<if test="bean.productNums != null">
+				#{bean.productNums},
+			</if>
+			<if test="bean.createTime != null">
+				#{bean.createTime},
+			</if>
+			<if test="bean.updateTime != null">
+				#{bean.updateTime},
+			</if>
+			<if test="bean.payTime != null">
+				#{bean.payTime},
+			</if>
+			<if test="bean.dvyTime != null">
+				#{bean.dvyTime},
+			</if>
+			<if test="bean.finallyTime != null">
+				#{bean.finallyTime},
+			</if>
+			<if test="bean.cancelTime != null">
+				#{bean.cancelTime},
+			</if>
+			<if test="bean.isPayed != null">
+				#{bean.isPayed},
+			</if>
+			<if test="bean.deleteStatus != null">
+				#{bean.deleteStatus},
+			</if>
+			<if test="bean.refundSts != null">
+				#{bean.refundSts},
+			</if>
+			<if test="bean.reduceAmount != null">
+				#{bean.reduceAmount},
+			</if>
+			<if test="bean.orderType != null">
+				#{bean.orderType},
+			</if>
+			<if test="bean.closeType != null">
+				#{bean.closeType},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.shopId != null">
+				`shop_id` = VALUES(`shop_id`),
+			</if>
+			<if test="bean.prodName != null">
+				`prod_name` = VALUES(`prod_name`),
+			</if>
+			<if test="bean.total != null">
+				`total` = VALUES(`total`),
+			</if>
+			<if test="bean.actualTotal != null">
+				`actual_total` = VALUES(`actual_total`),
+			</if>
+			<if test="bean.payType != null">
+				`pay_type` = VALUES(`pay_type`),
+			</if>
+			<if test="bean.remarks != null">
+				`remarks` = VALUES(`remarks`),
+			</if>
+			<if test="bean.status != null">
+				`status` = VALUES(`status`),
+			</if>
+			<if test="bean.dvyType != null">
+				`dvy_type` = VALUES(`dvy_type`),
+			</if>
+			<if test="bean.dvyId != null">
+				`dvy_id` = VALUES(`dvy_id`),
+			</if>
+			<if test="bean.dvyFlowId != null">
+				`dvy_flow_id` = VALUES(`dvy_flow_id`),
+			</if>
+			<if test="bean.freightAmount != null">
+				`freight_amount` = VALUES(`freight_amount`),
+			</if>
+			<if test="bean.addrOrderId != null">
+				`addr_order_id` = VALUES(`addr_order_id`),
+			</if>
+			<if test="bean.productNums != null">
+				`product_nums` = VALUES(`product_nums`),
+			</if>
+			<if test="bean.createTime != null">
+				`create_time` = VALUES(`create_time`),
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time` = VALUES(`update_time`),
+			</if>
+			<if test="bean.payTime != null">
+				`pay_time` = VALUES(`pay_time`),
+			</if>
+			<if test="bean.dvyTime != null">
+				`dvy_time` = VALUES(`dvy_time`),
+			</if>
+			<if test="bean.finallyTime != null">
+				`finally_time` = VALUES(`finally_time`),
+			</if>
+			<if test="bean.cancelTime != null">
+				`cancel_time` = VALUES(`cancel_time`),
+			</if>
+			<if test="bean.isPayed != null">
+				`is_payed` = VALUES(`is_payed`),
+			</if>
+			<if test="bean.deleteStatus != null">
+				`delete_status` = VALUES(`delete_status`),
+			</if>
+			<if test="bean.refundSts != null">
+				`refund_sts` = VALUES(`refund_sts`),
+			</if>
+			<if test="bean.reduceAmount != null">
+				`reduce_amount` = VALUES(`reduce_amount`),
+			</if>
+			<if test="bean.orderType != null">
+				`order_type` = VALUES(`order_type`),
+			</if>
+			<if test="bean.closeType != null">
+				`close_type` = VALUES(`close_type`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.Order">
+		INSERT INTO tz_order (`shop_id`,`prod_name`,`user_id`,`order_number`,`total`,`actual_total`,`pay_type`,`remarks`,`status`,`dvy_type`,`dvy_id`,`dvy_flow_id`,`freight_amount`,`addr_order_id`,`product_nums`,`create_time`,`update_time`,`pay_time`,`dvy_time`,`finally_time`,`cancel_time`,`is_payed`,`delete_status`,`refund_sts`,`reduce_amount`,`order_type`,`close_type`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.shopId},#{bean.prodName},#{bean.userId},#{bean.orderNumber},#{bean.total},#{bean.actualTotal},#{bean.payType},#{bean.remarks},#{bean.status},#{bean.dvyType},#{bean.dvyId},#{bean.dvyFlowId},#{bean.freightAmount},#{bean.addrOrderId},#{bean.productNums},#{bean.createTime},#{bean.updateTime},#{bean.payTime},#{bean.dvyTime},#{bean.finallyTime},#{bean.cancelTime},#{bean.isPayed},#{bean.deleteStatus},#{bean.refundSts},#{bean.reduceAmount},#{bean.orderType},#{bean.closeType})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.Order">
+		INSERT INTO tz_order (`shop_id`,`prod_name`,`user_id`,`order_number`,`total`,`actual_total`,`pay_type`,`remarks`,`status`,`dvy_type`,`dvy_id`,`dvy_flow_id`,`freight_amount`,`addr_order_id`,`product_nums`,`create_time`,`update_time`,`pay_time`,`dvy_time`,`finally_time`,`cancel_time`,`is_payed`,`delete_status`,`refund_sts`,`reduce_amount`,`order_type`,`close_type`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.shopId},#{bean.prodName},#{bean.userId},#{bean.orderNumber},#{bean.total},#{bean.actualTotal},#{bean.payType},#{bean.remarks},#{bean.status},#{bean.dvyType},#{bean.dvyId},#{bean.dvyFlowId},#{bean.freightAmount},#{bean.addrOrderId},#{bean.productNums},#{bean.createTime},#{bean.updateTime},#{bean.payTime},#{bean.dvyTime},#{bean.finallyTime},#{bean.cancelTime},#{bean.isPayed},#{bean.deleteStatus},#{bean.refundSts},#{bean.reduceAmount},#{bean.orderType},#{bean.closeType})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `order_id`=VALUES(`order_id`), `shop_id`=VALUES(`shop_id`), `prod_name`=VALUES(`prod_name`), `user_id`=VALUES(`user_id`), `order_number`=VALUES(`order_number`), `total`=VALUES(`total`), `actual_total`=VALUES(`actual_total`), `pay_type`=VALUES(`pay_type`), `remarks`=VALUES(`remarks`), `status`=VALUES(`status`), `dvy_type`=VALUES(`dvy_type`), `dvy_id`=VALUES(`dvy_id`), `dvy_flow_id`=VALUES(`dvy_flow_id`), `freight_amount`=VALUES(`freight_amount`), `addr_order_id`=VALUES(`addr_order_id`), `product_nums`=VALUES(`product_nums`), `create_time`=VALUES(`create_time`), `update_time`=VALUES(`update_time`), `pay_time`=VALUES(`pay_time`), `dvy_time`=VALUES(`dvy_time`), `finally_time`=VALUES(`finally_time`), `cancel_time`=VALUES(`cancel_time`), `is_payed`=VALUES(`is_payed`), `delete_status`=VALUES(`delete_status`), `refund_sts`=VALUES(`refund_sts`), `reduce_amount`=VALUES(`reduce_amount`), `order_type`=VALUES(`order_type`), `close_type`=VALUES(`close_type`)
+	</insert>
+
+	<!-- "根据"OrderId"查询" -->
+	<select id="selectByOrderId" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_order` WHERE order_id=#{orderId};
+	</select>
+
+	<!-- "根据"OrderId"删除" -->
+	<delete id="deleteByOrderId">
+		DELETE FROM `tz_order` WHERE order_id=#{orderId};
+	</delete>
+
+	<!-- "根据"OrderId"更新" -->
+	<update id="updateByOrderId" parameterType="com.mall.entity.po.Order">
+		UPDATE `tz_order`
+		<set>
+			<if test="bean.orderId != null">
+				`order_id` = #{bean.orderId}, 
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id` = #{bean.shopId}, 
+			</if>
+			<if test="bean.prodName != null">
+				`prod_name` = #{bean.prodName}, 
+			</if>
+			<if test="bean.userId != null">
+				`user_id` = #{bean.userId}, 
+			</if>
+			<if test="bean.orderNumber != null">
+				`order_number` = #{bean.orderNumber}, 
+			</if>
+			<if test="bean.total != null">
+				`total` = #{bean.total}, 
+			</if>
+			<if test="bean.actualTotal != null">
+				`actual_total` = #{bean.actualTotal}, 
+			</if>
+			<if test="bean.payType != null">
+				`pay_type` = #{bean.payType}, 
+			</if>
+			<if test="bean.remarks != null">
+				`remarks` = #{bean.remarks}, 
+			</if>
+			<if test="bean.status != null">
+				`status` = #{bean.status}, 
+			</if>
+			<if test="bean.dvyType != null">
+				`dvy_type` = #{bean.dvyType}, 
+			</if>
+			<if test="bean.dvyId != null">
+				`dvy_id` = #{bean.dvyId}, 
+			</if>
+			<if test="bean.dvyFlowId != null">
+				`dvy_flow_id` = #{bean.dvyFlowId}, 
+			</if>
+			<if test="bean.freightAmount != null">
+				`freight_amount` = #{bean.freightAmount}, 
+			</if>
+			<if test="bean.addrOrderId != null">
+				`addr_order_id` = #{bean.addrOrderId}, 
+			</if>
+			<if test="bean.productNums != null">
+				`product_nums` = #{bean.productNums}, 
+			</if>
+			<if test="bean.createTime != null">
+				`create_time` = #{bean.createTime}, 
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time` = #{bean.updateTime}, 
+			</if>
+			<if test="bean.payTime != null">
+				`pay_time` = #{bean.payTime}, 
+			</if>
+			<if test="bean.dvyTime != null">
+				`dvy_time` = #{bean.dvyTime}, 
+			</if>
+			<if test="bean.finallyTime != null">
+				`finally_time` = #{bean.finallyTime}, 
+			</if>
+			<if test="bean.cancelTime != null">
+				`cancel_time` = #{bean.cancelTime}, 
+			</if>
+			<if test="bean.isPayed != null">
+				`is_payed` = #{bean.isPayed}, 
+			</if>
+			<if test="bean.deleteStatus != null">
+				`delete_status` = #{bean.deleteStatus}, 
+			</if>
+			<if test="bean.refundSts != null">
+				`refund_sts` = #{bean.refundSts}, 
+			</if>
+			<if test="bean.reduceAmount != null">
+				`reduce_amount` = #{bean.reduceAmount}, 
+			</if>
+			<if test="bean.orderType != null">
+				`order_type` = #{bean.orderType}, 
+			</if>
+			<if test="bean.closeType != null">
+				`close_type` = #{bean.closeType}, 
+			</if>
+		</set>
+		WHERE order_id=#{orderId};
+	</update>
+
+	<!-- "根据"OrderNumber"查询" -->
+	<select id="selectByOrderNumber" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_order` WHERE order_number=#{orderNumber};
+	</select>
+
+	<!-- "根据"OrderNumber"删除" -->
+	<delete id="deleteByOrderNumber">
+		DELETE FROM `tz_order` WHERE order_number=#{orderNumber};
+	</delete>
+
+	<!-- "根据"OrderNumber"更新" -->
+	<update id="updateByOrderNumber" parameterType="com.mall.entity.po.Order">
+		UPDATE `tz_order`
+		<set>
+			<if test="bean.orderId != null">
+				`order_id` = #{bean.orderId}, 
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id` = #{bean.shopId}, 
+			</if>
+			<if test="bean.prodName != null">
+				`prod_name` = #{bean.prodName}, 
+			</if>
+			<if test="bean.userId != null">
+				`user_id` = #{bean.userId}, 
+			</if>
+			<if test="bean.orderNumber != null">
+				`order_number` = #{bean.orderNumber}, 
+			</if>
+			<if test="bean.total != null">
+				`total` = #{bean.total}, 
+			</if>
+			<if test="bean.actualTotal != null">
+				`actual_total` = #{bean.actualTotal}, 
+			</if>
+			<if test="bean.payType != null">
+				`pay_type` = #{bean.payType}, 
+			</if>
+			<if test="bean.remarks != null">
+				`remarks` = #{bean.remarks}, 
+			</if>
+			<if test="bean.status != null">
+				`status` = #{bean.status}, 
+			</if>
+			<if test="bean.dvyType != null">
+				`dvy_type` = #{bean.dvyType}, 
+			</if>
+			<if test="bean.dvyId != null">
+				`dvy_id` = #{bean.dvyId}, 
+			</if>
+			<if test="bean.dvyFlowId != null">
+				`dvy_flow_id` = #{bean.dvyFlowId}, 
+			</if>
+			<if test="bean.freightAmount != null">
+				`freight_amount` = #{bean.freightAmount}, 
+			</if>
+			<if test="bean.addrOrderId != null">
+				`addr_order_id` = #{bean.addrOrderId}, 
+			</if>
+			<if test="bean.productNums != null">
+				`product_nums` = #{bean.productNums}, 
+			</if>
+			<if test="bean.createTime != null">
+				`create_time` = #{bean.createTime}, 
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time` = #{bean.updateTime}, 
+			</if>
+			<if test="bean.payTime != null">
+				`pay_time` = #{bean.payTime}, 
+			</if>
+			<if test="bean.dvyTime != null">
+				`dvy_time` = #{bean.dvyTime}, 
+			</if>
+			<if test="bean.finallyTime != null">
+				`finally_time` = #{bean.finallyTime}, 
+			</if>
+			<if test="bean.cancelTime != null">
+				`cancel_time` = #{bean.cancelTime}, 
+			</if>
+			<if test="bean.isPayed != null">
+				`is_payed` = #{bean.isPayed}, 
+			</if>
+			<if test="bean.deleteStatus != null">
+				`delete_status` = #{bean.deleteStatus}, 
+			</if>
+			<if test="bean.refundSts != null">
+				`refund_sts` = #{bean.refundSts}, 
+			</if>
+			<if test="bean.reduceAmount != null">
+				`reduce_amount` = #{bean.reduceAmount}, 
+			</if>
+			<if test="bean.orderType != null">
+				`order_type` = #{bean.orderType}, 
+			</if>
+			<if test="bean.closeType != null">
+				`close_type` = #{bean.closeType}, 
+			</if>
+		</set>
+		WHERE order_number=#{orderNumber};
+	</update>
+
+	<!-- "根据"UserIdAndOrderNumber"查询" -->
+	<select id="selectByUserIdAndOrderNumber" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_order` WHERE user_id=#{userId} AND order_number=#{orderNumber};
+	</select>
+
+	<!-- "根据"UserIdAndOrderNumber"删除" -->
+	<delete id="deleteByUserIdAndOrderNumber">
+		DELETE FROM `tz_order` WHERE user_id=#{userId} AND order_number=#{orderNumber};
+	</delete>
+
+	<!-- "根据"UserIdAndOrderNumber"更新" -->
+	<update id="updateByUserIdAndOrderNumber" parameterType="com.mall.entity.po.Order">
+		UPDATE `tz_order`
+		<set>
+			<if test="bean.orderId != null">
+				`order_id` = #{bean.orderId}, 
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id` = #{bean.shopId}, 
+			</if>
+			<if test="bean.prodName != null">
+				`prod_name` = #{bean.prodName}, 
+			</if>
+			<if test="bean.userId != null">
+				`user_id` = #{bean.userId}, 
+			</if>
+			<if test="bean.orderNumber != null">
+				`order_number` = #{bean.orderNumber}, 
+			</if>
+			<if test="bean.total != null">
+				`total` = #{bean.total}, 
+			</if>
+			<if test="bean.actualTotal != null">
+				`actual_total` = #{bean.actualTotal}, 
+			</if>
+			<if test="bean.payType != null">
+				`pay_type` = #{bean.payType}, 
+			</if>
+			<if test="bean.remarks != null">
+				`remarks` = #{bean.remarks}, 
+			</if>
+			<if test="bean.status != null">
+				`status` = #{bean.status}, 
+			</if>
+			<if test="bean.dvyType != null">
+				`dvy_type` = #{bean.dvyType}, 
+			</if>
+			<if test="bean.dvyId != null">
+				`dvy_id` = #{bean.dvyId}, 
+			</if>
+			<if test="bean.dvyFlowId != null">
+				`dvy_flow_id` = #{bean.dvyFlowId}, 
+			</if>
+			<if test="bean.freightAmount != null">
+				`freight_amount` = #{bean.freightAmount}, 
+			</if>
+			<if test="bean.addrOrderId != null">
+				`addr_order_id` = #{bean.addrOrderId}, 
+			</if>
+			<if test="bean.productNums != null">
+				`product_nums` = #{bean.productNums}, 
+			</if>
+			<if test="bean.createTime != null">
+				`create_time` = #{bean.createTime}, 
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time` = #{bean.updateTime}, 
+			</if>
+			<if test="bean.payTime != null">
+				`pay_time` = #{bean.payTime}, 
+			</if>
+			<if test="bean.dvyTime != null">
+				`dvy_time` = #{bean.dvyTime}, 
+			</if>
+			<if test="bean.finallyTime != null">
+				`finally_time` = #{bean.finallyTime}, 
+			</if>
+			<if test="bean.cancelTime != null">
+				`cancel_time` = #{bean.cancelTime}, 
+			</if>
+			<if test="bean.isPayed != null">
+				`is_payed` = #{bean.isPayed}, 
+			</if>
+			<if test="bean.deleteStatus != null">
+				`delete_status` = #{bean.deleteStatus}, 
+			</if>
+			<if test="bean.refundSts != null">
+				`refund_sts` = #{bean.refundSts}, 
+			</if>
+			<if test="bean.reduceAmount != null">
+				`reduce_amount` = #{bean.reduceAmount}, 
+			</if>
+			<if test="bean.orderType != null">
+				`order_type` = #{bean.orderType}, 
+			</if>
+			<if test="bean.closeType != null">
+				`close_type` = #{bean.closeType}, 
+			</if>
+		</set>
+		WHERE user_id=#{userId} AND order_number=#{orderNumber};
+	</update>
+
+</mapper>

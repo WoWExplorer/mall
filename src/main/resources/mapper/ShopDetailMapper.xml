@@ -1,0 +1,976 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.ShopDetailMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.ShopDetail">
+		<!-- 店铺id -->
+		<result column="shop_id" property="shopId" />
+		<!-- 店铺名称(数字、中文，英文(可混合，不可有特殊字符)，可修改)、不唯一 -->
+		<result column="shop_name" property="shopName" />
+		<!-- 店长用户id -->
+		<result column="user_id" property="userId" />
+		<!-- 店铺类型 -->
+		<result column="shop_type" property="shopType" />
+		<!-- 店铺简介(可修改) -->
+		<result column="intro" property="intro" />
+		<!-- 店铺公告(可修改) -->
+		<result column="shop_notice" property="shopNotice" />
+		<!-- 店铺行业(餐饮、生鲜果蔬、鲜花等) -->
+		<result column="shop_industry" property="shopIndustry" />
+		<!-- 店长 -->
+		<result column="shop_owner" property="shopOwner" />
+		<!-- 店铺绑定的手机(登录账号：唯一) -->
+		<result column="mobile" property="mobile" />
+		<!-- 店铺联系电话 -->
+		<result column="tel" property="tel" />
+		<!-- 店铺所在纬度(可修改) -->
+		<result column="shop_lat" property="shopLat" />
+		<!-- 店铺所在经度(可修改) -->
+		<result column="shop_lng" property="shopLng" />
+		<!-- 店铺详细地址 -->
+		<result column="shop_address" property="shopAddress" />
+		<!-- 店铺所在省份（描述） -->
+		<result column="province" property="province" />
+		<!-- 店铺所在城市（描述） -->
+		<result column="city" property="city" />
+		<!-- 店铺所在区域（描述） -->
+		<result column="area" property="area" />
+		<!-- 店铺省市区代码，用于回显 -->
+		<result column="pca_code" property="pcaCode" />
+		<!-- 店铺logo(可修改) -->
+		<result column="shop_logo" property="shopLogo" />
+		<!-- 店铺相册 -->
+		<result column="shop_photos" property="shopPhotos" />
+		<!-- 每天营业时间段(可修改) -->
+		<result column="open_time" property="openTime" />
+		<!-- 店铺状态(-1:未开通 0: 停业中 1:营业中)，可修改 -->
+		<result column="shop_status" property="shopStatus" />
+		<!-- 0:商家承担运费; 1:买家承担运费 -->
+		<result column="transport_type" property="transportType" />
+		<!-- 固定运费 -->
+		<result column="fixed_freight" property="fixedFreight" />
+		<!-- 满X包邮 -->
+		<result column="full_free_shipping" property="fullFreeShipping" />
+		<!-- 创建时间 -->
+		<result column="create_time" property="createTime" />
+		<!-- 更新时间 -->
+		<result column="update_time" property="updateTime" />
+		<!-- 分销开关(0:开启 1:关闭) -->
+		<result column="is_distribution" property="isDistribution" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		shop_id,shop_name,user_id,shop_type,intro,shop_notice,shop_industry,shop_owner,mobile,tel,shop_lat,shop_lng,shop_address,province,city,area,pca_code,shop_logo,shop_photos,open_time,shop_status,transport_type,fixed_freight,full_free_shipping,create_time,update_time,is_distribution
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.shopId != null ">
+			and shop_id = #{query.shopId}
+		</if>
+		<if test="query.shopName != null and query.shopName != ''">
+			and shop_name = #{query.shopName}
+		</if>
+		<if test="query.userId != null and query.userId != ''">
+			and user_id = #{query.userId}
+		</if>
+		<if test="query.shopType != null ">
+			and shop_type = #{query.shopType}
+		</if>
+		<if test="query.intro != null and query.intro != ''">
+			and intro = #{query.intro}
+		</if>
+		<if test="query.shopNotice != null and query.shopNotice != ''">
+			and shop_notice = #{query.shopNotice}
+		</if>
+		<if test="query.shopIndustry != null ">
+			and shop_industry = #{query.shopIndustry}
+		</if>
+		<if test="query.shopOwner != null and query.shopOwner != ''">
+			and shop_owner = #{query.shopOwner}
+		</if>
+		<if test="query.mobile != null and query.mobile != ''">
+			and mobile = #{query.mobile}
+		</if>
+		<if test="query.tel != null and query.tel != ''">
+			and tel = #{query.tel}
+		</if>
+		<if test="query.shopLat != null and query.shopLat != ''">
+			and shop_lat = #{query.shopLat}
+		</if>
+		<if test="query.shopLng != null and query.shopLng != ''">
+			and shop_lng = #{query.shopLng}
+		</if>
+		<if test="query.shopAddress != null and query.shopAddress != ''">
+			and shop_address = #{query.shopAddress}
+		</if>
+		<if test="query.province != null and query.province != ''">
+			and province = #{query.province}
+		</if>
+		<if test="query.city != null and query.city != ''">
+			and city = #{query.city}
+		</if>
+		<if test="query.area != null and query.area != ''">
+			and area = #{query.area}
+		</if>
+		<if test="query.pcaCode != null and query.pcaCode != ''">
+			and pca_code = #{query.pcaCode}
+		</if>
+		<if test="query.shopLogo != null and query.shopLogo != ''">
+			and shop_logo = #{query.shopLogo}
+		</if>
+		<if test="query.shopPhotos != null and query.shopPhotos != ''">
+			and shop_photos = #{query.shopPhotos}
+		</if>
+		<if test="query.openTime != null and query.openTime != ''">
+			and open_time = #{query.openTime}
+		</if>
+		<if test="query.shopStatus != null ">
+			and shop_status = #{query.shopStatus}
+		</if>
+		<if test="query.transportType != null ">
+			and transport_type = #{query.transportType}
+		</if>
+		<if test="query.fixedFreight != null ">
+			and fixed_freight = #{query.fixedFreight}
+		</if>
+		<if test="query.fullFreeShipping != null ">
+			and full_free_shipping = #{query.fullFreeShipping}
+		</if>
+		<if test="query.createTime != null ">
+			and create_time = #{query.createTime}
+		</if>
+		<if test="query.updateTime != null ">
+			and update_time = #{query.updateTime}
+		</if>
+		<if test="query.isDistribution != null ">
+			and is_distribution = #{query.isDistribution}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+		<if test="query.shopNameFuzzy != null and query.shopNameFuzzy != ''">
+			and shopNameFuzzy like concat('%',#{query.shopNameFuzzy}, '%')
+		</if>
+		<if test="query.userIdFuzzy != null and query.userIdFuzzy != ''">
+			and userIdFuzzy like concat('%',#{query.userIdFuzzy}, '%')
+		</if>
+		<if test="query.introFuzzy != null and query.introFuzzy != ''">
+			and introFuzzy like concat('%',#{query.introFuzzy}, '%')
+		</if>
+		<if test="query.shopNoticeFuzzy != null and query.shopNoticeFuzzy != ''">
+			and shopNoticeFuzzy like concat('%',#{query.shopNoticeFuzzy}, '%')
+		</if>
+		<if test="query.shopOwnerFuzzy != null and query.shopOwnerFuzzy != ''">
+			and shopOwnerFuzzy like concat('%',#{query.shopOwnerFuzzy}, '%')
+		</if>
+		<if test="query.mobileFuzzy != null and query.mobileFuzzy != ''">
+			and mobileFuzzy like concat('%',#{query.mobileFuzzy}, '%')
+		</if>
+		<if test="query.telFuzzy != null and query.telFuzzy != ''">
+			and telFuzzy like concat('%',#{query.telFuzzy}, '%')
+		</if>
+		<if test="query.shopLatFuzzy != null and query.shopLatFuzzy != ''">
+			and shopLatFuzzy like concat('%',#{query.shopLatFuzzy}, '%')
+		</if>
+		<if test="query.shopLngFuzzy != null and query.shopLngFuzzy != ''">
+			and shopLngFuzzy like concat('%',#{query.shopLngFuzzy}, '%')
+		</if>
+		<if test="query.shopAddressFuzzy != null and query.shopAddressFuzzy != ''">
+			and shopAddressFuzzy like concat('%',#{query.shopAddressFuzzy}, '%')
+		</if>
+		<if test="query.provinceFuzzy != null and query.provinceFuzzy != ''">
+			and provinceFuzzy like concat('%',#{query.provinceFuzzy}, '%')
+		</if>
+		<if test="query.cityFuzzy != null and query.cityFuzzy != ''">
+			and cityFuzzy like concat('%',#{query.cityFuzzy}, '%')
+		</if>
+		<if test="query.areaFuzzy != null and query.areaFuzzy != ''">
+			and areaFuzzy like concat('%',#{query.areaFuzzy}, '%')
+		</if>
+		<if test="query.pcaCodeFuzzy != null and query.pcaCodeFuzzy != ''">
+			and pcaCodeFuzzy like concat('%',#{query.pcaCodeFuzzy}, '%')
+		</if>
+		<if test="query.shopLogoFuzzy != null and query.shopLogoFuzzy != ''">
+			and shopLogoFuzzy like concat('%',#{query.shopLogoFuzzy}, '%')
+		</if>
+		<if test="query.shopPhotosFuzzy != null and query.shopPhotosFuzzy != ''">
+			and shopPhotosFuzzy like concat('%',#{query.shopPhotosFuzzy}, '%')
+		</if>
+		<if test="query.openTimeFuzzy != null and query.openTimeFuzzy != ''">
+			and openTimeFuzzy like concat('%',#{query.openTimeFuzzy}, '%')
+		</if>
+		<if test="query.createTimeStart != null and query.createTimeStart != ''">
+			<![CDATA[and create_time >= str_to_date(#{createTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.createTimeEnd != null and query.createTimeEnd != ''">
+			<![CDATA[and create_time >= str_to_date(#{createTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.updateTimeStart != null and query.updateTimeStart != ''">
+			<![CDATA[and update_time >= str_to_date(#{updateTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.updateTimeEnd != null and query.updateTimeEnd != ''">
+			<![CDATA[and update_time >= str_to_date(#{updateTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_shop_detail <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_shop_detail <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.ShopDetail">
+		<selectKey keyProperty="bean.shop_id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_shop_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.shopId != null">
+				`shop_id`,
+			</if>
+			<if test="bean.shopName != null">
+				`shop_name`,
+			</if>
+			<if test="bean.userId != null">
+				`user_id`,
+			</if>
+			<if test="bean.shopType != null">
+				`shop_type`,
+			</if>
+			<if test="bean.intro != null">
+				`intro`,
+			</if>
+			<if test="bean.shopNotice != null">
+				`shop_notice`,
+			</if>
+			<if test="bean.shopIndustry != null">
+				`shop_industry`,
+			</if>
+			<if test="bean.shopOwner != null">
+				`shop_owner`,
+			</if>
+			<if test="bean.mobile != null">
+				`mobile`,
+			</if>
+			<if test="bean.tel != null">
+				`tel`,
+			</if>
+			<if test="bean.shopLat != null">
+				`shop_lat`,
+			</if>
+			<if test="bean.shopLng != null">
+				`shop_lng`,
+			</if>
+			<if test="bean.shopAddress != null">
+				`shop_address`,
+			</if>
+			<if test="bean.province != null">
+				`province`,
+			</if>
+			<if test="bean.city != null">
+				`city`,
+			</if>
+			<if test="bean.area != null">
+				`area`,
+			</if>
+			<if test="bean.pcaCode != null">
+				`pca_code`,
+			</if>
+			<if test="bean.shopLogo != null">
+				`shop_logo`,
+			</if>
+			<if test="bean.shopPhotos != null">
+				`shop_photos`,
+			</if>
+			<if test="bean.openTime != null">
+				`open_time`,
+			</if>
+			<if test="bean.shopStatus != null">
+				`shop_status`,
+			</if>
+			<if test="bean.transportType != null">
+				`transport_type`,
+			</if>
+			<if test="bean.fixedFreight != null">
+				`fixed_freight`,
+			</if>
+			<if test="bean.fullFreeShipping != null">
+				`full_free_shipping`,
+			</if>
+			<if test="bean.createTime != null">
+				`create_time`,
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time`,
+			</if>
+			<if test="bean.isDistribution != null">
+				`is_distribution`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.shopId != null">
+				#{bean.shopId},
+			</if>
+			<if test="bean.shopName != null">
+				#{bean.shopName},
+			</if>
+			<if test="bean.userId != null">
+				#{bean.userId},
+			</if>
+			<if test="bean.shopType != null">
+				#{bean.shopType},
+			</if>
+			<if test="bean.intro != null">
+				#{bean.intro},
+			</if>
+			<if test="bean.shopNotice != null">
+				#{bean.shopNotice},
+			</if>
+			<if test="bean.shopIndustry != null">
+				#{bean.shopIndustry},
+			</if>
+			<if test="bean.shopOwner != null">
+				#{bean.shopOwner},
+			</if>
+			<if test="bean.mobile != null">
+				#{bean.mobile},
+			</if>
+			<if test="bean.tel != null">
+				#{bean.tel},
+			</if>
+			<if test="bean.shopLat != null">
+				#{bean.shopLat},
+			</if>
+			<if test="bean.shopLng != null">
+				#{bean.shopLng},
+			</if>
+			<if test="bean.shopAddress != null">
+				#{bean.shopAddress},
+			</if>
+			<if test="bean.province != null">
+				#{bean.province},
+			</if>
+			<if test="bean.city != null">
+				#{bean.city},
+			</if>
+			<if test="bean.area != null">
+				#{bean.area},
+			</if>
+			<if test="bean.pcaCode != null">
+				#{bean.pcaCode},
+			</if>
+			<if test="bean.shopLogo != null">
+				#{bean.shopLogo},
+			</if>
+			<if test="bean.shopPhotos != null">
+				#{bean.shopPhotos},
+			</if>
+			<if test="bean.openTime != null">
+				#{bean.openTime},
+			</if>
+			<if test="bean.shopStatus != null">
+				#{bean.shopStatus},
+			</if>
+			<if test="bean.transportType != null">
+				#{bean.transportType},
+			</if>
+			<if test="bean.fixedFreight != null">
+				#{bean.fixedFreight},
+			</if>
+			<if test="bean.fullFreeShipping != null">
+				#{bean.fullFreeShipping},
+			</if>
+			<if test="bean.createTime != null">
+				#{bean.createTime},
+			</if>
+			<if test="bean.updateTime != null">
+				#{bean.updateTime},
+			</if>
+			<if test="bean.isDistribution != null">
+				#{bean.isDistribution},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.ShopDetail">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.shopId != null">
+				`shop_id`,
+			</if>
+			<if test="bean.shopName != null">
+				`shop_name`,
+			</if>
+			<if test="bean.userId != null">
+				`user_id`,
+			</if>
+			<if test="bean.shopType != null">
+				`shop_type`,
+			</if>
+			<if test="bean.intro != null">
+				`intro`,
+			</if>
+			<if test="bean.shopNotice != null">
+				`shop_notice`,
+			</if>
+			<if test="bean.shopIndustry != null">
+				`shop_industry`,
+			</if>
+			<if test="bean.shopOwner != null">
+				`shop_owner`,
+			</if>
+			<if test="bean.mobile != null">
+				`mobile`,
+			</if>
+			<if test="bean.tel != null">
+				`tel`,
+			</if>
+			<if test="bean.shopLat != null">
+				`shop_lat`,
+			</if>
+			<if test="bean.shopLng != null">
+				`shop_lng`,
+			</if>
+			<if test="bean.shopAddress != null">
+				`shop_address`,
+			</if>
+			<if test="bean.province != null">
+				`province`,
+			</if>
+			<if test="bean.city != null">
+				`city`,
+			</if>
+			<if test="bean.area != null">
+				`area`,
+			</if>
+			<if test="bean.pcaCode != null">
+				`pca_code`,
+			</if>
+			<if test="bean.shopLogo != null">
+				`shop_logo`,
+			</if>
+			<if test="bean.shopPhotos != null">
+				`shop_photos`,
+			</if>
+			<if test="bean.openTime != null">
+				`open_time`,
+			</if>
+			<if test="bean.shopStatus != null">
+				`shop_status`,
+			</if>
+			<if test="bean.transportType != null">
+				`transport_type`,
+			</if>
+			<if test="bean.fixedFreight != null">
+				`fixed_freight`,
+			</if>
+			<if test="bean.fullFreeShipping != null">
+				`full_free_shipping`,
+			</if>
+			<if test="bean.createTime != null">
+				`create_time`,
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time`,
+			</if>
+			<if test="bean.isDistribution != null">
+				`is_distribution`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.shopId != null">
+				#{bean.shopId},
+			</if>
+			<if test="bean.shopName != null">
+				#{bean.shopName},
+			</if>
+			<if test="bean.userId != null">
+				#{bean.userId},
+			</if>
+			<if test="bean.shopType != null">
+				#{bean.shopType},
+			</if>
+			<if test="bean.intro != null">
+				#{bean.intro},
+			</if>
+			<if test="bean.shopNotice != null">
+				#{bean.shopNotice},
+			</if>
+			<if test="bean.shopIndustry != null">
+				#{bean.shopIndustry},
+			</if>
+			<if test="bean.shopOwner != null">
+				#{bean.shopOwner},
+			</if>
+			<if test="bean.mobile != null">
+				#{bean.mobile},
+			</if>
+			<if test="bean.tel != null">
+				#{bean.tel},
+			</if>
+			<if test="bean.shopLat != null">
+				#{bean.shopLat},
+			</if>
+			<if test="bean.shopLng != null">
+				#{bean.shopLng},
+			</if>
+			<if test="bean.shopAddress != null">
+				#{bean.shopAddress},
+			</if>
+			<if test="bean.province != null">
+				#{bean.province},
+			</if>
+			<if test="bean.city != null">
+				#{bean.city},
+			</if>
+			<if test="bean.area != null">
+				#{bean.area},
+			</if>
+			<if test="bean.pcaCode != null">
+				#{bean.pcaCode},
+			</if>
+			<if test="bean.shopLogo != null">
+				#{bean.shopLogo},
+			</if>
+			<if test="bean.shopPhotos != null">
+				#{bean.shopPhotos},
+			</if>
+			<if test="bean.openTime != null">
+				#{bean.openTime},
+			</if>
+			<if test="bean.shopStatus != null">
+				#{bean.shopStatus},
+			</if>
+			<if test="bean.transportType != null">
+				#{bean.transportType},
+			</if>
+			<if test="bean.fixedFreight != null">
+				#{bean.fixedFreight},
+			</if>
+			<if test="bean.fullFreeShipping != null">
+				#{bean.fullFreeShipping},
+			</if>
+			<if test="bean.createTime != null">
+				#{bean.createTime},
+			</if>
+			<if test="bean.updateTime != null">
+				#{bean.updateTime},
+			</if>
+			<if test="bean.isDistribution != null">
+				#{bean.isDistribution},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.shopName != null">
+				`shop_name` = VALUES(`shop_name`),
+			</if>
+			<if test="bean.shopType != null">
+				`shop_type` = VALUES(`shop_type`),
+			</if>
+			<if test="bean.intro != null">
+				`intro` = VALUES(`intro`),
+			</if>
+			<if test="bean.shopNotice != null">
+				`shop_notice` = VALUES(`shop_notice`),
+			</if>
+			<if test="bean.shopIndustry != null">
+				`shop_industry` = VALUES(`shop_industry`),
+			</if>
+			<if test="bean.shopOwner != null">
+				`shop_owner` = VALUES(`shop_owner`),
+			</if>
+			<if test="bean.tel != null">
+				`tel` = VALUES(`tel`),
+			</if>
+			<if test="bean.shopLat != null">
+				`shop_lat` = VALUES(`shop_lat`),
+			</if>
+			<if test="bean.shopLng != null">
+				`shop_lng` = VALUES(`shop_lng`),
+			</if>
+			<if test="bean.shopAddress != null">
+				`shop_address` = VALUES(`shop_address`),
+			</if>
+			<if test="bean.province != null">
+				`province` = VALUES(`province`),
+			</if>
+			<if test="bean.city != null">
+				`city` = VALUES(`city`),
+			</if>
+			<if test="bean.area != null">
+				`area` = VALUES(`area`),
+			</if>
+			<if test="bean.pcaCode != null">
+				`pca_code` = VALUES(`pca_code`),
+			</if>
+			<if test="bean.shopLogo != null">
+				`shop_logo` = VALUES(`shop_logo`),
+			</if>
+			<if test="bean.shopPhotos != null">
+				`shop_photos` = VALUES(`shop_photos`),
+			</if>
+			<if test="bean.openTime != null">
+				`open_time` = VALUES(`open_time`),
+			</if>
+			<if test="bean.shopStatus != null">
+				`shop_status` = VALUES(`shop_status`),
+			</if>
+			<if test="bean.transportType != null">
+				`transport_type` = VALUES(`transport_type`),
+			</if>
+			<if test="bean.fixedFreight != null">
+				`fixed_freight` = VALUES(`fixed_freight`),
+			</if>
+			<if test="bean.fullFreeShipping != null">
+				`full_free_shipping` = VALUES(`full_free_shipping`),
+			</if>
+			<if test="bean.createTime != null">
+				`create_time` = VALUES(`create_time`),
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time` = VALUES(`update_time`),
+			</if>
+			<if test="bean.isDistribution != null">
+				`is_distribution` = VALUES(`is_distribution`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.ShopDetail">
+		INSERT INTO tz_shop_detail (`shop_name`,`user_id`,`shop_type`,`intro`,`shop_notice`,`shop_industry`,`shop_owner`,`mobile`,`tel`,`shop_lat`,`shop_lng`,`shop_address`,`province`,`city`,`area`,`pca_code`,`shop_logo`,`shop_photos`,`open_time`,`shop_status`,`transport_type`,`fixed_freight`,`full_free_shipping`,`create_time`,`update_time`,`is_distribution`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.shopName},#{bean.userId},#{bean.shopType},#{bean.intro},#{bean.shopNotice},#{bean.shopIndustry},#{bean.shopOwner},#{bean.mobile},#{bean.tel},#{bean.shopLat},#{bean.shopLng},#{bean.shopAddress},#{bean.province},#{bean.city},#{bean.area},#{bean.pcaCode},#{bean.shopLogo},#{bean.shopPhotos},#{bean.openTime},#{bean.shopStatus},#{bean.transportType},#{bean.fixedFreight},#{bean.fullFreeShipping},#{bean.createTime},#{bean.updateTime},#{bean.isDistribution})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.ShopDetail">
+		INSERT INTO tz_shop_detail (`shop_name`,`user_id`,`shop_type`,`intro`,`shop_notice`,`shop_industry`,`shop_owner`,`mobile`,`tel`,`shop_lat`,`shop_lng`,`shop_address`,`province`,`city`,`area`,`pca_code`,`shop_logo`,`shop_photos`,`open_time`,`shop_status`,`transport_type`,`fixed_freight`,`full_free_shipping`,`create_time`,`update_time`,`is_distribution`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.shopName},#{bean.userId},#{bean.shopType},#{bean.intro},#{bean.shopNotice},#{bean.shopIndustry},#{bean.shopOwner},#{bean.mobile},#{bean.tel},#{bean.shopLat},#{bean.shopLng},#{bean.shopAddress},#{bean.province},#{bean.city},#{bean.area},#{bean.pcaCode},#{bean.shopLogo},#{bean.shopPhotos},#{bean.openTime},#{bean.shopStatus},#{bean.transportType},#{bean.fixedFreight},#{bean.fullFreeShipping},#{bean.createTime},#{bean.updateTime},#{bean.isDistribution})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `shop_id`=VALUES(`shop_id`), `shop_name`=VALUES(`shop_name`), `user_id`=VALUES(`user_id`), `shop_type`=VALUES(`shop_type`), `intro`=VALUES(`intro`), `shop_notice`=VALUES(`shop_notice`), `shop_industry`=VALUES(`shop_industry`), `shop_owner`=VALUES(`shop_owner`), `mobile`=VALUES(`mobile`), `tel`=VALUES(`tel`), `shop_lat`=VALUES(`shop_lat`), `shop_lng`=VALUES(`shop_lng`), `shop_address`=VALUES(`shop_address`), `province`=VALUES(`province`), `city`=VALUES(`city`), `area`=VALUES(`area`), `pca_code`=VALUES(`pca_code`), `shop_logo`=VALUES(`shop_logo`), `shop_photos`=VALUES(`shop_photos`), `open_time`=VALUES(`open_time`), `shop_status`=VALUES(`shop_status`), `transport_type`=VALUES(`transport_type`), `fixed_freight`=VALUES(`fixed_freight`), `full_free_shipping`=VALUES(`full_free_shipping`), `create_time`=VALUES(`create_time`), `update_time`=VALUES(`update_time`), `is_distribution`=VALUES(`is_distribution`)
+	</insert>
+
+	<!-- "根据"ShopId"查询" -->
+	<select id="selectByShopId" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_shop_detail` WHERE shop_id=#{shopId};
+	</select>
+
+	<!-- "根据"ShopId"删除" -->
+	<delete id="deleteByShopId">
+		DELETE FROM `tz_shop_detail` WHERE shop_id=#{shopId};
+	</delete>
+
+	<!-- "根据"ShopId"更新" -->
+	<update id="updateByShopId" parameterType="com.mall.entity.po.ShopDetail">
+		UPDATE `tz_shop_detail`
+		<set>
+			<if test="bean.shopId != null">
+				`shop_id` = #{bean.shopId}, 
+			</if>
+			<if test="bean.shopName != null">
+				`shop_name` = #{bean.shopName}, 
+			</if>
+			<if test="bean.userId != null">
+				`user_id` = #{bean.userId}, 
+			</if>
+			<if test="bean.shopType != null">
+				`shop_type` = #{bean.shopType}, 
+			</if>
+			<if test="bean.intro != null">
+				`intro` = #{bean.intro}, 
+			</if>
+			<if test="bean.shopNotice != null">
+				`shop_notice` = #{bean.shopNotice}, 
+			</if>
+			<if test="bean.shopIndustry != null">
+				`shop_industry` = #{bean.shopIndustry}, 
+			</if>
+			<if test="bean.shopOwner != null">
+				`shop_owner` = #{bean.shopOwner}, 
+			</if>
+			<if test="bean.mobile != null">
+				`mobile` = #{bean.mobile}, 
+			</if>
+			<if test="bean.tel != null">
+				`tel` = #{bean.tel}, 
+			</if>
+			<if test="bean.shopLat != null">
+				`shop_lat` = #{bean.shopLat}, 
+			</if>
+			<if test="bean.shopLng != null">
+				`shop_lng` = #{bean.shopLng}, 
+			</if>
+			<if test="bean.shopAddress != null">
+				`shop_address` = #{bean.shopAddress}, 
+			</if>
+			<if test="bean.province != null">
+				`province` = #{bean.province}, 
+			</if>
+			<if test="bean.city != null">
+				`city` = #{bean.city}, 
+			</if>
+			<if test="bean.area != null">
+				`area` = #{bean.area}, 
+			</if>
+			<if test="bean.pcaCode != null">
+				`pca_code` = #{bean.pcaCode}, 
+			</if>
+			<if test="bean.shopLogo != null">
+				`shop_logo` = #{bean.shopLogo}, 
+			</if>
+			<if test="bean.shopPhotos != null">
+				`shop_photos` = #{bean.shopPhotos}, 
+			</if>
+			<if test="bean.openTime != null">
+				`open_time` = #{bean.openTime}, 
+			</if>
+			<if test="bean.shopStatus != null">
+				`shop_status` = #{bean.shopStatus}, 
+			</if>
+			<if test="bean.transportType != null">
+				`transport_type` = #{bean.transportType}, 
+			</if>
+			<if test="bean.fixedFreight != null">
+				`fixed_freight` = #{bean.fixedFreight}, 
+			</if>
+			<if test="bean.fullFreeShipping != null">
+				`full_free_shipping` = #{bean.fullFreeShipping}, 
+			</if>
+			<if test="bean.createTime != null">
+				`create_time` = #{bean.createTime}, 
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time` = #{bean.updateTime}, 
+			</if>
+			<if test="bean.isDistribution != null">
+				`is_distribution` = #{bean.isDistribution}, 
+			</if>
+		</set>
+		WHERE shop_id=#{shopId};
+	</update>
+
+	<!-- "根据"Mobile"查询" -->
+	<select id="selectByMobile" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_shop_detail` WHERE mobile=#{mobile};
+	</select>
+
+	<!-- "根据"Mobile"删除" -->
+	<delete id="deleteByMobile">
+		DELETE FROM `tz_shop_detail` WHERE mobile=#{mobile};
+	</delete>
+
+	<!-- "根据"Mobile"更新" -->
+	<update id="updateByMobile" parameterType="com.mall.entity.po.ShopDetail">
+		UPDATE `tz_shop_detail`
+		<set>
+			<if test="bean.shopId != null">
+				`shop_id` = #{bean.shopId}, 
+			</if>
+			<if test="bean.shopName != null">
+				`shop_name` = #{bean.shopName}, 
+			</if>
+			<if test="bean.userId != null">
+				`user_id` = #{bean.userId}, 
+			</if>
+			<if test="bean.shopType != null">
+				`shop_type` = #{bean.shopType}, 
+			</if>
+			<if test="bean.intro != null">
+				`intro` = #{bean.intro}, 
+			</if>
+			<if test="bean.shopNotice != null">
+				`shop_notice` = #{bean.shopNotice}, 
+			</if>
+			<if test="bean.shopIndustry != null">
+				`shop_industry` = #{bean.shopIndustry}, 
+			</if>
+			<if test="bean.shopOwner != null">
+				`shop_owner` = #{bean.shopOwner}, 
+			</if>
+			<if test="bean.mobile != null">
+				`mobile` = #{bean.mobile}, 
+			</if>
+			<if test="bean.tel != null">
+				`tel` = #{bean.tel}, 
+			</if>
+			<if test="bean.shopLat != null">
+				`shop_lat` = #{bean.shopLat}, 
+			</if>
+			<if test="bean.shopLng != null">
+				`shop_lng` = #{bean.shopLng}, 
+			</if>
+			<if test="bean.shopAddress != null">
+				`shop_address` = #{bean.shopAddress}, 
+			</if>
+			<if test="bean.province != null">
+				`province` = #{bean.province}, 
+			</if>
+			<if test="bean.city != null">
+				`city` = #{bean.city}, 
+			</if>
+			<if test="bean.area != null">
+				`area` = #{bean.area}, 
+			</if>
+			<if test="bean.pcaCode != null">
+				`pca_code` = #{bean.pcaCode}, 
+			</if>
+			<if test="bean.shopLogo != null">
+				`shop_logo` = #{bean.shopLogo}, 
+			</if>
+			<if test="bean.shopPhotos != null">
+				`shop_photos` = #{bean.shopPhotos}, 
+			</if>
+			<if test="bean.openTime != null">
+				`open_time` = #{bean.openTime}, 
+			</if>
+			<if test="bean.shopStatus != null">
+				`shop_status` = #{bean.shopStatus}, 
+			</if>
+			<if test="bean.transportType != null">
+				`transport_type` = #{bean.transportType}, 
+			</if>
+			<if test="bean.fixedFreight != null">
+				`fixed_freight` = #{bean.fixedFreight}, 
+			</if>
+			<if test="bean.fullFreeShipping != null">
+				`full_free_shipping` = #{bean.fullFreeShipping}, 
+			</if>
+			<if test="bean.createTime != null">
+				`create_time` = #{bean.createTime}, 
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time` = #{bean.updateTime}, 
+			</if>
+			<if test="bean.isDistribution != null">
+				`is_distribution` = #{bean.isDistribution}, 
+			</if>
+		</set>
+		WHERE mobile=#{mobile};
+	</update>
+
+	<!-- "根据"UserId"查询" -->
+	<select id="selectByUserId" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_shop_detail` WHERE user_id=#{userId};
+	</select>
+
+	<!-- "根据"UserId"删除" -->
+	<delete id="deleteByUserId">
+		DELETE FROM `tz_shop_detail` WHERE user_id=#{userId};
+	</delete>
+
+	<!-- "根据"UserId"更新" -->
+	<update id="updateByUserId" parameterType="com.mall.entity.po.ShopDetail">
+		UPDATE `tz_shop_detail`
+		<set>
+			<if test="bean.shopId != null">
+				`shop_id` = #{bean.shopId}, 
+			</if>
+			<if test="bean.shopName != null">
+				`shop_name` = #{bean.shopName}, 
+			</if>
+			<if test="bean.userId != null">
+				`user_id` = #{bean.userId}, 
+			</if>
+			<if test="bean.shopType != null">
+				`shop_type` = #{bean.shopType}, 
+			</if>
+			<if test="bean.intro != null">
+				`intro` = #{bean.intro}, 
+			</if>
+			<if test="bean.shopNotice != null">
+				`shop_notice` = #{bean.shopNotice}, 
+			</if>
+			<if test="bean.shopIndustry != null">
+				`shop_industry` = #{bean.shopIndustry}, 
+			</if>
+			<if test="bean.shopOwner != null">
+				`shop_owner` = #{bean.shopOwner}, 
+			</if>
+			<if test="bean.mobile != null">
+				`mobile` = #{bean.mobile}, 
+			</if>
+			<if test="bean.tel != null">
+				`tel` = #{bean.tel}, 
+			</if>
+			<if test="bean.shopLat != null">
+				`shop_lat` = #{bean.shopLat}, 
+			</if>
+			<if test="bean.shopLng != null">
+				`shop_lng` = #{bean.shopLng}, 
+			</if>
+			<if test="bean.shopAddress != null">
+				`shop_address` = #{bean.shopAddress}, 
+			</if>
+			<if test="bean.province != null">
+				`province` = #{bean.province}, 
+			</if>
+			<if test="bean.city != null">
+				`city` = #{bean.city}, 
+			</if>
+			<if test="bean.area != null">
+				`area` = #{bean.area}, 
+			</if>
+			<if test="bean.pcaCode != null">
+				`pca_code` = #{bean.pcaCode}, 
+			</if>
+			<if test="bean.shopLogo != null">
+				`shop_logo` = #{bean.shopLogo}, 
+			</if>
+			<if test="bean.shopPhotos != null">
+				`shop_photos` = #{bean.shopPhotos}, 
+			</if>
+			<if test="bean.openTime != null">
+				`open_time` = #{bean.openTime}, 
+			</if>
+			<if test="bean.shopStatus != null">
+				`shop_status` = #{bean.shopStatus}, 
+			</if>
+			<if test="bean.transportType != null">
+				`transport_type` = #{bean.transportType}, 
+			</if>
+			<if test="bean.fixedFreight != null">
+				`fixed_freight` = #{bean.fixedFreight}, 
+			</if>
+			<if test="bean.fullFreeShipping != null">
+				`full_free_shipping` = #{bean.fullFreeShipping}, 
+			</if>
+			<if test="bean.createTime != null">
+				`create_time` = #{bean.createTime}, 
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time` = #{bean.updateTime}, 
+			</if>
+			<if test="bean.isDistribution != null">
+				`is_distribution` = #{bean.isDistribution}, 
+			</if>
+		</set>
+		WHERE user_id=#{userId};
+	</update>
+
+</mapper>

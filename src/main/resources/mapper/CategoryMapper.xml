@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.CategoryMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.Category">
+		<!-- 类目ID -->
+		<result column="category_id" property="categoryId" />
+		<!-- 店铺ID -->
+		<result column="shop_id" property="shopId" />
+		<!-- 父节点 -->
+		<result column="parent_id" property="parentId" />
+		<!-- 产品类目名称 -->
+		<result column="category_name" property="categoryName" />
+		<!-- 类目图标 -->
+		<result column="icon" property="icon" />
+		<!-- 类目的显示图片 -->
+		<result column="pic" property="pic" />
+		<!-- 排序 -->
+		<result column="seq" property="seq" />
+		<!-- 默认是1，表示正常状态,0为下线状态 -->
+		<result column="status" property="status" />
+		<!-- 记录时间 -->
+		<result column="rec_time" property="recTime" />
+		<!-- 分类层级 -->
+		<result column="grade" property="grade" />
+		<!-- 更新时间 -->
+		<result column="update_time" property="updateTime" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		category_id,shop_id,parent_id,category_name,icon,pic,seq,status,rec_time,grade,update_time
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.categoryId != null ">
+			and category_id = #{query.categoryId}
+		</if>
+		<if test="query.shopId != null ">
+			and shop_id = #{query.shopId}
+		</if>
+		<if test="query.parentId != null ">
+			and parent_id = #{query.parentId}
+		</if>
+		<if test="query.categoryName != null and query.categoryName != ''">
+			and category_name = #{query.categoryName}
+		</if>
+		<if test="query.icon != null and query.icon != ''">
+			and icon = #{query.icon}
+		</if>
+		<if test="query.pic != null and query.pic != ''">
+			and pic = #{query.pic}
+		</if>
+		<if test="query.seq != null ">
+			and seq = #{query.seq}
+		</if>
+		<if test="query.status != null ">
+			and status = #{query.status}
+		</if>
+		<if test="query.recTime != null ">
+			and rec_time = #{query.recTime}
+		</if>
+		<if test="query.grade != null ">
+			and grade = #{query.grade}
+		</if>
+		<if test="query.updateTime != null ">
+			and update_time = #{query.updateTime}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+		<if test="query.categoryNameFuzzy != null and query.categoryNameFuzzy != ''">
+			and categoryNameFuzzy like concat('%',#{query.categoryNameFuzzy}, '%')
+		</if>
+		<if test="query.iconFuzzy != null and query.iconFuzzy != ''">
+			and iconFuzzy like concat('%',#{query.iconFuzzy}, '%')
+		</if>
+		<if test="query.picFuzzy != null and query.picFuzzy != ''">
+			and picFuzzy like concat('%',#{query.picFuzzy}, '%')
+		</if>
+		<if test="query.recTimeStart != null and query.recTimeStart != ''">
+			<![CDATA[and rec_time >= str_to_date(#{recTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.recTimeEnd != null and query.recTimeEnd != ''">
+			<![CDATA[and rec_time >= str_to_date(#{recTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.updateTimeStart != null and query.updateTimeStart != ''">
+			<![CDATA[and update_time >= str_to_date(#{updateTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.updateTimeEnd != null and query.updateTimeEnd != ''">
+			<![CDATA[and update_time >= str_to_date(#{updateTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_category <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_category <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.Category">
+		<selectKey keyProperty="bean.category_id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_category
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.categoryId != null">
+				`category_id`,
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id`,
+			</if>
+			<if test="bean.parentId != null">
+				`parent_id`,
+			</if>
+			<if test="bean.categoryName != null">
+				`category_name`,
+			</if>
+			<if test="bean.icon != null">
+				`icon`,
+			</if>
+			<if test="bean.pic != null">
+				`pic`,
+			</if>
+			<if test="bean.seq != null">
+				`seq`,
+			</if>
+			<if test="bean.status != null">
+				`status`,
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time`,
+			</if>
+			<if test="bean.grade != null">
+				`grade`,
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.categoryId != null">
+				#{bean.categoryId},
+			</if>
+			<if test="bean.shopId != null">
+				#{bean.shopId},
+			</if>
+			<if test="bean.parentId != null">
+				#{bean.parentId},
+			</if>
+			<if test="bean.categoryName != null">
+				#{bean.categoryName},
+			</if>
+			<if test="bean.icon != null">
+				#{bean.icon},
+			</if>
+			<if test="bean.pic != null">
+				#{bean.pic},
+			</if>
+			<if test="bean.seq != null">
+				#{bean.seq},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+			<if test="bean.recTime != null">
+				#{bean.recTime},
+			</if>
+			<if test="bean.grade != null">
+				#{bean.grade},
+			</if>
+			<if test="bean.updateTime != null">
+				#{bean.updateTime},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.Category">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.categoryId != null">
+				`category_id`,
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id`,
+			</if>
+			<if test="bean.parentId != null">
+				`parent_id`,
+			</if>
+			<if test="bean.categoryName != null">
+				`category_name`,
+			</if>
+			<if test="bean.icon != null">
+				`icon`,
+			</if>
+			<if test="bean.pic != null">
+				`pic`,
+			</if>
+			<if test="bean.seq != null">
+				`seq`,
+			</if>
+			<if test="bean.status != null">
+				`status`,
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time`,
+			</if>
+			<if test="bean.grade != null">
+				`grade`,
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.categoryId != null">
+				#{bean.categoryId},
+			</if>
+			<if test="bean.shopId != null">
+				#{bean.shopId},
+			</if>
+			<if test="bean.parentId != null">
+				#{bean.parentId},
+			</if>
+			<if test="bean.categoryName != null">
+				#{bean.categoryName},
+			</if>
+			<if test="bean.icon != null">
+				#{bean.icon},
+			</if>
+			<if test="bean.pic != null">
+				#{bean.pic},
+			</if>
+			<if test="bean.seq != null">
+				#{bean.seq},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+			<if test="bean.recTime != null">
+				#{bean.recTime},
+			</if>
+			<if test="bean.grade != null">
+				#{bean.grade},
+			</if>
+			<if test="bean.updateTime != null">
+				#{bean.updateTime},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.shopId != null">
+				`shop_id` = VALUES(`shop_id`),
+			</if>
+			<if test="bean.parentId != null">
+				`parent_id` = VALUES(`parent_id`),
+			</if>
+			<if test="bean.categoryName != null">
+				`category_name` = VALUES(`category_name`),
+			</if>
+			<if test="bean.icon != null">
+				`icon` = VALUES(`icon`),
+			</if>
+			<if test="bean.pic != null">
+				`pic` = VALUES(`pic`),
+			</if>
+			<if test="bean.seq != null">
+				`seq` = VALUES(`seq`),
+			</if>
+			<if test="bean.status != null">
+				`status` = VALUES(`status`),
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time` = VALUES(`rec_time`),
+			</if>
+			<if test="bean.grade != null">
+				`grade` = VALUES(`grade`),
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time` = VALUES(`update_time`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.Category">
+		INSERT INTO tz_category (`shop_id`,`parent_id`,`category_name`,`icon`,`pic`,`seq`,`status`,`rec_time`,`grade`,`update_time`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.shopId},#{bean.parentId},#{bean.categoryName},#{bean.icon},#{bean.pic},#{bean.seq},#{bean.status},#{bean.recTime},#{bean.grade},#{bean.updateTime})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.Category">
+		INSERT INTO tz_category (`shop_id`,`parent_id`,`category_name`,`icon`,`pic`,`seq`,`status`,`rec_time`,`grade`,`update_time`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.shopId},#{bean.parentId},#{bean.categoryName},#{bean.icon},#{bean.pic},#{bean.seq},#{bean.status},#{bean.recTime},#{bean.grade},#{bean.updateTime})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `category_id`=VALUES(`category_id`), `shop_id`=VALUES(`shop_id`), `parent_id`=VALUES(`parent_id`), `category_name`=VALUES(`category_name`), `icon`=VALUES(`icon`), `pic`=VALUES(`pic`), `seq`=VALUES(`seq`), `status`=VALUES(`status`), `rec_time`=VALUES(`rec_time`), `grade`=VALUES(`grade`), `update_time`=VALUES(`update_time`)
+	</insert>
+
+	<!-- "根据"CategoryId"查询" -->
+	<select id="selectByCategoryId" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_category` WHERE category_id=#{categoryId};
+	</select>
+
+	<!-- "根据"CategoryId"删除" -->
+	<delete id="deleteByCategoryId">
+		DELETE FROM `tz_category` WHERE category_id=#{categoryId};
+	</delete>
+
+	<!-- "根据"CategoryId"更新" -->
+	<update id="updateByCategoryId" parameterType="com.mall.entity.po.Category">
+		UPDATE `tz_category`
+		<set>
+			<if test="bean.categoryId != null">
+				`category_id` = #{bean.categoryId}, 
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id` = #{bean.shopId}, 
+			</if>
+			<if test="bean.parentId != null">
+				`parent_id` = #{bean.parentId}, 
+			</if>
+			<if test="bean.categoryName != null">
+				`category_name` = #{bean.categoryName}, 
+			</if>
+			<if test="bean.icon != null">
+				`icon` = #{bean.icon}, 
+			</if>
+			<if test="bean.pic != null">
+				`pic` = #{bean.pic}, 
+			</if>
+			<if test="bean.seq != null">
+				`seq` = #{bean.seq}, 
+			</if>
+			<if test="bean.status != null">
+				`status` = #{bean.status}, 
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time` = #{bean.recTime}, 
+			</if>
+			<if test="bean.grade != null">
+				`grade` = #{bean.grade}, 
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time` = #{bean.updateTime}, 
+			</if>
+		</set>
+		WHERE category_id=#{categoryId};
+	</update>
+
+</mapper>

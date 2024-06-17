@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.UserMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.User">
+		<!-- ID -->
+		<result column="user_id" property="userId" />
+		<!-- 用户昵称 -->
+		<result column="nick_name" property="nickName" />
+		<!-- 真实姓名 -->
+		<result column="real_name" property="realName" />
+		<!-- 用户邮箱 -->
+		<result column="user_mail" property="userMail" />
+		<!-- 登录密码 -->
+		<result column="login_password" property="loginPassword" />
+		<!-- 支付密码 -->
+		<result column="pay_password" property="payPassword" />
+		<!-- 手机号码 -->
+		<result column="user_mobile" property="userMobile" />
+		<!-- 修改时间 -->
+		<result column="modify_time" property="modifyTime" />
+		<!-- 注册时间 -->
+		<result column="user_regtime" property="userRegtime" />
+		<!-- 注册IP -->
+		<result column="user_regip" property="userRegip" />
+		<!-- 最后登录时间 -->
+		<result column="user_lasttime" property="userLasttime" />
+		<!-- 最后登录IP -->
+		<result column="user_lastip" property="userLastip" />
+		<!-- 备注 -->
+		<result column="user_memo" property="userMemo" />
+		<!-- M(男) or F(女) -->
+		<result column="sex" property="sex" />
+		<!-- 例如：2009-11-27 -->
+		<result column="birth_date" property="birthDate" />
+		<!-- 头像图片路径 -->
+		<result column="pic" property="pic" />
+		<!-- 状态 1 正常 0 无效 -->
+		<result column="status" property="status" />
+		<!-- 用户积分 -->
+		<result column="score" property="score" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		user_id,nick_name,real_name,user_mail,login_password,pay_password,user_mobile,modify_time,user_regtime,user_regip,user_lasttime,user_lastip,user_memo,sex,birth_date,pic,status,score
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.userId != null and query.userId != ''">
+			and user_id = #{query.userId}
+		</if>
+		<if test="query.nickName != null and query.nickName != ''">
+			and nick_name = #{query.nickName}
+		</if>
+		<if test="query.realName != null and query.realName != ''">
+			and real_name = #{query.realName}
+		</if>
+		<if test="query.userMail != null and query.userMail != ''">
+			and user_mail = #{query.userMail}
+		</if>
+		<if test="query.loginPassword != null and query.loginPassword != ''">
+			and login_password = #{query.loginPassword}
+		</if>
+		<if test="query.payPassword != null and query.payPassword != ''">
+			and pay_password = #{query.payPassword}
+		</if>
+		<if test="query.userMobile != null and query.userMobile != ''">
+			and user_mobile = #{query.userMobile}
+		</if>
+		<if test="query.modifyTime != null ">
+			and modify_time = #{query.modifyTime}
+		</if>
+		<if test="query.userRegtime != null ">
+			and user_regtime = #{query.userRegtime}
+		</if>
+		<if test="query.userRegip != null and query.userRegip != ''">
+			and user_regip = #{query.userRegip}
+		</if>
+		<if test="query.userLasttime != null ">
+			and user_lasttime = #{query.userLasttime}
+		</if>
+		<if test="query.userLastip != null and query.userLastip != ''">
+			and user_lastip = #{query.userLastip}
+		</if>
+		<if test="query.userMemo != null and query.userMemo != ''">
+			and user_memo = #{query.userMemo}
+		</if>
+		<if test="query.sex != null and query.sex != ''">
+			and sex = #{query.sex}
+		</if>
+		<if test="query.birthDate != null and query.birthDate != ''">
+			and birth_date = #{query.birthDate}
+		</if>
+		<if test="query.pic != null and query.pic != ''">
+			and pic = #{query.pic}
+		</if>
+		<if test="query.status != null ">
+			and status = #{query.status}
+		</if>
+		<if test="query.score != null ">
+			and score = #{query.score}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+		<if test="query.userIdFuzzy != null and query.userIdFuzzy != ''">
+			and userIdFuzzy like concat('%',#{query.userIdFuzzy}, '%')
+		</if>
+		<if test="query.nickNameFuzzy != null and query.nickNameFuzzy != ''">
+			and nickNameFuzzy like concat('%',#{query.nickNameFuzzy}, '%')
+		</if>
+		<if test="query.realNameFuzzy != null and query.realNameFuzzy != ''">
+			and realNameFuzzy like concat('%',#{query.realNameFuzzy}, '%')
+		</if>
+		<if test="query.userMailFuzzy != null and query.userMailFuzzy != ''">
+			and userMailFuzzy like concat('%',#{query.userMailFuzzy}, '%')
+		</if>
+		<if test="query.loginPasswordFuzzy != null and query.loginPasswordFuzzy != ''">
+			and loginPasswordFuzzy like concat('%',#{query.loginPasswordFuzzy}, '%')
+		</if>
+		<if test="query.payPasswordFuzzy != null and query.payPasswordFuzzy != ''">
+			and payPasswordFuzzy like concat('%',#{query.payPasswordFuzzy}, '%')
+		</if>
+		<if test="query.userMobileFuzzy != null and query.userMobileFuzzy != ''">
+			and userMobileFuzzy like concat('%',#{query.userMobileFuzzy}, '%')
+		</if>
+		<if test="query.modifyTimeStart != null and query.modifyTimeStart != ''">
+			<![CDATA[and modify_time >= str_to_date(#{modifyTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.modifyTimeEnd != null and query.modifyTimeEnd != ''">
+			<![CDATA[and modify_time >= str_to_date(#{modifyTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.userRegtimeStart != null and query.userRegtimeStart != ''">
+			<![CDATA[and user_regtime >= str_to_date(#{userRegtimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.userRegtimeEnd != null and query.userRegtimeEnd != ''">
+			<![CDATA[and user_regtime >= str_to_date(#{userRegtimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.userRegipFuzzy != null and query.userRegipFuzzy != ''">
+			and userRegipFuzzy like concat('%',#{query.userRegipFuzzy}, '%')
+		</if>
+		<if test="query.userLasttimeStart != null and query.userLasttimeStart != ''">
+			<![CDATA[and user_lasttime >= str_to_date(#{userLasttimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.userLasttimeEnd != null and query.userLasttimeEnd != ''">
+			<![CDATA[and user_lasttime >= str_to_date(#{userLasttimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.userLastipFuzzy != null and query.userLastipFuzzy != ''">
+			and userLastipFuzzy like concat('%',#{query.userLastipFuzzy}, '%')
+		</if>
+		<if test="query.userMemoFuzzy != null and query.userMemoFuzzy != ''">
+			and userMemoFuzzy like concat('%',#{query.userMemoFuzzy}, '%')
+		</if>
+		<if test="query.sexFuzzy != null and query.sexFuzzy != ''">
+			and sexFuzzy like concat('%',#{query.sexFuzzy}, '%')
+		</if>
+		<if test="query.birthDateFuzzy != null and query.birthDateFuzzy != ''">
+			and birthDateFuzzy like concat('%',#{query.birthDateFuzzy}, '%')
+		</if>
+		<if test="query.picFuzzy != null and query.picFuzzy != ''">
+			and picFuzzy like concat('%',#{query.picFuzzy}, '%')
+		</if>
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_user <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_user <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.User">
+			INSERT INTO tz_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.userId != null">
+				`user_id`,
+			</if>
+			<if test="bean.nickName != null">
+				`nick_name`,
+			</if>
+			<if test="bean.realName != null">
+				`real_name`,
+			</if>
+			<if test="bean.userMail != null">
+				`user_mail`,
+			</if>
+			<if test="bean.loginPassword != null">
+				`login_password`,
+			</if>
+			<if test="bean.payPassword != null">
+				`pay_password`,
+			</if>
+			<if test="bean.userMobile != null">
+				`user_mobile`,
+			</if>
+			<if test="bean.modifyTime != null">
+				`modify_time`,
+			</if>
+			<if test="bean.userRegtime != null">
+				`user_regtime`,
+			</if>
+			<if test="bean.userRegip != null">
+				`user_regip`,
+			</if>
+			<if test="bean.userLasttime != null">
+				`user_lasttime`,
+			</if>
+			<if test="bean.userLastip != null">
+				`user_lastip`,
+			</if>
+			<if test="bean.userMemo != null">
+				`user_memo`,
+			</if>
+			<if test="bean.sex != null">
+				`sex`,
+			</if>
+			<if test="bean.birthDate != null">
+				`birth_date`,
+			</if>
+			<if test="bean.pic != null">
+				`pic`,
+			</if>
+			<if test="bean.status != null">
+				`status`,
+			</if>
+			<if test="bean.score != null">
+				`score`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.userId != null">
+				#{bean.userId},
+			</if>
+			<if test="bean.nickName != null">
+				#{bean.nickName},
+			</if>
+			<if test="bean.realName != null">
+				#{bean.realName},
+			</if>
+			<if test="bean.userMail != null">
+				#{bean.userMail},
+			</if>
+			<if test="bean.loginPassword != null">
+				#{bean.loginPassword},
+			</if>
+			<if test="bean.payPassword != null">
+				#{bean.payPassword},
+			</if>
+			<if test="bean.userMobile != null">
+				#{bean.userMobile},
+			</if>
+			<if test="bean.modifyTime != null">
+				#{bean.modifyTime},
+			</if>
+			<if test="bean.userRegtime != null">
+				#{bean.userRegtime},
+			</if>
+			<if test="bean.userRegip != null">
+				#{bean.userRegip},
+			</if>
+			<if test="bean.userLasttime != null">
+				#{bean.userLasttime},
+			</if>
+			<if test="bean.userLastip != null">
+				#{bean.userLastip},
+			</if>
+			<if test="bean.userMemo != null">
+				#{bean.userMemo},
+			</if>
+			<if test="bean.sex != null">
+				#{bean.sex},
+			</if>
+			<if test="bean.birthDate != null">
+				#{bean.birthDate},
+			</if>
+			<if test="bean.pic != null">
+				#{bean.pic},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+			<if test="bean.score != null">
+				#{bean.score},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.User">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.userId != null">
+				`user_id`,
+			</if>
+			<if test="bean.nickName != null">
+				`nick_name`,
+			</if>
+			<if test="bean.realName != null">
+				`real_name`,
+			</if>
+			<if test="bean.userMail != null">
+				`user_mail`,
+			</if>
+			<if test="bean.loginPassword != null">
+				`login_password`,
+			</if>
+			<if test="bean.payPassword != null">
+				`pay_password`,
+			</if>
+			<if test="bean.userMobile != null">
+				`user_mobile`,
+			</if>
+			<if test="bean.modifyTime != null">
+				`modify_time`,
+			</if>
+			<if test="bean.userRegtime != null">
+				`user_regtime`,
+			</if>
+			<if test="bean.userRegip != null">
+				`user_regip`,
+			</if>
+			<if test="bean.userLasttime != null">
+				`user_lasttime`,
+			</if>
+			<if test="bean.userLastip != null">
+				`user_lastip`,
+			</if>
+			<if test="bean.userMemo != null">
+				`user_memo`,
+			</if>
+			<if test="bean.sex != null">
+				`sex`,
+			</if>
+			<if test="bean.birthDate != null">
+				`birth_date`,
+			</if>
+			<if test="bean.pic != null">
+				`pic`,
+			</if>
+			<if test="bean.status != null">
+				`status`,
+			</if>
+			<if test="bean.score != null">
+				`score`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.userId != null">
+				#{bean.userId},
+			</if>
+			<if test="bean.nickName != null">
+				#{bean.nickName},
+			</if>
+			<if test="bean.realName != null">
+				#{bean.realName},
+			</if>
+			<if test="bean.userMail != null">
+				#{bean.userMail},
+			</if>
+			<if test="bean.loginPassword != null">
+				#{bean.loginPassword},
+			</if>
+			<if test="bean.payPassword != null">
+				#{bean.payPassword},
+			</if>
+			<if test="bean.userMobile != null">
+				#{bean.userMobile},
+			</if>
+			<if test="bean.modifyTime != null">
+				#{bean.modifyTime},
+			</if>
+			<if test="bean.userRegtime != null">
+				#{bean.userRegtime},
+			</if>
+			<if test="bean.userRegip != null">
+				#{bean.userRegip},
+			</if>
+			<if test="bean.userLasttime != null">
+				#{bean.userLasttime},
+			</if>
+			<if test="bean.userLastip != null">
+				#{bean.userLastip},
+			</if>
+			<if test="bean.userMemo != null">
+				#{bean.userMemo},
+			</if>
+			<if test="bean.sex != null">
+				#{bean.sex},
+			</if>
+			<if test="bean.birthDate != null">
+				#{bean.birthDate},
+			</if>
+			<if test="bean.pic != null">
+				#{bean.pic},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+			<if test="bean.score != null">
+				#{bean.score},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.nickName != null">
+				`nick_name` = VALUES(`nick_name`),
+			</if>
+			<if test="bean.realName != null">
+				`real_name` = VALUES(`real_name`),
+			</if>
+			<if test="bean.loginPassword != null">
+				`login_password` = VALUES(`login_password`),
+			</if>
+			<if test="bean.payPassword != null">
+				`pay_password` = VALUES(`pay_password`),
+			</if>
+			<if test="bean.modifyTime != null">
+				`modify_time` = VALUES(`modify_time`),
+			</if>
+			<if test="bean.userRegtime != null">
+				`user_regtime` = VALUES(`user_regtime`),
+			</if>
+			<if test="bean.userRegip != null">
+				`user_regip` = VALUES(`user_regip`),
+			</if>
+			<if test="bean.userLasttime != null">
+				`user_lasttime` = VALUES(`user_lasttime`),
+			</if>
+			<if test="bean.userLastip != null">
+				`user_lastip` = VALUES(`user_lastip`),
+			</if>
+			<if test="bean.userMemo != null">
+				`user_memo` = VALUES(`user_memo`),
+			</if>
+			<if test="bean.sex != null">
+				`sex` = VALUES(`sex`),
+			</if>
+			<if test="bean.birthDate != null">
+				`birth_date` = VALUES(`birth_date`),
+			</if>
+			<if test="bean.pic != null">
+				`pic` = VALUES(`pic`),
+			</if>
+			<if test="bean.status != null">
+				`status` = VALUES(`status`),
+			</if>
+			<if test="bean.score != null">
+				`score` = VALUES(`score`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.User">
+		INSERT INTO tz_user (`user_id`,`nick_name`,`real_name`,`user_mail`,`login_password`,`pay_password`,`user_mobile`,`modify_time`,`user_regtime`,`user_regip`,`user_lasttime`,`user_lastip`,`user_memo`,`sex`,`birth_date`,`pic`,`status`,`score`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.userId},#{bean.nickName},#{bean.realName},#{bean.userMail},#{bean.loginPassword},#{bean.payPassword},#{bean.userMobile},#{bean.modifyTime},#{bean.userRegtime},#{bean.userRegip},#{bean.userLasttime},#{bean.userLastip},#{bean.userMemo},#{bean.sex},#{bean.birthDate},#{bean.pic},#{bean.status},#{bean.score})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.User">
+		INSERT INTO tz_user (`user_id`,`nick_name`,`real_name`,`user_mail`,`login_password`,`pay_password`,`user_mobile`,`modify_time`,`user_regtime`,`user_regip`,`user_lasttime`,`user_lastip`,`user_memo`,`sex`,`birth_date`,`pic`,`status`,`score`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.userId},#{bean.nickName},#{bean.realName},#{bean.userMail},#{bean.loginPassword},#{bean.payPassword},#{bean.userMobile},#{bean.modifyTime},#{bean.userRegtime},#{bean.userRegip},#{bean.userLasttime},#{bean.userLastip},#{bean.userMemo},#{bean.sex},#{bean.birthDate},#{bean.pic},#{bean.status},#{bean.score})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `user_id`=VALUES(`user_id`), `nick_name`=VALUES(`nick_name`), `real_name`=VALUES(`real_name`), `user_mail`=VALUES(`user_mail`), `login_password`=VALUES(`login_password`), `pay_password`=VALUES(`pay_password`), `user_mobile`=VALUES(`user_mobile`), `modify_time`=VALUES(`modify_time`), `user_regtime`=VALUES(`user_regtime`), `user_regip`=VALUES(`user_regip`), `user_lasttime`=VALUES(`user_lasttime`), `user_lastip`=VALUES(`user_lastip`), `user_memo`=VALUES(`user_memo`), `sex`=VALUES(`sex`), `birth_date`=VALUES(`birth_date`), `pic`=VALUES(`pic`), `status`=VALUES(`status`), `score`=VALUES(`score`)
+	</insert>
+
+	<!-- "根据"UserId"查询" -->
+	<select id="selectByUserId" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_user` WHERE user_id=#{userId};
+	</select>
+
+	<!-- "根据"UserId"删除" -->
+	<delete id="deleteByUserId">
+		DELETE FROM `tz_user` WHERE user_id=#{userId};
+	</delete>
+
+	<!-- "根据"UserId"更新" -->
+	<update id="updateByUserId" parameterType="com.mall.entity.po.User">
+		UPDATE `tz_user`
+		<set>
+			<if test="bean.userId != null">
+				`user_id` = #{bean.userId}, 
+			</if>
+			<if test="bean.nickName != null">
+				`nick_name` = #{bean.nickName}, 
+			</if>
+			<if test="bean.realName != null">
+				`real_name` = #{bean.realName}, 
+			</if>
+			<if test="bean.userMail != null">
+				`user_mail` = #{bean.userMail}, 
+			</if>
+			<if test="bean.loginPassword != null">
+				`login_password` = #{bean.loginPassword}, 
+			</if>
+			<if test="bean.payPassword != null">
+				`pay_password` = #{bean.payPassword}, 
+			</if>
+			<if test="bean.userMobile != null">
+				`user_mobile` = #{bean.userMobile}, 
+			</if>
+			<if test="bean.modifyTime != null">
+				`modify_time` = #{bean.modifyTime}, 
+			</if>
+			<if test="bean.userRegtime != null">
+				`user_regtime` = #{bean.userRegtime}, 
+			</if>
+			<if test="bean.userRegip != null">
+				`user_regip` = #{bean.userRegip}, 
+			</if>
+			<if test="bean.userLasttime != null">
+				`user_lasttime` = #{bean.userLasttime}, 
+			</if>
+			<if test="bean.userLastip != null">
+				`user_lastip` = #{bean.userLastip}, 
+			</if>
+			<if test="bean.userMemo != null">
+				`user_memo` = #{bean.userMemo}, 
+			</if>
+			<if test="bean.sex != null">
+				`sex` = #{bean.sex}, 
+			</if>
+			<if test="bean.birthDate != null">
+				`birth_date` = #{bean.birthDate}, 
+			</if>
+			<if test="bean.pic != null">
+				`pic` = #{bean.pic}, 
+			</if>
+			<if test="bean.status != null">
+				`status` = #{bean.status}, 
+			</if>
+			<if test="bean.score != null">
+				`score` = #{bean.score}, 
+			</if>
+		</set>
+		WHERE user_id=#{userId};
+	</update>
+
+	<!-- "根据"UserMail"查询" -->
+	<select id="selectByUserMail" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_user` WHERE user_mail=#{userMail};
+	</select>
+
+	<!-- "根据"UserMail"删除" -->
+	<delete id="deleteByUserMail">
+		DELETE FROM `tz_user` WHERE user_mail=#{userMail};
+	</delete>
+
+	<!-- "根据"UserMail"更新" -->
+	<update id="updateByUserMail" parameterType="com.mall.entity.po.User">
+		UPDATE `tz_user`
+		<set>
+			<if test="bean.userId != null">
+				`user_id` = #{bean.userId}, 
+			</if>
+			<if test="bean.nickName != null">
+				`nick_name` = #{bean.nickName}, 
+			</if>
+			<if test="bean.realName != null">
+				`real_name` = #{bean.realName}, 
+			</if>
+			<if test="bean.userMail != null">
+				`user_mail` = #{bean.userMail}, 
+			</if>
+			<if test="bean.loginPassword != null">
+				`login_password` = #{bean.loginPassword}, 
+			</if>
+			<if test="bean.payPassword != null">
+				`pay_password` = #{bean.payPassword}, 
+			</if>
+			<if test="bean.userMobile != null">
+				`user_mobile` = #{bean.userMobile}, 
+			</if>
+			<if test="bean.modifyTime != null">
+				`modify_time` = #{bean.modifyTime}, 
+			</if>
+			<if test="bean.userRegtime != null">
+				`user_regtime` = #{bean.userRegtime}, 
+			</if>
+			<if test="bean.userRegip != null">
+				`user_regip` = #{bean.userRegip}, 
+			</if>
+			<if test="bean.userLasttime != null">
+				`user_lasttime` = #{bean.userLasttime}, 
+			</if>
+			<if test="bean.userLastip != null">
+				`user_lastip` = #{bean.userLastip}, 
+			</if>
+			<if test="bean.userMemo != null">
+				`user_memo` = #{bean.userMemo}, 
+			</if>
+			<if test="bean.sex != null">
+				`sex` = #{bean.sex}, 
+			</if>
+			<if test="bean.birthDate != null">
+				`birth_date` = #{bean.birthDate}, 
+			</if>
+			<if test="bean.pic != null">
+				`pic` = #{bean.pic}, 
+			</if>
+			<if test="bean.status != null">
+				`status` = #{bean.status}, 
+			</if>
+			<if test="bean.score != null">
+				`score` = #{bean.score}, 
+			</if>
+		</set>
+		WHERE user_mail=#{userMail};
+	</update>
+
+	<!-- "根据"UserMobile"查询" -->
+	<select id="selectByUserMobile" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_user` WHERE user_mobile=#{userMobile};
+	</select>
+
+	<!-- "根据"UserMobile"删除" -->
+	<delete id="deleteByUserMobile">
+		DELETE FROM `tz_user` WHERE user_mobile=#{userMobile};
+	</delete>
+
+	<!-- "根据"UserMobile"更新" -->
+	<update id="updateByUserMobile" parameterType="com.mall.entity.po.User">
+		UPDATE `tz_user`
+		<set>
+			<if test="bean.userId != null">
+				`user_id` = #{bean.userId}, 
+			</if>
+			<if test="bean.nickName != null">
+				`nick_name` = #{bean.nickName}, 
+			</if>
+			<if test="bean.realName != null">
+				`real_name` = #{bean.realName}, 
+			</if>
+			<if test="bean.userMail != null">
+				`user_mail` = #{bean.userMail}, 
+			</if>
+			<if test="bean.loginPassword != null">
+				`login_password` = #{bean.loginPassword}, 
+			</if>
+			<if test="bean.payPassword != null">
+				`pay_password` = #{bean.payPassword}, 
+			</if>
+			<if test="bean.userMobile != null">
+				`user_mobile` = #{bean.userMobile}, 
+			</if>
+			<if test="bean.modifyTime != null">
+				`modify_time` = #{bean.modifyTime}, 
+			</if>
+			<if test="bean.userRegtime != null">
+				`user_regtime` = #{bean.userRegtime}, 
+			</if>
+			<if test="bean.userRegip != null">
+				`user_regip` = #{bean.userRegip}, 
+			</if>
+			<if test="bean.userLasttime != null">
+				`user_lasttime` = #{bean.userLasttime}, 
+			</if>
+			<if test="bean.userLastip != null">
+				`user_lastip` = #{bean.userLastip}, 
+			</if>
+			<if test="bean.userMemo != null">
+				`user_memo` = #{bean.userMemo}, 
+			</if>
+			<if test="bean.sex != null">
+				`sex` = #{bean.sex}, 
+			</if>
+			<if test="bean.birthDate != null">
+				`birth_date` = #{bean.birthDate}, 
+			</if>
+			<if test="bean.pic != null">
+				`pic` = #{bean.pic}, 
+			</if>
+			<if test="bean.status != null">
+				`status` = #{bean.status}, 
+			</if>
+			<if test="bean.score != null">
+				`score` = #{bean.score}, 
+			</if>
+		</set>
+		WHERE user_mobile=#{userMobile};
+	</update>
+
+</mapper>

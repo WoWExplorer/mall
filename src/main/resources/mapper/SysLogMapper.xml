@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.SysLogMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.SysLog">
+		<!--  -->
+		<id column="id" property="id" />
+		<!-- 用户名 -->
+		<result column="username" property="username" />
+		<!-- 用户操作 -->
+		<result column="operation" property="operation" />
+		<!-- 请求方法 -->
+		<result column="method" property="method" />
+		<!-- 请求参数 -->
+		<result column="params" property="params" />
+		<!-- 执行时长(毫秒) -->
+		<result column="time" property="time" />
+		<!-- IP地址 -->
+		<result column="ip" property="ip" />
+		<!-- 创建时间 -->
+		<result column="create_date" property="createDate" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		id,username,operation,method,params,time,ip,create_date
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.id != null ">
+			and id = #{query.id}
+		</if>
+		<if test="query.username != null and query.username != ''">
+			and username = #{query.username}
+		</if>
+		<if test="query.operation != null and query.operation != ''">
+			and operation = #{query.operation}
+		</if>
+		<if test="query.method != null and query.method != ''">
+			and method = #{query.method}
+		</if>
+		<if test="query.params != null and query.params != ''">
+			and params = #{query.params}
+		</if>
+		<if test="query.time != null ">
+			and time = #{query.time}
+		</if>
+		<if test="query.ip != null and query.ip != ''">
+			and ip = #{query.ip}
+		</if>
+		<if test="query.createDate != null ">
+			and create_date = #{query.createDate}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+		<if test="query.usernameFuzzy != null and query.usernameFuzzy != ''">
+			and usernameFuzzy like concat('%',#{query.usernameFuzzy}, '%')
+		</if>
+		<if test="query.operationFuzzy != null and query.operationFuzzy != ''">
+			and operationFuzzy like concat('%',#{query.operationFuzzy}, '%')
+		</if>
+		<if test="query.methodFuzzy != null and query.methodFuzzy != ''">
+			and methodFuzzy like concat('%',#{query.methodFuzzy}, '%')
+		</if>
+		<if test="query.paramsFuzzy != null and query.paramsFuzzy != ''">
+			and paramsFuzzy like concat('%',#{query.paramsFuzzy}, '%')
+		</if>
+		<if test="query.ipFuzzy != null and query.ipFuzzy != ''">
+			and ipFuzzy like concat('%',#{query.ipFuzzy}, '%')
+		</if>
+		<if test="query.createDateStart != null and query.createDateStart != ''">
+			<![CDATA[and create_date >= str_to_date(#{createDateStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.createDateEnd != null and query.createDateEnd != ''">
+			<![CDATA[and create_date >= str_to_date(#{createDateEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_sys_log <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_sys_log <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.SysLog">
+		<selectKey keyProperty="bean.id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_sys_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				`id`,
+			</if>
+			<if test="bean.username != null">
+				`username`,
+			</if>
+			<if test="bean.operation != null">
+				`operation`,
+			</if>
+			<if test="bean.method != null">
+				`method`,
+			</if>
+			<if test="bean.params != null">
+				`params`,
+			</if>
+			<if test="bean.time != null">
+				`time`,
+			</if>
+			<if test="bean.ip != null">
+				`ip`,
+			</if>
+			<if test="bean.createDate != null">
+				`create_date`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				#{bean.id},
+			</if>
+			<if test="bean.username != null">
+				#{bean.username},
+			</if>
+			<if test="bean.operation != null">
+				#{bean.operation},
+			</if>
+			<if test="bean.method != null">
+				#{bean.method},
+			</if>
+			<if test="bean.params != null">
+				#{bean.params},
+			</if>
+			<if test="bean.time != null">
+				#{bean.time},
+			</if>
+			<if test="bean.ip != null">
+				#{bean.ip},
+			</if>
+			<if test="bean.createDate != null">
+				#{bean.createDate},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.SysLog">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				`id`,
+			</if>
+			<if test="bean.username != null">
+				`username`,
+			</if>
+			<if test="bean.operation != null">
+				`operation`,
+			</if>
+			<if test="bean.method != null">
+				`method`,
+			</if>
+			<if test="bean.params != null">
+				`params`,
+			</if>
+			<if test="bean.time != null">
+				`time`,
+			</if>
+			<if test="bean.ip != null">
+				`ip`,
+			</if>
+			<if test="bean.createDate != null">
+				`create_date`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				#{bean.id},
+			</if>
+			<if test="bean.username != null">
+				#{bean.username},
+			</if>
+			<if test="bean.operation != null">
+				#{bean.operation},
+			</if>
+			<if test="bean.method != null">
+				#{bean.method},
+			</if>
+			<if test="bean.params != null">
+				#{bean.params},
+			</if>
+			<if test="bean.time != null">
+				#{bean.time},
+			</if>
+			<if test="bean.ip != null">
+				#{bean.ip},
+			</if>
+			<if test="bean.createDate != null">
+				#{bean.createDate},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.username != null">
+				`username` = VALUES(`username`),
+			</if>
+			<if test="bean.operation != null">
+				`operation` = VALUES(`operation`),
+			</if>
+			<if test="bean.method != null">
+				`method` = VALUES(`method`),
+			</if>
+			<if test="bean.params != null">
+				`params` = VALUES(`params`),
+			</if>
+			<if test="bean.time != null">
+				`time` = VALUES(`time`),
+			</if>
+			<if test="bean.ip != null">
+				`ip` = VALUES(`ip`),
+			</if>
+			<if test="bean.createDate != null">
+				`create_date` = VALUES(`create_date`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.SysLog">
+		INSERT INTO tz_sys_log (`username`,`operation`,`method`,`params`,`time`,`ip`,`create_date`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.username},#{bean.operation},#{bean.method},#{bean.params},#{bean.time},#{bean.ip},#{bean.createDate})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.SysLog">
+		INSERT INTO tz_sys_log (`username`,`operation`,`method`,`params`,`time`,`ip`,`create_date`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.username},#{bean.operation},#{bean.method},#{bean.params},#{bean.time},#{bean.ip},#{bean.createDate})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `id`=VALUES(`id`), `username`=VALUES(`username`), `operation`=VALUES(`operation`), `method`=VALUES(`method`), `params`=VALUES(`params`), `time`=VALUES(`time`), `ip`=VALUES(`ip`), `create_date`=VALUES(`create_date`)
+	</insert>
+
+	<!-- "根据"Id"查询" -->
+	<select id="selectById" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_sys_log` WHERE id=#{id};
+	</select>
+
+	<!-- "根据"Id"删除" -->
+	<delete id="deleteById">
+		DELETE FROM `tz_sys_log` WHERE id=#{id};
+	</delete>
+
+	<!-- "根据"Id"更新" -->
+	<update id="updateById" parameterType="com.mall.entity.po.SysLog">
+		UPDATE `tz_sys_log`
+		<set>
+			<if test="bean.id != null">
+				`id` = #{bean.id}, 
+			</if>
+			<if test="bean.username != null">
+				`username` = #{bean.username}, 
+			</if>
+			<if test="bean.operation != null">
+				`operation` = #{bean.operation}, 
+			</if>
+			<if test="bean.method != null">
+				`method` = #{bean.method}, 
+			</if>
+			<if test="bean.params != null">
+				`params` = #{bean.params}, 
+			</if>
+			<if test="bean.time != null">
+				`time` = #{bean.time}, 
+			</if>
+			<if test="bean.ip != null">
+				`ip` = #{bean.ip}, 
+			</if>
+			<if test="bean.createDate != null">
+				`create_date` = #{bean.createDate}, 
+			</if>
+		</set>
+		WHERE id=#{id};
+	</update>
+
+</mapper>

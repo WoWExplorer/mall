@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.SmsLogMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.SmsLog">
+		<!-- ID -->
+		<id column="id" property="id" />
+		<!-- 用户id -->
+		<result column="user_id" property="userId" />
+		<!-- 手机号码 -->
+		<result column="user_phone" property="userPhone" />
+		<!-- 短信内容 -->
+		<result column="content" property="content" />
+		<!-- 手机验证码 -->
+		<result column="mobile_code" property="mobileCode" />
+		<!-- 短信类型  1:注册  2:验证 -->
+		<result column="type" property="type" />
+		<!-- 发送时间 -->
+		<result column="rec_date" property="recDate" />
+		<!-- 发送短信返回码 -->
+		<result column="response_code" property="responseCode" />
+		<!-- 状态  1:有效  0：失效 -->
+		<result column="status" property="status" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		id,user_id,user_phone,content,mobile_code,type,rec_date,response_code,status
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.id != null ">
+			and id = #{query.id}
+		</if>
+		<if test="query.userId != null and query.userId != ''">
+			and user_id = #{query.userId}
+		</if>
+		<if test="query.userPhone != null and query.userPhone != ''">
+			and user_phone = #{query.userPhone}
+		</if>
+		<if test="query.content != null and query.content != ''">
+			and content = #{query.content}
+		</if>
+		<if test="query.mobileCode != null and query.mobileCode != ''">
+			and mobile_code = #{query.mobileCode}
+		</if>
+		<if test="query.type != null ">
+			and type = #{query.type}
+		</if>
+		<if test="query.recDate != null ">
+			and rec_date = #{query.recDate}
+		</if>
+		<if test="query.responseCode != null and query.responseCode != ''">
+			and response_code = #{query.responseCode}
+		</if>
+		<if test="query.status != null ">
+			and status = #{query.status}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+		<if test="query.userIdFuzzy != null and query.userIdFuzzy != ''">
+			and userIdFuzzy like concat('%',#{query.userIdFuzzy}, '%')
+		</if>
+		<if test="query.userPhoneFuzzy != null and query.userPhoneFuzzy != ''">
+			and userPhoneFuzzy like concat('%',#{query.userPhoneFuzzy}, '%')
+		</if>
+		<if test="query.contentFuzzy != null and query.contentFuzzy != ''">
+			and contentFuzzy like concat('%',#{query.contentFuzzy}, '%')
+		</if>
+		<if test="query.mobileCodeFuzzy != null and query.mobileCodeFuzzy != ''">
+			and mobileCodeFuzzy like concat('%',#{query.mobileCodeFuzzy}, '%')
+		</if>
+		<if test="query.recDateStart != null and query.recDateStart != ''">
+			<![CDATA[and rec_date >= str_to_date(#{recDateStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.recDateEnd != null and query.recDateEnd != ''">
+			<![CDATA[and rec_date >= str_to_date(#{recDateEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.responseCodeFuzzy != null and query.responseCodeFuzzy != ''">
+			and responseCodeFuzzy like concat('%',#{query.responseCodeFuzzy}, '%')
+		</if>
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_sms_log <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_sms_log <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.SmsLog">
+		<selectKey keyProperty="bean.id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_sms_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				`id`,
+			</if>
+			<if test="bean.userId != null">
+				`user_id`,
+			</if>
+			<if test="bean.userPhone != null">
+				`user_phone`,
+			</if>
+			<if test="bean.content != null">
+				`content`,
+			</if>
+			<if test="bean.mobileCode != null">
+				`mobile_code`,
+			</if>
+			<if test="bean.type != null">
+				`type`,
+			</if>
+			<if test="bean.recDate != null">
+				`rec_date`,
+			</if>
+			<if test="bean.responseCode != null">
+				`response_code`,
+			</if>
+			<if test="bean.status != null">
+				`status`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				#{bean.id},
+			</if>
+			<if test="bean.userId != null">
+				#{bean.userId},
+			</if>
+			<if test="bean.userPhone != null">
+				#{bean.userPhone},
+			</if>
+			<if test="bean.content != null">
+				#{bean.content},
+			</if>
+			<if test="bean.mobileCode != null">
+				#{bean.mobileCode},
+			</if>
+			<if test="bean.type != null">
+				#{bean.type},
+			</if>
+			<if test="bean.recDate != null">
+				#{bean.recDate},
+			</if>
+			<if test="bean.responseCode != null">
+				#{bean.responseCode},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.SmsLog">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				`id`,
+			</if>
+			<if test="bean.userId != null">
+				`user_id`,
+			</if>
+			<if test="bean.userPhone != null">
+				`user_phone`,
+			</if>
+			<if test="bean.content != null">
+				`content`,
+			</if>
+			<if test="bean.mobileCode != null">
+				`mobile_code`,
+			</if>
+			<if test="bean.type != null">
+				`type`,
+			</if>
+			<if test="bean.recDate != null">
+				`rec_date`,
+			</if>
+			<if test="bean.responseCode != null">
+				`response_code`,
+			</if>
+			<if test="bean.status != null">
+				`status`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				#{bean.id},
+			</if>
+			<if test="bean.userId != null">
+				#{bean.userId},
+			</if>
+			<if test="bean.userPhone != null">
+				#{bean.userPhone},
+			</if>
+			<if test="bean.content != null">
+				#{bean.content},
+			</if>
+			<if test="bean.mobileCode != null">
+				#{bean.mobileCode},
+			</if>
+			<if test="bean.type != null">
+				#{bean.type},
+			</if>
+			<if test="bean.recDate != null">
+				#{bean.recDate},
+			</if>
+			<if test="bean.responseCode != null">
+				#{bean.responseCode},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.userId != null">
+				`user_id` = VALUES(`user_id`),
+			</if>
+			<if test="bean.userPhone != null">
+				`user_phone` = VALUES(`user_phone`),
+			</if>
+			<if test="bean.content != null">
+				`content` = VALUES(`content`),
+			</if>
+			<if test="bean.mobileCode != null">
+				`mobile_code` = VALUES(`mobile_code`),
+			</if>
+			<if test="bean.type != null">
+				`type` = VALUES(`type`),
+			</if>
+			<if test="bean.recDate != null">
+				`rec_date` = VALUES(`rec_date`),
+			</if>
+			<if test="bean.responseCode != null">
+				`response_code` = VALUES(`response_code`),
+			</if>
+			<if test="bean.status != null">
+				`status` = VALUES(`status`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.SmsLog">
+		INSERT INTO tz_sms_log (`user_id`,`user_phone`,`content`,`mobile_code`,`type`,`rec_date`,`response_code`,`status`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.userId},#{bean.userPhone},#{bean.content},#{bean.mobileCode},#{bean.type},#{bean.recDate},#{bean.responseCode},#{bean.status})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.SmsLog">
+		INSERT INTO tz_sms_log (`user_id`,`user_phone`,`content`,`mobile_code`,`type`,`rec_date`,`response_code`,`status`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.userId},#{bean.userPhone},#{bean.content},#{bean.mobileCode},#{bean.type},#{bean.recDate},#{bean.responseCode},#{bean.status})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `id`=VALUES(`id`), `user_id`=VALUES(`user_id`), `user_phone`=VALUES(`user_phone`), `content`=VALUES(`content`), `mobile_code`=VALUES(`mobile_code`), `type`=VALUES(`type`), `rec_date`=VALUES(`rec_date`), `response_code`=VALUES(`response_code`), `status`=VALUES(`status`)
+	</insert>
+
+	<!-- "根据"Id"查询" -->
+	<select id="selectById" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_sms_log` WHERE id=#{id};
+	</select>
+
+	<!-- "根据"Id"删除" -->
+	<delete id="deleteById">
+		DELETE FROM `tz_sms_log` WHERE id=#{id};
+	</delete>
+
+	<!-- "根据"Id"更新" -->
+	<update id="updateById" parameterType="com.mall.entity.po.SmsLog">
+		UPDATE `tz_sms_log`
+		<set>
+			<if test="bean.id != null">
+				`id` = #{bean.id}, 
+			</if>
+			<if test="bean.userId != null">
+				`user_id` = #{bean.userId}, 
+			</if>
+			<if test="bean.userPhone != null">
+				`user_phone` = #{bean.userPhone}, 
+			</if>
+			<if test="bean.content != null">
+				`content` = #{bean.content}, 
+			</if>
+			<if test="bean.mobileCode != null">
+				`mobile_code` = #{bean.mobileCode}, 
+			</if>
+			<if test="bean.type != null">
+				`type` = #{bean.type}, 
+			</if>
+			<if test="bean.recDate != null">
+				`rec_date` = #{bean.recDate}, 
+			</if>
+			<if test="bean.responseCode != null">
+				`response_code` = #{bean.responseCode}, 
+			</if>
+			<if test="bean.status != null">
+				`status` = #{bean.status}, 
+			</if>
+		</set>
+		WHERE id=#{id};
+	</update>
+
+</mapper>

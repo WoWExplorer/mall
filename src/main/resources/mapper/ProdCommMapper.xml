@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.ProdCommMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.ProdComm">
+		<!-- ID -->
+		<result column="prod_comm_id" property="prodCommId" />
+		<!-- 商品ID -->
+		<result column="prod_id" property="prodId" />
+		<!-- 订单项ID -->
+		<result column="order_item_id" property="orderItemId" />
+		<!-- 评论用户ID -->
+		<result column="user_id" property="userId" />
+		<!-- 评论内容 -->
+		<result column="content" property="content" />
+		<!-- 掌柜回复 -->
+		<result column="reply_content" property="replyContent" />
+		<!-- 记录时间 -->
+		<result column="rec_time" property="recTime" />
+		<!-- 回复时间 -->
+		<result column="reply_time" property="replyTime" />
+		<!-- 是否回复 0:未回复  1:已回复 -->
+		<result column="reply_sts" property="replySts" />
+		<!-- IP来源 -->
+		<result column="postip" property="postip" />
+		<!-- 得分，0-5分 -->
+		<result column="score" property="score" />
+		<!-- 有用的计数 -->
+		<result column="useful_counts" property="usefulCounts" />
+		<!-- 晒图的json字符串 -->
+		<result column="pics" property="pics" />
+		<!-- 是否匿名(1:是  0:否) -->
+		<result column="is_anonymous" property="isAnonymous" />
+		<!-- 是否显示，1:为显示，0:待审核， -1：不通过审核，不显示。 如果需要审核评论，则是0,，否则1 -->
+		<result column="status" property="status" />
+		<!-- 评价(0好评 1中评 2差评) -->
+		<result column="evaluate" property="evaluate" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		prod_comm_id,prod_id,order_item_id,user_id,content,reply_content,rec_time,reply_time,reply_sts,postip,score,useful_counts,pics,is_anonymous,status,evaluate
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.prodCommId != null ">
+			and prod_comm_id = #{query.prodCommId}
+		</if>
+		<if test="query.prodId != null ">
+			and prod_id = #{query.prodId}
+		</if>
+		<if test="query.orderItemId != null ">
+			and order_item_id = #{query.orderItemId}
+		</if>
+		<if test="query.userId != null and query.userId != ''">
+			and user_id = #{query.userId}
+		</if>
+		<if test="query.content != null and query.content != ''">
+			and content = #{query.content}
+		</if>
+		<if test="query.replyContent != null and query.replyContent != ''">
+			and reply_content = #{query.replyContent}
+		</if>
+		<if test="query.recTime != null ">
+			and rec_time = #{query.recTime}
+		</if>
+		<if test="query.replyTime != null ">
+			and reply_time = #{query.replyTime}
+		</if>
+		<if test="query.replySts != null ">
+			and reply_sts = #{query.replySts}
+		</if>
+		<if test="query.postip != null and query.postip != ''">
+			and postip = #{query.postip}
+		</if>
+		<if test="query.score != null ">
+			and score = #{query.score}
+		</if>
+		<if test="query.usefulCounts != null ">
+			and useful_counts = #{query.usefulCounts}
+		</if>
+		<if test="query.pics != null and query.pics != ''">
+			and pics = #{query.pics}
+		</if>
+		<if test="query.isAnonymous != null ">
+			and is_anonymous = #{query.isAnonymous}
+		</if>
+		<if test="query.status != null ">
+			and status = #{query.status}
+		</if>
+		<if test="query.evaluate != null ">
+			and evaluate = #{query.evaluate}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+		<if test="query.userIdFuzzy != null and query.userIdFuzzy != ''">
+			and userIdFuzzy like concat('%',#{query.userIdFuzzy}, '%')
+		</if>
+		<if test="query.contentFuzzy != null and query.contentFuzzy != ''">
+			and contentFuzzy like concat('%',#{query.contentFuzzy}, '%')
+		</if>
+		<if test="query.replyContentFuzzy != null and query.replyContentFuzzy != ''">
+			and replyContentFuzzy like concat('%',#{query.replyContentFuzzy}, '%')
+		</if>
+		<if test="query.recTimeStart != null and query.recTimeStart != ''">
+			<![CDATA[and rec_time >= str_to_date(#{recTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.recTimeEnd != null and query.recTimeEnd != ''">
+			<![CDATA[and rec_time >= str_to_date(#{recTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.replyTimeStart != null and query.replyTimeStart != ''">
+			<![CDATA[and reply_time >= str_to_date(#{replyTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.replyTimeEnd != null and query.replyTimeEnd != ''">
+			<![CDATA[and reply_time >= str_to_date(#{replyTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.postipFuzzy != null and query.postipFuzzy != ''">
+			and postipFuzzy like concat('%',#{query.postipFuzzy}, '%')
+		</if>
+		<if test="query.picsFuzzy != null and query.picsFuzzy != ''">
+			and picsFuzzy like concat('%',#{query.picsFuzzy}, '%')
+		</if>
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_prod_comm <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_prod_comm <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.ProdComm">
+		<selectKey keyProperty="bean.prod_comm_id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_prod_comm
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.prodCommId != null">
+				`prod_comm_id`,
+			</if>
+			<if test="bean.prodId != null">
+				`prod_id`,
+			</if>
+			<if test="bean.orderItemId != null">
+				`order_item_id`,
+			</if>
+			<if test="bean.userId != null">
+				`user_id`,
+			</if>
+			<if test="bean.content != null">
+				`content`,
+			</if>
+			<if test="bean.replyContent != null">
+				`reply_content`,
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time`,
+			</if>
+			<if test="bean.replyTime != null">
+				`reply_time`,
+			</if>
+			<if test="bean.replySts != null">
+				`reply_sts`,
+			</if>
+			<if test="bean.postip != null">
+				`postip`,
+			</if>
+			<if test="bean.score != null">
+				`score`,
+			</if>
+			<if test="bean.usefulCounts != null">
+				`useful_counts`,
+			</if>
+			<if test="bean.pics != null">
+				`pics`,
+			</if>
+			<if test="bean.isAnonymous != null">
+				`is_anonymous`,
+			</if>
+			<if test="bean.status != null">
+				`status`,
+			</if>
+			<if test="bean.evaluate != null">
+				`evaluate`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.prodCommId != null">
+				#{bean.prodCommId},
+			</if>
+			<if test="bean.prodId != null">
+				#{bean.prodId},
+			</if>
+			<if test="bean.orderItemId != null">
+				#{bean.orderItemId},
+			</if>
+			<if test="bean.userId != null">
+				#{bean.userId},
+			</if>
+			<if test="bean.content != null">
+				#{bean.content},
+			</if>
+			<if test="bean.replyContent != null">
+				#{bean.replyContent},
+			</if>
+			<if test="bean.recTime != null">
+				#{bean.recTime},
+			</if>
+			<if test="bean.replyTime != null">
+				#{bean.replyTime},
+			</if>
+			<if test="bean.replySts != null">
+				#{bean.replySts},
+			</if>
+			<if test="bean.postip != null">
+				#{bean.postip},
+			</if>
+			<if test="bean.score != null">
+				#{bean.score},
+			</if>
+			<if test="bean.usefulCounts != null">
+				#{bean.usefulCounts},
+			</if>
+			<if test="bean.pics != null">
+				#{bean.pics},
+			</if>
+			<if test="bean.isAnonymous != null">
+				#{bean.isAnonymous},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+			<if test="bean.evaluate != null">
+				#{bean.evaluate},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.ProdComm">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.prodCommId != null">
+				`prod_comm_id`,
+			</if>
+			<if test="bean.prodId != null">
+				`prod_id`,
+			</if>
+			<if test="bean.orderItemId != null">
+				`order_item_id`,
+			</if>
+			<if test="bean.userId != null">
+				`user_id`,
+			</if>
+			<if test="bean.content != null">
+				`content`,
+			</if>
+			<if test="bean.replyContent != null">
+				`reply_content`,
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time`,
+			</if>
+			<if test="bean.replyTime != null">
+				`reply_time`,
+			</if>
+			<if test="bean.replySts != null">
+				`reply_sts`,
+			</if>
+			<if test="bean.postip != null">
+				`postip`,
+			</if>
+			<if test="bean.score != null">
+				`score`,
+			</if>
+			<if test="bean.usefulCounts != null">
+				`useful_counts`,
+			</if>
+			<if test="bean.pics != null">
+				`pics`,
+			</if>
+			<if test="bean.isAnonymous != null">
+				`is_anonymous`,
+			</if>
+			<if test="bean.status != null">
+				`status`,
+			</if>
+			<if test="bean.evaluate != null">
+				`evaluate`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.prodCommId != null">
+				#{bean.prodCommId},
+			</if>
+			<if test="bean.prodId != null">
+				#{bean.prodId},
+			</if>
+			<if test="bean.orderItemId != null">
+				#{bean.orderItemId},
+			</if>
+			<if test="bean.userId != null">
+				#{bean.userId},
+			</if>
+			<if test="bean.content != null">
+				#{bean.content},
+			</if>
+			<if test="bean.replyContent != null">
+				#{bean.replyContent},
+			</if>
+			<if test="bean.recTime != null">
+				#{bean.recTime},
+			</if>
+			<if test="bean.replyTime != null">
+				#{bean.replyTime},
+			</if>
+			<if test="bean.replySts != null">
+				#{bean.replySts},
+			</if>
+			<if test="bean.postip != null">
+				#{bean.postip},
+			</if>
+			<if test="bean.score != null">
+				#{bean.score},
+			</if>
+			<if test="bean.usefulCounts != null">
+				#{bean.usefulCounts},
+			</if>
+			<if test="bean.pics != null">
+				#{bean.pics},
+			</if>
+			<if test="bean.isAnonymous != null">
+				#{bean.isAnonymous},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+			<if test="bean.evaluate != null">
+				#{bean.evaluate},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.prodId != null">
+				`prod_id` = VALUES(`prod_id`),
+			</if>
+			<if test="bean.orderItemId != null">
+				`order_item_id` = VALUES(`order_item_id`),
+			</if>
+			<if test="bean.userId != null">
+				`user_id` = VALUES(`user_id`),
+			</if>
+			<if test="bean.content != null">
+				`content` = VALUES(`content`),
+			</if>
+			<if test="bean.replyContent != null">
+				`reply_content` = VALUES(`reply_content`),
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time` = VALUES(`rec_time`),
+			</if>
+			<if test="bean.replyTime != null">
+				`reply_time` = VALUES(`reply_time`),
+			</if>
+			<if test="bean.replySts != null">
+				`reply_sts` = VALUES(`reply_sts`),
+			</if>
+			<if test="bean.postip != null">
+				`postip` = VALUES(`postip`),
+			</if>
+			<if test="bean.score != null">
+				`score` = VALUES(`score`),
+			</if>
+			<if test="bean.usefulCounts != null">
+				`useful_counts` = VALUES(`useful_counts`),
+			</if>
+			<if test="bean.pics != null">
+				`pics` = VALUES(`pics`),
+			</if>
+			<if test="bean.isAnonymous != null">
+				`is_anonymous` = VALUES(`is_anonymous`),
+			</if>
+			<if test="bean.status != null">
+				`status` = VALUES(`status`),
+			</if>
+			<if test="bean.evaluate != null">
+				`evaluate` = VALUES(`evaluate`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.ProdComm">
+		INSERT INTO tz_prod_comm (`prod_id`,`order_item_id`,`user_id`,`content`,`reply_content`,`rec_time`,`reply_time`,`reply_sts`,`postip`,`score`,`useful_counts`,`pics`,`is_anonymous`,`status`,`evaluate`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.prodId},#{bean.orderItemId},#{bean.userId},#{bean.content},#{bean.replyContent},#{bean.recTime},#{bean.replyTime},#{bean.replySts},#{bean.postip},#{bean.score},#{bean.usefulCounts},#{bean.pics},#{bean.isAnonymous},#{bean.status},#{bean.evaluate})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.ProdComm">
+		INSERT INTO tz_prod_comm (`prod_id`,`order_item_id`,`user_id`,`content`,`reply_content`,`rec_time`,`reply_time`,`reply_sts`,`postip`,`score`,`useful_counts`,`pics`,`is_anonymous`,`status`,`evaluate`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.prodId},#{bean.orderItemId},#{bean.userId},#{bean.content},#{bean.replyContent},#{bean.recTime},#{bean.replyTime},#{bean.replySts},#{bean.postip},#{bean.score},#{bean.usefulCounts},#{bean.pics},#{bean.isAnonymous},#{bean.status},#{bean.evaluate})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `prod_comm_id`=VALUES(`prod_comm_id`), `prod_id`=VALUES(`prod_id`), `order_item_id`=VALUES(`order_item_id`), `user_id`=VALUES(`user_id`), `content`=VALUES(`content`), `reply_content`=VALUES(`reply_content`), `rec_time`=VALUES(`rec_time`), `reply_time`=VALUES(`reply_time`), `reply_sts`=VALUES(`reply_sts`), `postip`=VALUES(`postip`), `score`=VALUES(`score`), `useful_counts`=VALUES(`useful_counts`), `pics`=VALUES(`pics`), `is_anonymous`=VALUES(`is_anonymous`), `status`=VALUES(`status`), `evaluate`=VALUES(`evaluate`)
+	</insert>
+
+	<!-- "根据"ProdCommId"查询" -->
+	<select id="selectByProdCommId" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_prod_comm` WHERE prod_comm_id=#{prodCommId};
+	</select>
+
+	<!-- "根据"ProdCommId"删除" -->
+	<delete id="deleteByProdCommId">
+		DELETE FROM `tz_prod_comm` WHERE prod_comm_id=#{prodCommId};
+	</delete>
+
+	<!-- "根据"ProdCommId"更新" -->
+	<update id="updateByProdCommId" parameterType="com.mall.entity.po.ProdComm">
+		UPDATE `tz_prod_comm`
+		<set>
+			<if test="bean.prodCommId != null">
+				`prod_comm_id` = #{bean.prodCommId}, 
+			</if>
+			<if test="bean.prodId != null">
+				`prod_id` = #{bean.prodId}, 
+			</if>
+			<if test="bean.orderItemId != null">
+				`order_item_id` = #{bean.orderItemId}, 
+			</if>
+			<if test="bean.userId != null">
+				`user_id` = #{bean.userId}, 
+			</if>
+			<if test="bean.content != null">
+				`content` = #{bean.content}, 
+			</if>
+			<if test="bean.replyContent != null">
+				`reply_content` = #{bean.replyContent}, 
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time` = #{bean.recTime}, 
+			</if>
+			<if test="bean.replyTime != null">
+				`reply_time` = #{bean.replyTime}, 
+			</if>
+			<if test="bean.replySts != null">
+				`reply_sts` = #{bean.replySts}, 
+			</if>
+			<if test="bean.postip != null">
+				`postip` = #{bean.postip}, 
+			</if>
+			<if test="bean.score != null">
+				`score` = #{bean.score}, 
+			</if>
+			<if test="bean.usefulCounts != null">
+				`useful_counts` = #{bean.usefulCounts}, 
+			</if>
+			<if test="bean.pics != null">
+				`pics` = #{bean.pics}, 
+			</if>
+			<if test="bean.isAnonymous != null">
+				`is_anonymous` = #{bean.isAnonymous}, 
+			</if>
+			<if test="bean.status != null">
+				`status` = #{bean.status}, 
+			</if>
+			<if test="bean.evaluate != null">
+				`evaluate` = #{bean.evaluate}, 
+			</if>
+		</set>
+		WHERE prod_comm_id=#{prodCommId};
+	</update>
+
+</mapper>

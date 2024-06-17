@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.ProdPropMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.ProdProp">
+		<!-- 属性id -->
+		<result column="prop_id" property="propId" />
+		<!-- 属性名称 -->
+		<result column="prop_name" property="propName" />
+		<!-- ProdPropRule 1:销售属性(规格); 2:参数属性; -->
+		<result column="rule" property="rule" />
+		<!-- 店铺id -->
+		<result column="shop_id" property="shopId" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		prop_id,prop_name,rule,shop_id
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.propId != null ">
+			and prop_id = #{query.propId}
+		</if>
+		<if test="query.propName != null and query.propName != ''">
+			and prop_name = #{query.propName}
+		</if>
+		<if test="query.rule != null ">
+			and rule = #{query.rule}
+		</if>
+		<if test="query.shopId != null ">
+			and shop_id = #{query.shopId}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+		<if test="query.propNameFuzzy != null and query.propNameFuzzy != ''">
+			and propNameFuzzy like concat('%',#{query.propNameFuzzy}, '%')
+		</if>
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_prod_prop <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_prod_prop <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.ProdProp">
+		<selectKey keyProperty="bean.prop_id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_prod_prop
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.propId != null">
+				`prop_id`,
+			</if>
+			<if test="bean.propName != null">
+				`prop_name`,
+			</if>
+			<if test="bean.rule != null">
+				`rule`,
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.propId != null">
+				#{bean.propId},
+			</if>
+			<if test="bean.propName != null">
+				#{bean.propName},
+			</if>
+			<if test="bean.rule != null">
+				#{bean.rule},
+			</if>
+			<if test="bean.shopId != null">
+				#{bean.shopId},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.ProdProp">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.propId != null">
+				`prop_id`,
+			</if>
+			<if test="bean.propName != null">
+				`prop_name`,
+			</if>
+			<if test="bean.rule != null">
+				`rule`,
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.propId != null">
+				#{bean.propId},
+			</if>
+			<if test="bean.propName != null">
+				#{bean.propName},
+			</if>
+			<if test="bean.rule != null">
+				#{bean.rule},
+			</if>
+			<if test="bean.shopId != null">
+				#{bean.shopId},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.propName != null">
+				`prop_name` = VALUES(`prop_name`),
+			</if>
+			<if test="bean.rule != null">
+				`rule` = VALUES(`rule`),
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id` = VALUES(`shop_id`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.ProdProp">
+		INSERT INTO tz_prod_prop (`prop_name`,`rule`,`shop_id`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.propName},#{bean.rule},#{bean.shopId})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.ProdProp">
+		INSERT INTO tz_prod_prop (`prop_name`,`rule`,`shop_id`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.propName},#{bean.rule},#{bean.shopId})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `prop_id`=VALUES(`prop_id`), `prop_name`=VALUES(`prop_name`), `rule`=VALUES(`rule`), `shop_id`=VALUES(`shop_id`)
+	</insert>
+
+	<!-- "根据"PropId"查询" -->
+	<select id="selectByPropId" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_prod_prop` WHERE prop_id=#{propId};
+	</select>
+
+	<!-- "根据"PropId"删除" -->
+	<delete id="deleteByPropId">
+		DELETE FROM `tz_prod_prop` WHERE prop_id=#{propId};
+	</delete>
+
+	<!-- "根据"PropId"更新" -->
+	<update id="updateByPropId" parameterType="com.mall.entity.po.ProdProp">
+		UPDATE `tz_prod_prop`
+		<set>
+			<if test="bean.propId != null">
+				`prop_id` = #{bean.propId}, 
+			</if>
+			<if test="bean.propName != null">
+				`prop_name` = #{bean.propName}, 
+			</if>
+			<if test="bean.rule != null">
+				`rule` = #{bean.rule}, 
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id` = #{bean.shopId}, 
+			</if>
+		</set>
+		WHERE prop_id=#{propId};
+	</update>
+
+</mapper>

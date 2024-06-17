@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.PickAddrMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.PickAddr">
+		<!-- ID -->
+		<result column="addr_id" property="addrId" />
+		<!-- 自提点名称 -->
+		<result column="addr_name" property="addrName" />
+		<!-- 地址 -->
+		<result column="addr" property="addr" />
+		<!-- 手机 -->
+		<result column="mobile" property="mobile" />
+		<!-- 省份ID -->
+		<result column="province_id" property="provinceId" />
+		<!-- 省份 -->
+		<result column="province" property="province" />
+		<!-- 城市ID -->
+		<result column="city_id" property="cityId" />
+		<!-- 城市 -->
+		<result column="city" property="city" />
+		<!-- 区/县ID -->
+		<result column="area_id" property="areaId" />
+		<!-- 区/县 -->
+		<result column="area" property="area" />
+		<!-- 店铺id -->
+		<result column="shop_id" property="shopId" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		addr_id,addr_name,addr,mobile,province_id,province,city_id,city,area_id,area,shop_id
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.addrId != null ">
+			and addr_id = #{query.addrId}
+		</if>
+		<if test="query.addrName != null and query.addrName != ''">
+			and addr_name = #{query.addrName}
+		</if>
+		<if test="query.addr != null and query.addr != ''">
+			and addr = #{query.addr}
+		</if>
+		<if test="query.mobile != null and query.mobile != ''">
+			and mobile = #{query.mobile}
+		</if>
+		<if test="query.provinceId != null ">
+			and province_id = #{query.provinceId}
+		</if>
+		<if test="query.province != null and query.province != ''">
+			and province = #{query.province}
+		</if>
+		<if test="query.cityId != null ">
+			and city_id = #{query.cityId}
+		</if>
+		<if test="query.city != null and query.city != ''">
+			and city = #{query.city}
+		</if>
+		<if test="query.areaId != null ">
+			and area_id = #{query.areaId}
+		</if>
+		<if test="query.area != null and query.area != ''">
+			and area = #{query.area}
+		</if>
+		<if test="query.shopId != null ">
+			and shop_id = #{query.shopId}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+		<if test="query.addrNameFuzzy != null and query.addrNameFuzzy != ''">
+			and addrNameFuzzy like concat('%',#{query.addrNameFuzzy}, '%')
+		</if>
+		<if test="query.addrFuzzy != null and query.addrFuzzy != ''">
+			and addrFuzzy like concat('%',#{query.addrFuzzy}, '%')
+		</if>
+		<if test="query.mobileFuzzy != null and query.mobileFuzzy != ''">
+			and mobileFuzzy like concat('%',#{query.mobileFuzzy}, '%')
+		</if>
+		<if test="query.provinceFuzzy != null and query.provinceFuzzy != ''">
+			and provinceFuzzy like concat('%',#{query.provinceFuzzy}, '%')
+		</if>
+		<if test="query.cityFuzzy != null and query.cityFuzzy != ''">
+			and cityFuzzy like concat('%',#{query.cityFuzzy}, '%')
+		</if>
+		<if test="query.areaFuzzy != null and query.areaFuzzy != ''">
+			and areaFuzzy like concat('%',#{query.areaFuzzy}, '%')
+		</if>
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_pick_addr <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_pick_addr <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.PickAddr">
+		<selectKey keyProperty="bean.addr_id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_pick_addr
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.addrId != null">
+				`addr_id`,
+			</if>
+			<if test="bean.addrName != null">
+				`addr_name`,
+			</if>
+			<if test="bean.addr != null">
+				`addr`,
+			</if>
+			<if test="bean.mobile != null">
+				`mobile`,
+			</if>
+			<if test="bean.provinceId != null">
+				`province_id`,
+			</if>
+			<if test="bean.province != null">
+				`province`,
+			</if>
+			<if test="bean.cityId != null">
+				`city_id`,
+			</if>
+			<if test="bean.city != null">
+				`city`,
+			</if>
+			<if test="bean.areaId != null">
+				`area_id`,
+			</if>
+			<if test="bean.area != null">
+				`area`,
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.addrId != null">
+				#{bean.addrId},
+			</if>
+			<if test="bean.addrName != null">
+				#{bean.addrName},
+			</if>
+			<if test="bean.addr != null">
+				#{bean.addr},
+			</if>
+			<if test="bean.mobile != null">
+				#{bean.mobile},
+			</if>
+			<if test="bean.provinceId != null">
+				#{bean.provinceId},
+			</if>
+			<if test="bean.province != null">
+				#{bean.province},
+			</if>
+			<if test="bean.cityId != null">
+				#{bean.cityId},
+			</if>
+			<if test="bean.city != null">
+				#{bean.city},
+			</if>
+			<if test="bean.areaId != null">
+				#{bean.areaId},
+			</if>
+			<if test="bean.area != null">
+				#{bean.area},
+			</if>
+			<if test="bean.shopId != null">
+				#{bean.shopId},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.PickAddr">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.addrId != null">
+				`addr_id`,
+			</if>
+			<if test="bean.addrName != null">
+				`addr_name`,
+			</if>
+			<if test="bean.addr != null">
+				`addr`,
+			</if>
+			<if test="bean.mobile != null">
+				`mobile`,
+			</if>
+			<if test="bean.provinceId != null">
+				`province_id`,
+			</if>
+			<if test="bean.province != null">
+				`province`,
+			</if>
+			<if test="bean.cityId != null">
+				`city_id`,
+			</if>
+			<if test="bean.city != null">
+				`city`,
+			</if>
+			<if test="bean.areaId != null">
+				`area_id`,
+			</if>
+			<if test="bean.area != null">
+				`area`,
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.addrId != null">
+				#{bean.addrId},
+			</if>
+			<if test="bean.addrName != null">
+				#{bean.addrName},
+			</if>
+			<if test="bean.addr != null">
+				#{bean.addr},
+			</if>
+			<if test="bean.mobile != null">
+				#{bean.mobile},
+			</if>
+			<if test="bean.provinceId != null">
+				#{bean.provinceId},
+			</if>
+			<if test="bean.province != null">
+				#{bean.province},
+			</if>
+			<if test="bean.cityId != null">
+				#{bean.cityId},
+			</if>
+			<if test="bean.city != null">
+				#{bean.city},
+			</if>
+			<if test="bean.areaId != null">
+				#{bean.areaId},
+			</if>
+			<if test="bean.area != null">
+				#{bean.area},
+			</if>
+			<if test="bean.shopId != null">
+				#{bean.shopId},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.addrName != null">
+				`addr_name` = VALUES(`addr_name`),
+			</if>
+			<if test="bean.addr != null">
+				`addr` = VALUES(`addr`),
+			</if>
+			<if test="bean.mobile != null">
+				`mobile` = VALUES(`mobile`),
+			</if>
+			<if test="bean.provinceId != null">
+				`province_id` = VALUES(`province_id`),
+			</if>
+			<if test="bean.province != null">
+				`province` = VALUES(`province`),
+			</if>
+			<if test="bean.cityId != null">
+				`city_id` = VALUES(`city_id`),
+			</if>
+			<if test="bean.city != null">
+				`city` = VALUES(`city`),
+			</if>
+			<if test="bean.areaId != null">
+				`area_id` = VALUES(`area_id`),
+			</if>
+			<if test="bean.area != null">
+				`area` = VALUES(`area`),
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id` = VALUES(`shop_id`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.PickAddr">
+		INSERT INTO tz_pick_addr (`addr_name`,`addr`,`mobile`,`province_id`,`province`,`city_id`,`city`,`area_id`,`area`,`shop_id`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.addrName},#{bean.addr},#{bean.mobile},#{bean.provinceId},#{bean.province},#{bean.cityId},#{bean.city},#{bean.areaId},#{bean.area},#{bean.shopId})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.PickAddr">
+		INSERT INTO tz_pick_addr (`addr_name`,`addr`,`mobile`,`province_id`,`province`,`city_id`,`city`,`area_id`,`area`,`shop_id`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.addrName},#{bean.addr},#{bean.mobile},#{bean.provinceId},#{bean.province},#{bean.cityId},#{bean.city},#{bean.areaId},#{bean.area},#{bean.shopId})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `addr_id`=VALUES(`addr_id`), `addr_name`=VALUES(`addr_name`), `addr`=VALUES(`addr`), `mobile`=VALUES(`mobile`), `province_id`=VALUES(`province_id`), `province`=VALUES(`province`), `city_id`=VALUES(`city_id`), `city`=VALUES(`city`), `area_id`=VALUES(`area_id`), `area`=VALUES(`area`), `shop_id`=VALUES(`shop_id`)
+	</insert>
+
+	<!-- "根据"AddrId"查询" -->
+	<select id="selectByAddrId" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_pick_addr` WHERE addr_id=#{addrId};
+	</select>
+
+	<!-- "根据"AddrId"删除" -->
+	<delete id="deleteByAddrId">
+		DELETE FROM `tz_pick_addr` WHERE addr_id=#{addrId};
+	</delete>
+
+	<!-- "根据"AddrId"更新" -->
+	<update id="updateByAddrId" parameterType="com.mall.entity.po.PickAddr">
+		UPDATE `tz_pick_addr`
+		<set>
+			<if test="bean.addrId != null">
+				`addr_id` = #{bean.addrId}, 
+			</if>
+			<if test="bean.addrName != null">
+				`addr_name` = #{bean.addrName}, 
+			</if>
+			<if test="bean.addr != null">
+				`addr` = #{bean.addr}, 
+			</if>
+			<if test="bean.mobile != null">
+				`mobile` = #{bean.mobile}, 
+			</if>
+			<if test="bean.provinceId != null">
+				`province_id` = #{bean.provinceId}, 
+			</if>
+			<if test="bean.province != null">
+				`province` = #{bean.province}, 
+			</if>
+			<if test="bean.cityId != null">
+				`city_id` = #{bean.cityId}, 
+			</if>
+			<if test="bean.city != null">
+				`city` = #{bean.city}, 
+			</if>
+			<if test="bean.areaId != null">
+				`area_id` = #{bean.areaId}, 
+			</if>
+			<if test="bean.area != null">
+				`area` = #{bean.area}, 
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id` = #{bean.shopId}, 
+			</if>
+		</set>
+		WHERE addr_id=#{addrId};
+	</update>
+
+</mapper>

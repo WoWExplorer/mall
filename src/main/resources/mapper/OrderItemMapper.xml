@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.OrderItemMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.OrderItem">
+		<!-- 订单项ID -->
+		<result column="order_item_id" property="orderItemId" />
+		<!-- 店铺id -->
+		<result column="shop_id" property="shopId" />
+		<!-- 订单order_number -->
+		<result column="order_number" property="orderNumber" />
+		<!-- 产品ID -->
+		<result column="prod_id" property="prodId" />
+		<!-- 产品SkuID -->
+		<result column="sku_id" property="skuId" />
+		<!-- 购物车产品个数 -->
+		<result column="prod_count" property="prodCount" />
+		<!-- 产品名称 -->
+		<result column="prod_name" property="prodName" />
+		<!-- sku名称 -->
+		<result column="sku_name" property="skuName" />
+		<!-- 产品主图片路径 -->
+		<result column="pic" property="pic" />
+		<!-- 产品价格 -->
+		<result column="price" property="price" />
+		<!-- 用户Id -->
+		<result column="user_id" property="userId" />
+		<!-- 商品总金额 -->
+		<result column="product_total_amount" property="productTotalAmount" />
+		<!-- 购物时间 -->
+		<result column="rec_time" property="recTime" />
+		<!-- 评论状态： 0 未评价  1 已评价 -->
+		<result column="comm_sts" property="commSts" />
+		<!-- 推广员使用的推销卡号 -->
+		<result column="distribution_card_no" property="distributionCardNo" />
+		<!-- 加入购物车时间 -->
+		<result column="basket_date" property="basketDate" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		order_item_id,shop_id,order_number,prod_id,sku_id,prod_count,prod_name,sku_name,pic,price,user_id,product_total_amount,rec_time,comm_sts,distribution_card_no,basket_date
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.orderItemId != null ">
+			and order_item_id = #{query.orderItemId}
+		</if>
+		<if test="query.shopId != null ">
+			and shop_id = #{query.shopId}
+		</if>
+		<if test="query.orderNumber != null and query.orderNumber != ''">
+			and order_number = #{query.orderNumber}
+		</if>
+		<if test="query.prodId != null ">
+			and prod_id = #{query.prodId}
+		</if>
+		<if test="query.skuId != null ">
+			and sku_id = #{query.skuId}
+		</if>
+		<if test="query.prodCount != null ">
+			and prod_count = #{query.prodCount}
+		</if>
+		<if test="query.prodName != null and query.prodName != ''">
+			and prod_name = #{query.prodName}
+		</if>
+		<if test="query.skuName != null and query.skuName != ''">
+			and sku_name = #{query.skuName}
+		</if>
+		<if test="query.pic != null and query.pic != ''">
+			and pic = #{query.pic}
+		</if>
+		<if test="query.price != null ">
+			and price = #{query.price}
+		</if>
+		<if test="query.userId != null and query.userId != ''">
+			and user_id = #{query.userId}
+		</if>
+		<if test="query.productTotalAmount != null ">
+			and product_total_amount = #{query.productTotalAmount}
+		</if>
+		<if test="query.recTime != null ">
+			and rec_time = #{query.recTime}
+		</if>
+		<if test="query.commSts != null ">
+			and comm_sts = #{query.commSts}
+		</if>
+		<if test="query.distributionCardNo != null and query.distributionCardNo != ''">
+			and distribution_card_no = #{query.distributionCardNo}
+		</if>
+		<if test="query.basketDate != null ">
+			and basket_date = #{query.basketDate}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+		<if test="query.orderNumberFuzzy != null and query.orderNumberFuzzy != ''">
+			and orderNumberFuzzy like concat('%',#{query.orderNumberFuzzy}, '%')
+		</if>
+		<if test="query.prodNameFuzzy != null and query.prodNameFuzzy != ''">
+			and prodNameFuzzy like concat('%',#{query.prodNameFuzzy}, '%')
+		</if>
+		<if test="query.skuNameFuzzy != null and query.skuNameFuzzy != ''">
+			and skuNameFuzzy like concat('%',#{query.skuNameFuzzy}, '%')
+		</if>
+		<if test="query.picFuzzy != null and query.picFuzzy != ''">
+			and picFuzzy like concat('%',#{query.picFuzzy}, '%')
+		</if>
+		<if test="query.userIdFuzzy != null and query.userIdFuzzy != ''">
+			and userIdFuzzy like concat('%',#{query.userIdFuzzy}, '%')
+		</if>
+		<if test="query.recTimeStart != null and query.recTimeStart != ''">
+			<![CDATA[and rec_time >= str_to_date(#{recTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.recTimeEnd != null and query.recTimeEnd != ''">
+			<![CDATA[and rec_time >= str_to_date(#{recTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.distributionCardNoFuzzy != null and query.distributionCardNoFuzzy != ''">
+			and distributionCardNoFuzzy like concat('%',#{query.distributionCardNoFuzzy}, '%')
+		</if>
+		<if test="query.basketDateStart != null and query.basketDateStart != ''">
+			<![CDATA[and basket_date >= str_to_date(#{basketDateStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.basketDateEnd != null and query.basketDateEnd != ''">
+			<![CDATA[and basket_date >= str_to_date(#{basketDateEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_order_item <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_order_item <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.OrderItem">
+		<selectKey keyProperty="bean.order_item_id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_order_item
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.orderItemId != null">
+				`order_item_id`,
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id`,
+			</if>
+			<if test="bean.orderNumber != null">
+				`order_number`,
+			</if>
+			<if test="bean.prodId != null">
+				`prod_id`,
+			</if>
+			<if test="bean.skuId != null">
+				`sku_id`,
+			</if>
+			<if test="bean.prodCount != null">
+				`prod_count`,
+			</if>
+			<if test="bean.prodName != null">
+				`prod_name`,
+			</if>
+			<if test="bean.skuName != null">
+				`sku_name`,
+			</if>
+			<if test="bean.pic != null">
+				`pic`,
+			</if>
+			<if test="bean.price != null">
+				`price`,
+			</if>
+			<if test="bean.userId != null">
+				`user_id`,
+			</if>
+			<if test="bean.productTotalAmount != null">
+				`product_total_amount`,
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time`,
+			</if>
+			<if test="bean.commSts != null">
+				`comm_sts`,
+			</if>
+			<if test="bean.distributionCardNo != null">
+				`distribution_card_no`,
+			</if>
+			<if test="bean.basketDate != null">
+				`basket_date`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.orderItemId != null">
+				#{bean.orderItemId},
+			</if>
+			<if test="bean.shopId != null">
+				#{bean.shopId},
+			</if>
+			<if test="bean.orderNumber != null">
+				#{bean.orderNumber},
+			</if>
+			<if test="bean.prodId != null">
+				#{bean.prodId},
+			</if>
+			<if test="bean.skuId != null">
+				#{bean.skuId},
+			</if>
+			<if test="bean.prodCount != null">
+				#{bean.prodCount},
+			</if>
+			<if test="bean.prodName != null">
+				#{bean.prodName},
+			</if>
+			<if test="bean.skuName != null">
+				#{bean.skuName},
+			</if>
+			<if test="bean.pic != null">
+				#{bean.pic},
+			</if>
+			<if test="bean.price != null">
+				#{bean.price},
+			</if>
+			<if test="bean.userId != null">
+				#{bean.userId},
+			</if>
+			<if test="bean.productTotalAmount != null">
+				#{bean.productTotalAmount},
+			</if>
+			<if test="bean.recTime != null">
+				#{bean.recTime},
+			</if>
+			<if test="bean.commSts != null">
+				#{bean.commSts},
+			</if>
+			<if test="bean.distributionCardNo != null">
+				#{bean.distributionCardNo},
+			</if>
+			<if test="bean.basketDate != null">
+				#{bean.basketDate},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.OrderItem">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.orderItemId != null">
+				`order_item_id`,
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id`,
+			</if>
+			<if test="bean.orderNumber != null">
+				`order_number`,
+			</if>
+			<if test="bean.prodId != null">
+				`prod_id`,
+			</if>
+			<if test="bean.skuId != null">
+				`sku_id`,
+			</if>
+			<if test="bean.prodCount != null">
+				`prod_count`,
+			</if>
+			<if test="bean.prodName != null">
+				`prod_name`,
+			</if>
+			<if test="bean.skuName != null">
+				`sku_name`,
+			</if>
+			<if test="bean.pic != null">
+				`pic`,
+			</if>
+			<if test="bean.price != null">
+				`price`,
+			</if>
+			<if test="bean.userId != null">
+				`user_id`,
+			</if>
+			<if test="bean.productTotalAmount != null">
+				`product_total_amount`,
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time`,
+			</if>
+			<if test="bean.commSts != null">
+				`comm_sts`,
+			</if>
+			<if test="bean.distributionCardNo != null">
+				`distribution_card_no`,
+			</if>
+			<if test="bean.basketDate != null">
+				`basket_date`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.orderItemId != null">
+				#{bean.orderItemId},
+			</if>
+			<if test="bean.shopId != null">
+				#{bean.shopId},
+			</if>
+			<if test="bean.orderNumber != null">
+				#{bean.orderNumber},
+			</if>
+			<if test="bean.prodId != null">
+				#{bean.prodId},
+			</if>
+			<if test="bean.skuId != null">
+				#{bean.skuId},
+			</if>
+			<if test="bean.prodCount != null">
+				#{bean.prodCount},
+			</if>
+			<if test="bean.prodName != null">
+				#{bean.prodName},
+			</if>
+			<if test="bean.skuName != null">
+				#{bean.skuName},
+			</if>
+			<if test="bean.pic != null">
+				#{bean.pic},
+			</if>
+			<if test="bean.price != null">
+				#{bean.price},
+			</if>
+			<if test="bean.userId != null">
+				#{bean.userId},
+			</if>
+			<if test="bean.productTotalAmount != null">
+				#{bean.productTotalAmount},
+			</if>
+			<if test="bean.recTime != null">
+				#{bean.recTime},
+			</if>
+			<if test="bean.commSts != null">
+				#{bean.commSts},
+			</if>
+			<if test="bean.distributionCardNo != null">
+				#{bean.distributionCardNo},
+			</if>
+			<if test="bean.basketDate != null">
+				#{bean.basketDate},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.shopId != null">
+				`shop_id` = VALUES(`shop_id`),
+			</if>
+			<if test="bean.orderNumber != null">
+				`order_number` = VALUES(`order_number`),
+			</if>
+			<if test="bean.prodId != null">
+				`prod_id` = VALUES(`prod_id`),
+			</if>
+			<if test="bean.skuId != null">
+				`sku_id` = VALUES(`sku_id`),
+			</if>
+			<if test="bean.prodCount != null">
+				`prod_count` = VALUES(`prod_count`),
+			</if>
+			<if test="bean.prodName != null">
+				`prod_name` = VALUES(`prod_name`),
+			</if>
+			<if test="bean.skuName != null">
+				`sku_name` = VALUES(`sku_name`),
+			</if>
+			<if test="bean.pic != null">
+				`pic` = VALUES(`pic`),
+			</if>
+			<if test="bean.price != null">
+				`price` = VALUES(`price`),
+			</if>
+			<if test="bean.userId != null">
+				`user_id` = VALUES(`user_id`),
+			</if>
+			<if test="bean.productTotalAmount != null">
+				`product_total_amount` = VALUES(`product_total_amount`),
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time` = VALUES(`rec_time`),
+			</if>
+			<if test="bean.commSts != null">
+				`comm_sts` = VALUES(`comm_sts`),
+			</if>
+			<if test="bean.distributionCardNo != null">
+				`distribution_card_no` = VALUES(`distribution_card_no`),
+			</if>
+			<if test="bean.basketDate != null">
+				`basket_date` = VALUES(`basket_date`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.OrderItem">
+		INSERT INTO tz_order_item (`shop_id`,`order_number`,`prod_id`,`sku_id`,`prod_count`,`prod_name`,`sku_name`,`pic`,`price`,`user_id`,`product_total_amount`,`rec_time`,`comm_sts`,`distribution_card_no`,`basket_date`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.shopId},#{bean.orderNumber},#{bean.prodId},#{bean.skuId},#{bean.prodCount},#{bean.prodName},#{bean.skuName},#{bean.pic},#{bean.price},#{bean.userId},#{bean.productTotalAmount},#{bean.recTime},#{bean.commSts},#{bean.distributionCardNo},#{bean.basketDate})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.OrderItem">
+		INSERT INTO tz_order_item (`shop_id`,`order_number`,`prod_id`,`sku_id`,`prod_count`,`prod_name`,`sku_name`,`pic`,`price`,`user_id`,`product_total_amount`,`rec_time`,`comm_sts`,`distribution_card_no`,`basket_date`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.shopId},#{bean.orderNumber},#{bean.prodId},#{bean.skuId},#{bean.prodCount},#{bean.prodName},#{bean.skuName},#{bean.pic},#{bean.price},#{bean.userId},#{bean.productTotalAmount},#{bean.recTime},#{bean.commSts},#{bean.distributionCardNo},#{bean.basketDate})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `order_item_id`=VALUES(`order_item_id`), `shop_id`=VALUES(`shop_id`), `order_number`=VALUES(`order_number`), `prod_id`=VALUES(`prod_id`), `sku_id`=VALUES(`sku_id`), `prod_count`=VALUES(`prod_count`), `prod_name`=VALUES(`prod_name`), `sku_name`=VALUES(`sku_name`), `pic`=VALUES(`pic`), `price`=VALUES(`price`), `user_id`=VALUES(`user_id`), `product_total_amount`=VALUES(`product_total_amount`), `rec_time`=VALUES(`rec_time`), `comm_sts`=VALUES(`comm_sts`), `distribution_card_no`=VALUES(`distribution_card_no`), `basket_date`=VALUES(`basket_date`)
+	</insert>
+
+	<!-- "根据"OrderItemId"查询" -->
+	<select id="selectByOrderItemId" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_order_item` WHERE order_item_id=#{orderItemId};
+	</select>
+
+	<!-- "根据"OrderItemId"删除" -->
+	<delete id="deleteByOrderItemId">
+		DELETE FROM `tz_order_item` WHERE order_item_id=#{orderItemId};
+	</delete>
+
+	<!-- "根据"OrderItemId"更新" -->
+	<update id="updateByOrderItemId" parameterType="com.mall.entity.po.OrderItem">
+		UPDATE `tz_order_item`
+		<set>
+			<if test="bean.orderItemId != null">
+				`order_item_id` = #{bean.orderItemId}, 
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id` = #{bean.shopId}, 
+			</if>
+			<if test="bean.orderNumber != null">
+				`order_number` = #{bean.orderNumber}, 
+			</if>
+			<if test="bean.prodId != null">
+				`prod_id` = #{bean.prodId}, 
+			</if>
+			<if test="bean.skuId != null">
+				`sku_id` = #{bean.skuId}, 
+			</if>
+			<if test="bean.prodCount != null">
+				`prod_count` = #{bean.prodCount}, 
+			</if>
+			<if test="bean.prodName != null">
+				`prod_name` = #{bean.prodName}, 
+			</if>
+			<if test="bean.skuName != null">
+				`sku_name` = #{bean.skuName}, 
+			</if>
+			<if test="bean.pic != null">
+				`pic` = #{bean.pic}, 
+			</if>
+			<if test="bean.price != null">
+				`price` = #{bean.price}, 
+			</if>
+			<if test="bean.userId != null">
+				`user_id` = #{bean.userId}, 
+			</if>
+			<if test="bean.productTotalAmount != null">
+				`product_total_amount` = #{bean.productTotalAmount}, 
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time` = #{bean.recTime}, 
+			</if>
+			<if test="bean.commSts != null">
+				`comm_sts` = #{bean.commSts}, 
+			</if>
+			<if test="bean.distributionCardNo != null">
+				`distribution_card_no` = #{bean.distributionCardNo}, 
+			</if>
+			<if test="bean.basketDate != null">
+				`basket_date` = #{bean.basketDate}, 
+			</if>
+		</set>
+		WHERE order_item_id=#{orderItemId};
+	</update>
+
+</mapper>

@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.BrandMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.Brand">
+		<!-- 主键 -->
+		<result column="brand_id" property="brandId" />
+		<!-- 品牌名称 -->
+		<result column="brand_name" property="brandName" />
+		<!-- 图片路径 -->
+		<result column="brand_pic" property="brandPic" />
+		<!-- 用户ID -->
+		<result column="user_id" property="userId" />
+		<!-- 备注 -->
+		<result column="memo" property="memo" />
+		<!-- 顺序 -->
+		<result column="seq" property="seq" />
+		<!-- 默认是1，表示正常状态,0为下线状态 -->
+		<result column="status" property="status" />
+		<!-- 简要描述 -->
+		<result column="brief" property="brief" />
+		<!-- 内容 -->
+		<result column="content" property="content" />
+		<!-- 记录时间 -->
+		<result column="rec_time" property="recTime" />
+		<!-- 更新时间 -->
+		<result column="update_time" property="updateTime" />
+		<!-- 品牌首字母 -->
+		<result column="first_char" property="firstChar" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		brand_id,brand_name,brand_pic,user_id,memo,seq,status,brief,content,rec_time,update_time,first_char
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.brandId != null ">
+			and brand_id = #{query.brandId}
+		</if>
+		<if test="query.brandName != null and query.brandName != ''">
+			and brand_name = #{query.brandName}
+		</if>
+		<if test="query.brandPic != null and query.brandPic != ''">
+			and brand_pic = #{query.brandPic}
+		</if>
+		<if test="query.userId != null and query.userId != ''">
+			and user_id = #{query.userId}
+		</if>
+		<if test="query.memo != null and query.memo != ''">
+			and memo = #{query.memo}
+		</if>
+		<if test="query.seq != null ">
+			and seq = #{query.seq}
+		</if>
+		<if test="query.status != null ">
+			and status = #{query.status}
+		</if>
+		<if test="query.brief != null and query.brief != ''">
+			and brief = #{query.brief}
+		</if>
+		<if test="query.content != null and query.content != ''">
+			and content = #{query.content}
+		</if>
+		<if test="query.recTime != null ">
+			and rec_time = #{query.recTime}
+		</if>
+		<if test="query.updateTime != null ">
+			and update_time = #{query.updateTime}
+		</if>
+		<if test="query.firstChar != null and query.firstChar != ''">
+			and first_char = #{query.firstChar}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+		<if test="query.brandNameFuzzy != null and query.brandNameFuzzy != ''">
+			and brandNameFuzzy like concat('%',#{query.brandNameFuzzy}, '%')
+		</if>
+		<if test="query.brandPicFuzzy != null and query.brandPicFuzzy != ''">
+			and brandPicFuzzy like concat('%',#{query.brandPicFuzzy}, '%')
+		</if>
+		<if test="query.userIdFuzzy != null and query.userIdFuzzy != ''">
+			and userIdFuzzy like concat('%',#{query.userIdFuzzy}, '%')
+		</if>
+		<if test="query.memoFuzzy != null and query.memoFuzzy != ''">
+			and memoFuzzy like concat('%',#{query.memoFuzzy}, '%')
+		</if>
+		<if test="query.briefFuzzy != null and query.briefFuzzy != ''">
+			and briefFuzzy like concat('%',#{query.briefFuzzy}, '%')
+		</if>
+		<if test="query.contentFuzzy != null and query.contentFuzzy != ''">
+			and contentFuzzy like concat('%',#{query.contentFuzzy}, '%')
+		</if>
+		<if test="query.recTimeStart != null and query.recTimeStart != ''">
+			<![CDATA[and rec_time >= str_to_date(#{recTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.recTimeEnd != null and query.recTimeEnd != ''">
+			<![CDATA[and rec_time >= str_to_date(#{recTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.updateTimeStart != null and query.updateTimeStart != ''">
+			<![CDATA[and update_time >= str_to_date(#{updateTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.updateTimeEnd != null and query.updateTimeEnd != ''">
+			<![CDATA[and update_time >= str_to_date(#{updateTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.firstCharFuzzy != null and query.firstCharFuzzy != ''">
+			and firstCharFuzzy like concat('%',#{query.firstCharFuzzy}, '%')
+		</if>
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_brand <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_brand <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.Brand">
+		<selectKey keyProperty="bean.brand_id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_brand
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.brandId != null">
+				`brand_id`,
+			</if>
+			<if test="bean.brandName != null">
+				`brand_name`,
+			</if>
+			<if test="bean.brandPic != null">
+				`brand_pic`,
+			</if>
+			<if test="bean.userId != null">
+				`user_id`,
+			</if>
+			<if test="bean.memo != null">
+				`memo`,
+			</if>
+			<if test="bean.seq != null">
+				`seq`,
+			</if>
+			<if test="bean.status != null">
+				`status`,
+			</if>
+			<if test="bean.brief != null">
+				`brief`,
+			</if>
+			<if test="bean.content != null">
+				`content`,
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time`,
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time`,
+			</if>
+			<if test="bean.firstChar != null">
+				`first_char`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.brandId != null">
+				#{bean.brandId},
+			</if>
+			<if test="bean.brandName != null">
+				#{bean.brandName},
+			</if>
+			<if test="bean.brandPic != null">
+				#{bean.brandPic},
+			</if>
+			<if test="bean.userId != null">
+				#{bean.userId},
+			</if>
+			<if test="bean.memo != null">
+				#{bean.memo},
+			</if>
+			<if test="bean.seq != null">
+				#{bean.seq},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+			<if test="bean.brief != null">
+				#{bean.brief},
+			</if>
+			<if test="bean.content != null">
+				#{bean.content},
+			</if>
+			<if test="bean.recTime != null">
+				#{bean.recTime},
+			</if>
+			<if test="bean.updateTime != null">
+				#{bean.updateTime},
+			</if>
+			<if test="bean.firstChar != null">
+				#{bean.firstChar},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.Brand">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.brandId != null">
+				`brand_id`,
+			</if>
+			<if test="bean.brandName != null">
+				`brand_name`,
+			</if>
+			<if test="bean.brandPic != null">
+				`brand_pic`,
+			</if>
+			<if test="bean.userId != null">
+				`user_id`,
+			</if>
+			<if test="bean.memo != null">
+				`memo`,
+			</if>
+			<if test="bean.seq != null">
+				`seq`,
+			</if>
+			<if test="bean.status != null">
+				`status`,
+			</if>
+			<if test="bean.brief != null">
+				`brief`,
+			</if>
+			<if test="bean.content != null">
+				`content`,
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time`,
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time`,
+			</if>
+			<if test="bean.firstChar != null">
+				`first_char`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.brandId != null">
+				#{bean.brandId},
+			</if>
+			<if test="bean.brandName != null">
+				#{bean.brandName},
+			</if>
+			<if test="bean.brandPic != null">
+				#{bean.brandPic},
+			</if>
+			<if test="bean.userId != null">
+				#{bean.userId},
+			</if>
+			<if test="bean.memo != null">
+				#{bean.memo},
+			</if>
+			<if test="bean.seq != null">
+				#{bean.seq},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+			<if test="bean.brief != null">
+				#{bean.brief},
+			</if>
+			<if test="bean.content != null">
+				#{bean.content},
+			</if>
+			<if test="bean.recTime != null">
+				#{bean.recTime},
+			</if>
+			<if test="bean.updateTime != null">
+				#{bean.updateTime},
+			</if>
+			<if test="bean.firstChar != null">
+				#{bean.firstChar},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.brandName != null">
+				`brand_name` = VALUES(`brand_name`),
+			</if>
+			<if test="bean.brandPic != null">
+				`brand_pic` = VALUES(`brand_pic`),
+			</if>
+			<if test="bean.userId != null">
+				`user_id` = VALUES(`user_id`),
+			</if>
+			<if test="bean.memo != null">
+				`memo` = VALUES(`memo`),
+			</if>
+			<if test="bean.seq != null">
+				`seq` = VALUES(`seq`),
+			</if>
+			<if test="bean.status != null">
+				`status` = VALUES(`status`),
+			</if>
+			<if test="bean.brief != null">
+				`brief` = VALUES(`brief`),
+			</if>
+			<if test="bean.content != null">
+				`content` = VALUES(`content`),
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time` = VALUES(`rec_time`),
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time` = VALUES(`update_time`),
+			</if>
+			<if test="bean.firstChar != null">
+				`first_char` = VALUES(`first_char`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.Brand">
+		INSERT INTO tz_brand (`brand_name`,`brand_pic`,`user_id`,`memo`,`seq`,`status`,`brief`,`content`,`rec_time`,`update_time`,`first_char`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.brandName},#{bean.brandPic},#{bean.userId},#{bean.memo},#{bean.seq},#{bean.status},#{bean.brief},#{bean.content},#{bean.recTime},#{bean.updateTime},#{bean.firstChar})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.Brand">
+		INSERT INTO tz_brand (`brand_name`,`brand_pic`,`user_id`,`memo`,`seq`,`status`,`brief`,`content`,`rec_time`,`update_time`,`first_char`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.brandName},#{bean.brandPic},#{bean.userId},#{bean.memo},#{bean.seq},#{bean.status},#{bean.brief},#{bean.content},#{bean.recTime},#{bean.updateTime},#{bean.firstChar})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `brand_id`=VALUES(`brand_id`), `brand_name`=VALUES(`brand_name`), `brand_pic`=VALUES(`brand_pic`), `user_id`=VALUES(`user_id`), `memo`=VALUES(`memo`), `seq`=VALUES(`seq`), `status`=VALUES(`status`), `brief`=VALUES(`brief`), `content`=VALUES(`content`), `rec_time`=VALUES(`rec_time`), `update_time`=VALUES(`update_time`), `first_char`=VALUES(`first_char`)
+	</insert>
+
+	<!-- "根据"BrandId"查询" -->
+	<select id="selectByBrandId" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_brand` WHERE brand_id=#{brandId};
+	</select>
+
+	<!-- "根据"BrandId"删除" -->
+	<delete id="deleteByBrandId">
+		DELETE FROM `tz_brand` WHERE brand_id=#{brandId};
+	</delete>
+
+	<!-- "根据"BrandId"更新" -->
+	<update id="updateByBrandId" parameterType="com.mall.entity.po.Brand">
+		UPDATE `tz_brand`
+		<set>
+			<if test="bean.brandId != null">
+				`brand_id` = #{bean.brandId}, 
+			</if>
+			<if test="bean.brandName != null">
+				`brand_name` = #{bean.brandName}, 
+			</if>
+			<if test="bean.brandPic != null">
+				`brand_pic` = #{bean.brandPic}, 
+			</if>
+			<if test="bean.userId != null">
+				`user_id` = #{bean.userId}, 
+			</if>
+			<if test="bean.memo != null">
+				`memo` = #{bean.memo}, 
+			</if>
+			<if test="bean.seq != null">
+				`seq` = #{bean.seq}, 
+			</if>
+			<if test="bean.status != null">
+				`status` = #{bean.status}, 
+			</if>
+			<if test="bean.brief != null">
+				`brief` = #{bean.brief}, 
+			</if>
+			<if test="bean.content != null">
+				`content` = #{bean.content}, 
+			</if>
+			<if test="bean.recTime != null">
+				`rec_time` = #{bean.recTime}, 
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time` = #{bean.updateTime}, 
+			</if>
+			<if test="bean.firstChar != null">
+				`first_char` = #{bean.firstChar}, 
+			</if>
+		</set>
+		WHERE brand_id=#{brandId};
+	</update>
+
+</mapper>

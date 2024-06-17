@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.ProdTagMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.ProdTag">
+		<!-- 分组标签id -->
+		<id column="id" property="id" />
+		<!-- 分组标题 -->
+		<result column="title" property="title" />
+		<!-- 店铺Id -->
+		<result column="shop_id" property="shopId" />
+		<!-- 状态(1为正常,0为删除) -->
+		<result column="status" property="status" />
+		<!-- 默认类型(0:商家自定义,1:系统默认) -->
+		<result column="is_default" property="isDefault" />
+		<!-- 商品数量 -->
+		<result column="prod_count" property="prodCount" />
+		<!-- 列表样式(0:一列一个,1:一列两个,2:一列三个) -->
+		<result column="style" property="style" />
+		<!-- 排序 -->
+		<result column="seq" property="seq" />
+		<!-- 创建时间 -->
+		<result column="create_time" property="createTime" />
+		<!-- 修改时间 -->
+		<result column="update_time" property="updateTime" />
+		<!-- 删除时间 -->
+		<result column="delete_time" property="deleteTime" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		id,title,shop_id,status,is_default,prod_count,style,seq,create_time,update_time,delete_time
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.id != null ">
+			and id = #{query.id}
+		</if>
+		<if test="query.title != null and query.title != ''">
+			and title = #{query.title}
+		</if>
+		<if test="query.shopId != null ">
+			and shop_id = #{query.shopId}
+		</if>
+		<if test="query.status != null ">
+			and status = #{query.status}
+		</if>
+		<if test="query.isDefault != null ">
+			and is_default = #{query.isDefault}
+		</if>
+		<if test="query.prodCount != null ">
+			and prod_count = #{query.prodCount}
+		</if>
+		<if test="query.style != null ">
+			and style = #{query.style}
+		</if>
+		<if test="query.seq != null ">
+			and seq = #{query.seq}
+		</if>
+		<if test="query.createTime != null ">
+			and create_time = #{query.createTime}
+		</if>
+		<if test="query.updateTime != null ">
+			and update_time = #{query.updateTime}
+		</if>
+		<if test="query.deleteTime != null ">
+			and delete_time = #{query.deleteTime}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+		<if test="query.titleFuzzy != null and query.titleFuzzy != ''">
+			and titleFuzzy like concat('%',#{query.titleFuzzy}, '%')
+		</if>
+		<if test="query.createTimeStart != null and query.createTimeStart != ''">
+			<![CDATA[and create_time >= str_to_date(#{createTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.createTimeEnd != null and query.createTimeEnd != ''">
+			<![CDATA[and create_time >= str_to_date(#{createTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.updateTimeStart != null and query.updateTimeStart != ''">
+			<![CDATA[and update_time >= str_to_date(#{updateTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.updateTimeEnd != null and query.updateTimeEnd != ''">
+			<![CDATA[and update_time >= str_to_date(#{updateTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.deleteTimeStart != null and query.deleteTimeStart != ''">
+			<![CDATA[and delete_time >= str_to_date(#{deleteTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.deleteTimeEnd != null and query.deleteTimeEnd != ''">
+			<![CDATA[and delete_time >= str_to_date(#{deleteTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_prod_tag <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_prod_tag <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.ProdTag">
+		<selectKey keyProperty="bean.id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_prod_tag
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				`id`,
+			</if>
+			<if test="bean.title != null">
+				`title`,
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id`,
+			</if>
+			<if test="bean.status != null">
+				`status`,
+			</if>
+			<if test="bean.isDefault != null">
+				`is_default`,
+			</if>
+			<if test="bean.prodCount != null">
+				`prod_count`,
+			</if>
+			<if test="bean.style != null">
+				`style`,
+			</if>
+			<if test="bean.seq != null">
+				`seq`,
+			</if>
+			<if test="bean.createTime != null">
+				`create_time`,
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time`,
+			</if>
+			<if test="bean.deleteTime != null">
+				`delete_time`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				#{bean.id},
+			</if>
+			<if test="bean.title != null">
+				#{bean.title},
+			</if>
+			<if test="bean.shopId != null">
+				#{bean.shopId},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+			<if test="bean.isDefault != null">
+				#{bean.isDefault},
+			</if>
+			<if test="bean.prodCount != null">
+				#{bean.prodCount},
+			</if>
+			<if test="bean.style != null">
+				#{bean.style},
+			</if>
+			<if test="bean.seq != null">
+				#{bean.seq},
+			</if>
+			<if test="bean.createTime != null">
+				#{bean.createTime},
+			</if>
+			<if test="bean.updateTime != null">
+				#{bean.updateTime},
+			</if>
+			<if test="bean.deleteTime != null">
+				#{bean.deleteTime},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.ProdTag">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				`id`,
+			</if>
+			<if test="bean.title != null">
+				`title`,
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id`,
+			</if>
+			<if test="bean.status != null">
+				`status`,
+			</if>
+			<if test="bean.isDefault != null">
+				`is_default`,
+			</if>
+			<if test="bean.prodCount != null">
+				`prod_count`,
+			</if>
+			<if test="bean.style != null">
+				`style`,
+			</if>
+			<if test="bean.seq != null">
+				`seq`,
+			</if>
+			<if test="bean.createTime != null">
+				`create_time`,
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time`,
+			</if>
+			<if test="bean.deleteTime != null">
+				`delete_time`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				#{bean.id},
+			</if>
+			<if test="bean.title != null">
+				#{bean.title},
+			</if>
+			<if test="bean.shopId != null">
+				#{bean.shopId},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+			<if test="bean.isDefault != null">
+				#{bean.isDefault},
+			</if>
+			<if test="bean.prodCount != null">
+				#{bean.prodCount},
+			</if>
+			<if test="bean.style != null">
+				#{bean.style},
+			</if>
+			<if test="bean.seq != null">
+				#{bean.seq},
+			</if>
+			<if test="bean.createTime != null">
+				#{bean.createTime},
+			</if>
+			<if test="bean.updateTime != null">
+				#{bean.updateTime},
+			</if>
+			<if test="bean.deleteTime != null">
+				#{bean.deleteTime},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.title != null">
+				`title` = VALUES(`title`),
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id` = VALUES(`shop_id`),
+			</if>
+			<if test="bean.status != null">
+				`status` = VALUES(`status`),
+			</if>
+			<if test="bean.isDefault != null">
+				`is_default` = VALUES(`is_default`),
+			</if>
+			<if test="bean.prodCount != null">
+				`prod_count` = VALUES(`prod_count`),
+			</if>
+			<if test="bean.style != null">
+				`style` = VALUES(`style`),
+			</if>
+			<if test="bean.seq != null">
+				`seq` = VALUES(`seq`),
+			</if>
+			<if test="bean.createTime != null">
+				`create_time` = VALUES(`create_time`),
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time` = VALUES(`update_time`),
+			</if>
+			<if test="bean.deleteTime != null">
+				`delete_time` = VALUES(`delete_time`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.ProdTag">
+		INSERT INTO tz_prod_tag (`title`,`shop_id`,`status`,`is_default`,`prod_count`,`style`,`seq`,`create_time`,`update_time`,`delete_time`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.title},#{bean.shopId},#{bean.status},#{bean.isDefault},#{bean.prodCount},#{bean.style},#{bean.seq},#{bean.createTime},#{bean.updateTime},#{bean.deleteTime})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.ProdTag">
+		INSERT INTO tz_prod_tag (`title`,`shop_id`,`status`,`is_default`,`prod_count`,`style`,`seq`,`create_time`,`update_time`,`delete_time`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.title},#{bean.shopId},#{bean.status},#{bean.isDefault},#{bean.prodCount},#{bean.style},#{bean.seq},#{bean.createTime},#{bean.updateTime},#{bean.deleteTime})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `id`=VALUES(`id`), `title`=VALUES(`title`), `shop_id`=VALUES(`shop_id`), `status`=VALUES(`status`), `is_default`=VALUES(`is_default`), `prod_count`=VALUES(`prod_count`), `style`=VALUES(`style`), `seq`=VALUES(`seq`), `create_time`=VALUES(`create_time`), `update_time`=VALUES(`update_time`), `delete_time`=VALUES(`delete_time`)
+	</insert>
+
+	<!-- "根据"Id"查询" -->
+	<select id="selectById" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_prod_tag` WHERE id=#{id};
+	</select>
+
+	<!-- "根据"Id"删除" -->
+	<delete id="deleteById">
+		DELETE FROM `tz_prod_tag` WHERE id=#{id};
+	</delete>
+
+	<!-- "根据"Id"更新" -->
+	<update id="updateById" parameterType="com.mall.entity.po.ProdTag">
+		UPDATE `tz_prod_tag`
+		<set>
+			<if test="bean.id != null">
+				`id` = #{bean.id}, 
+			</if>
+			<if test="bean.title != null">
+				`title` = #{bean.title}, 
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id` = #{bean.shopId}, 
+			</if>
+			<if test="bean.status != null">
+				`status` = #{bean.status}, 
+			</if>
+			<if test="bean.isDefault != null">
+				`is_default` = #{bean.isDefault}, 
+			</if>
+			<if test="bean.prodCount != null">
+				`prod_count` = #{bean.prodCount}, 
+			</if>
+			<if test="bean.style != null">
+				`style` = #{bean.style}, 
+			</if>
+			<if test="bean.seq != null">
+				`seq` = #{bean.seq}, 
+			</if>
+			<if test="bean.createTime != null">
+				`create_time` = #{bean.createTime}, 
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time` = #{bean.updateTime}, 
+			</if>
+			<if test="bean.deleteTime != null">
+				`delete_time` = #{bean.deleteTime}, 
+			</if>
+		</set>
+		WHERE id=#{id};
+	</update>
+
+</mapper>

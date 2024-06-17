@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.IndexImgMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.IndexImg">
+		<!-- 主键 -->
+		<result column="img_id" property="imgId" />
+		<!-- 店铺ID -->
+		<result column="shop_id" property="shopId" />
+		<!-- 图片 -->
+		<result column="img_url" property="imgUrl" />
+		<!-- 说明文字,描述 -->
+		<result column="des" property="des" />
+		<!-- 标题 -->
+		<result column="title" property="title" />
+		<!-- 链接 -->
+		<result column="link" property="link" />
+		<!-- 状态 -->
+		<result column="status" property="status" />
+		<!-- 顺序 -->
+		<result column="seq" property="seq" />
+		<!-- 上传时间 -->
+		<result column="upload_time" property="uploadTime" />
+		<!-- 关联 -->
+		<result column="relation" property="relation" />
+		<!-- 类型 -->
+		<result column="type" property="type" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		img_id,shop_id,img_url,des,title,link,status,seq,upload_time,relation,type
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.imgId != null ">
+			and img_id = #{query.imgId}
+		</if>
+		<if test="query.shopId != null ">
+			and shop_id = #{query.shopId}
+		</if>
+		<if test="query.imgUrl != null and query.imgUrl != ''">
+			and img_url = #{query.imgUrl}
+		</if>
+		<if test="query.des != null and query.des != ''">
+			and des = #{query.des}
+		</if>
+		<if test="query.title != null and query.title != ''">
+			and title = #{query.title}
+		</if>
+		<if test="query.link != null and query.link != ''">
+			and link = #{query.link}
+		</if>
+		<if test="query.status != null ">
+			and status = #{query.status}
+		</if>
+		<if test="query.seq != null ">
+			and seq = #{query.seq}
+		</if>
+		<if test="query.uploadTime != null ">
+			and upload_time = #{query.uploadTime}
+		</if>
+		<if test="query.relation != null ">
+			and relation = #{query.relation}
+		</if>
+		<if test="query.type != null ">
+			and type = #{query.type}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+		<if test="query.imgUrlFuzzy != null and query.imgUrlFuzzy != ''">
+			and imgUrlFuzzy like concat('%',#{query.imgUrlFuzzy}, '%')
+		</if>
+		<if test="query.desFuzzy != null and query.desFuzzy != ''">
+			and desFuzzy like concat('%',#{query.desFuzzy}, '%')
+		</if>
+		<if test="query.titleFuzzy != null and query.titleFuzzy != ''">
+			and titleFuzzy like concat('%',#{query.titleFuzzy}, '%')
+		</if>
+		<if test="query.linkFuzzy != null and query.linkFuzzy != ''">
+			and linkFuzzy like concat('%',#{query.linkFuzzy}, '%')
+		</if>
+		<if test="query.uploadTimeStart != null and query.uploadTimeStart != ''">
+			<![CDATA[and upload_time >= str_to_date(#{uploadTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.uploadTimeEnd != null and query.uploadTimeEnd != ''">
+			<![CDATA[and upload_time >= str_to_date(#{uploadTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_index_img <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_index_img <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.IndexImg">
+		<selectKey keyProperty="bean.img_id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_index_img
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.imgId != null">
+				`img_id`,
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id`,
+			</if>
+			<if test="bean.imgUrl != null">
+				`img_url`,
+			</if>
+			<if test="bean.des != null">
+				`des`,
+			</if>
+			<if test="bean.title != null">
+				`title`,
+			</if>
+			<if test="bean.link != null">
+				`link`,
+			</if>
+			<if test="bean.status != null">
+				`status`,
+			</if>
+			<if test="bean.seq != null">
+				`seq`,
+			</if>
+			<if test="bean.uploadTime != null">
+				`upload_time`,
+			</if>
+			<if test="bean.relation != null">
+				`relation`,
+			</if>
+			<if test="bean.type != null">
+				`type`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.imgId != null">
+				#{bean.imgId},
+			</if>
+			<if test="bean.shopId != null">
+				#{bean.shopId},
+			</if>
+			<if test="bean.imgUrl != null">
+				#{bean.imgUrl},
+			</if>
+			<if test="bean.des != null">
+				#{bean.des},
+			</if>
+			<if test="bean.title != null">
+				#{bean.title},
+			</if>
+			<if test="bean.link != null">
+				#{bean.link},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+			<if test="bean.seq != null">
+				#{bean.seq},
+			</if>
+			<if test="bean.uploadTime != null">
+				#{bean.uploadTime},
+			</if>
+			<if test="bean.relation != null">
+				#{bean.relation},
+			</if>
+			<if test="bean.type != null">
+				#{bean.type},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.IndexImg">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.imgId != null">
+				`img_id`,
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id`,
+			</if>
+			<if test="bean.imgUrl != null">
+				`img_url`,
+			</if>
+			<if test="bean.des != null">
+				`des`,
+			</if>
+			<if test="bean.title != null">
+				`title`,
+			</if>
+			<if test="bean.link != null">
+				`link`,
+			</if>
+			<if test="bean.status != null">
+				`status`,
+			</if>
+			<if test="bean.seq != null">
+				`seq`,
+			</if>
+			<if test="bean.uploadTime != null">
+				`upload_time`,
+			</if>
+			<if test="bean.relation != null">
+				`relation`,
+			</if>
+			<if test="bean.type != null">
+				`type`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.imgId != null">
+				#{bean.imgId},
+			</if>
+			<if test="bean.shopId != null">
+				#{bean.shopId},
+			</if>
+			<if test="bean.imgUrl != null">
+				#{bean.imgUrl},
+			</if>
+			<if test="bean.des != null">
+				#{bean.des},
+			</if>
+			<if test="bean.title != null">
+				#{bean.title},
+			</if>
+			<if test="bean.link != null">
+				#{bean.link},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+			<if test="bean.seq != null">
+				#{bean.seq},
+			</if>
+			<if test="bean.uploadTime != null">
+				#{bean.uploadTime},
+			</if>
+			<if test="bean.relation != null">
+				#{bean.relation},
+			</if>
+			<if test="bean.type != null">
+				#{bean.type},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.shopId != null">
+				`shop_id` = VALUES(`shop_id`),
+			</if>
+			<if test="bean.imgUrl != null">
+				`img_url` = VALUES(`img_url`),
+			</if>
+			<if test="bean.des != null">
+				`des` = VALUES(`des`),
+			</if>
+			<if test="bean.title != null">
+				`title` = VALUES(`title`),
+			</if>
+			<if test="bean.link != null">
+				`link` = VALUES(`link`),
+			</if>
+			<if test="bean.status != null">
+				`status` = VALUES(`status`),
+			</if>
+			<if test="bean.seq != null">
+				`seq` = VALUES(`seq`),
+			</if>
+			<if test="bean.uploadTime != null">
+				`upload_time` = VALUES(`upload_time`),
+			</if>
+			<if test="bean.relation != null">
+				`relation` = VALUES(`relation`),
+			</if>
+			<if test="bean.type != null">
+				`type` = VALUES(`type`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.IndexImg">
+		INSERT INTO tz_index_img (`shop_id`,`img_url`,`des`,`title`,`link`,`status`,`seq`,`upload_time`,`relation`,`type`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.shopId},#{bean.imgUrl},#{bean.des},#{bean.title},#{bean.link},#{bean.status},#{bean.seq},#{bean.uploadTime},#{bean.relation},#{bean.type})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.IndexImg">
+		INSERT INTO tz_index_img (`shop_id`,`img_url`,`des`,`title`,`link`,`status`,`seq`,`upload_time`,`relation`,`type`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.shopId},#{bean.imgUrl},#{bean.des},#{bean.title},#{bean.link},#{bean.status},#{bean.seq},#{bean.uploadTime},#{bean.relation},#{bean.type})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `img_id`=VALUES(`img_id`), `shop_id`=VALUES(`shop_id`), `img_url`=VALUES(`img_url`), `des`=VALUES(`des`), `title`=VALUES(`title`), `link`=VALUES(`link`), `status`=VALUES(`status`), `seq`=VALUES(`seq`), `upload_time`=VALUES(`upload_time`), `relation`=VALUES(`relation`), `type`=VALUES(`type`)
+	</insert>
+
+	<!-- "根据"ImgId"查询" -->
+	<select id="selectByImgId" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_index_img` WHERE img_id=#{imgId};
+	</select>
+
+	<!-- "根据"ImgId"删除" -->
+	<delete id="deleteByImgId">
+		DELETE FROM `tz_index_img` WHERE img_id=#{imgId};
+	</delete>
+
+	<!-- "根据"ImgId"更新" -->
+	<update id="updateByImgId" parameterType="com.mall.entity.po.IndexImg">
+		UPDATE `tz_index_img`
+		<set>
+			<if test="bean.imgId != null">
+				`img_id` = #{bean.imgId}, 
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id` = #{bean.shopId}, 
+			</if>
+			<if test="bean.imgUrl != null">
+				`img_url` = #{bean.imgUrl}, 
+			</if>
+			<if test="bean.des != null">
+				`des` = #{bean.des}, 
+			</if>
+			<if test="bean.title != null">
+				`title` = #{bean.title}, 
+			</if>
+			<if test="bean.link != null">
+				`link` = #{bean.link}, 
+			</if>
+			<if test="bean.status != null">
+				`status` = #{bean.status}, 
+			</if>
+			<if test="bean.seq != null">
+				`seq` = #{bean.seq}, 
+			</if>
+			<if test="bean.uploadTime != null">
+				`upload_time` = #{bean.uploadTime}, 
+			</if>
+			<if test="bean.relation != null">
+				`relation` = #{bean.relation}, 
+			</if>
+			<if test="bean.type != null">
+				`type` = #{bean.type}, 
+			</if>
+		</set>
+		WHERE img_id=#{imgId};
+	</update>
+
+</mapper>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.SysRoleMenuMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.SysRoleMenu">
+		<!--  -->
+		<id column="id" property="id" />
+		<!-- 角色ID -->
+		<result column="role_id" property="roleId" />
+		<!-- 菜单ID -->
+		<result column="menu_id" property="menuId" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		id,role_id,menu_id
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.id != null ">
+			and id = #{query.id}
+		</if>
+		<if test="query.roleId != null ">
+			and role_id = #{query.roleId}
+		</if>
+		<if test="query.menuId != null ">
+			and menu_id = #{query.menuId}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_sys_role_menu <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_sys_role_menu <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.SysRoleMenu">
+		<selectKey keyProperty="bean.id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_sys_role_menu
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				`id`,
+			</if>
+			<if test="bean.roleId != null">
+				`role_id`,
+			</if>
+			<if test="bean.menuId != null">
+				`menu_id`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				#{bean.id},
+			</if>
+			<if test="bean.roleId != null">
+				#{bean.roleId},
+			</if>
+			<if test="bean.menuId != null">
+				#{bean.menuId},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.SysRoleMenu">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				`id`,
+			</if>
+			<if test="bean.roleId != null">
+				`role_id`,
+			</if>
+			<if test="bean.menuId != null">
+				`menu_id`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				#{bean.id},
+			</if>
+			<if test="bean.roleId != null">
+				#{bean.roleId},
+			</if>
+			<if test="bean.menuId != null">
+				#{bean.menuId},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.roleId != null">
+				`role_id` = VALUES(`role_id`),
+			</if>
+			<if test="bean.menuId != null">
+				`menu_id` = VALUES(`menu_id`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.SysRoleMenu">
+		INSERT INTO tz_sys_role_menu (`role_id`,`menu_id`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.roleId},#{bean.menuId})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.SysRoleMenu">
+		INSERT INTO tz_sys_role_menu (`role_id`,`menu_id`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.roleId},#{bean.menuId})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `id`=VALUES(`id`), `role_id`=VALUES(`role_id`), `menu_id`=VALUES(`menu_id`)
+	</insert>
+
+	<!-- "根据"Id"查询" -->
+	<select id="selectById" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_sys_role_menu` WHERE id=#{id};
+	</select>
+
+	<!-- "根据"Id"删除" -->
+	<delete id="deleteById">
+		DELETE FROM `tz_sys_role_menu` WHERE id=#{id};
+	</delete>
+
+	<!-- "根据"Id"更新" -->
+	<update id="updateById" parameterType="com.mall.entity.po.SysRoleMenu">
+		UPDATE `tz_sys_role_menu`
+		<set>
+			<if test="bean.id != null">
+				`id` = #{bean.id}, 
+			</if>
+			<if test="bean.roleId != null">
+				`role_id` = #{bean.roleId}, 
+			</if>
+			<if test="bean.menuId != null">
+				`menu_id` = #{bean.menuId}, 
+			</if>
+		</set>
+		WHERE id=#{id};
+	</update>
+
+</mapper>

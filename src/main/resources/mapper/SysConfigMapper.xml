@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.SysConfigMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.SysConfig">
+		<!--  -->
+		<id column="id" property="id" />
+		<!-- key -->
+		<result column="param_key" property="paramKey" />
+		<!-- value -->
+		<result column="param_value" property="paramValue" />
+		<!-- 备注 -->
+		<result column="remark" property="remark" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		id,param_key,param_value,remark
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.id != null ">
+			and id = #{query.id}
+		</if>
+		<if test="query.paramKey != null and query.paramKey != ''">
+			and param_key = #{query.paramKey}
+		</if>
+		<if test="query.paramValue != null and query.paramValue != ''">
+			and param_value = #{query.paramValue}
+		</if>
+		<if test="query.remark != null and query.remark != ''">
+			and remark = #{query.remark}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+		<if test="query.paramKeyFuzzy != null and query.paramKeyFuzzy != ''">
+			and paramKeyFuzzy like concat('%',#{query.paramKeyFuzzy}, '%')
+		</if>
+		<if test="query.paramValueFuzzy != null and query.paramValueFuzzy != ''">
+			and paramValueFuzzy like concat('%',#{query.paramValueFuzzy}, '%')
+		</if>
+		<if test="query.remarkFuzzy != null and query.remarkFuzzy != ''">
+			and remarkFuzzy like concat('%',#{query.remarkFuzzy}, '%')
+		</if>
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_sys_config <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_sys_config <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.SysConfig">
+		<selectKey keyProperty="bean.id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_sys_config
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				`id`,
+			</if>
+			<if test="bean.paramKey != null">
+				`param_key`,
+			</if>
+			<if test="bean.paramValue != null">
+				`param_value`,
+			</if>
+			<if test="bean.remark != null">
+				`remark`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				#{bean.id},
+			</if>
+			<if test="bean.paramKey != null">
+				#{bean.paramKey},
+			</if>
+			<if test="bean.paramValue != null">
+				#{bean.paramValue},
+			</if>
+			<if test="bean.remark != null">
+				#{bean.remark},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.SysConfig">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				`id`,
+			</if>
+			<if test="bean.paramKey != null">
+				`param_key`,
+			</if>
+			<if test="bean.paramValue != null">
+				`param_value`,
+			</if>
+			<if test="bean.remark != null">
+				`remark`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.id != null">
+				#{bean.id},
+			</if>
+			<if test="bean.paramKey != null">
+				#{bean.paramKey},
+			</if>
+			<if test="bean.paramValue != null">
+				#{bean.paramValue},
+			</if>
+			<if test="bean.remark != null">
+				#{bean.remark},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.paramValue != null">
+				`param_value` = VALUES(`param_value`),
+			</if>
+			<if test="bean.remark != null">
+				`remark` = VALUES(`remark`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.SysConfig">
+		INSERT INTO tz_sys_config (`param_key`,`param_value`,`remark`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.paramKey},#{bean.paramValue},#{bean.remark})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.SysConfig">
+		INSERT INTO tz_sys_config (`param_key`,`param_value`,`remark`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.paramKey},#{bean.paramValue},#{bean.remark})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `id`=VALUES(`id`), `param_key`=VALUES(`param_key`), `param_value`=VALUES(`param_value`), `remark`=VALUES(`remark`)
+	</insert>
+
+	<!-- "根据"Id"查询" -->
+	<select id="selectById" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_sys_config` WHERE id=#{id};
+	</select>
+
+	<!-- "根据"Id"删除" -->
+	<delete id="deleteById">
+		DELETE FROM `tz_sys_config` WHERE id=#{id};
+	</delete>
+
+	<!-- "根据"Id"更新" -->
+	<update id="updateById" parameterType="com.mall.entity.po.SysConfig">
+		UPDATE `tz_sys_config`
+		<set>
+			<if test="bean.id != null">
+				`id` = #{bean.id}, 
+			</if>
+			<if test="bean.paramKey != null">
+				`param_key` = #{bean.paramKey}, 
+			</if>
+			<if test="bean.paramValue != null">
+				`param_value` = #{bean.paramValue}, 
+			</if>
+			<if test="bean.remark != null">
+				`remark` = #{bean.remark}, 
+			</if>
+		</set>
+		WHERE id=#{id};
+	</update>
+
+	<!-- "根据"ParamKey"查询" -->
+	<select id="selectByParamKey" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_sys_config` WHERE param_key=#{paramKey};
+	</select>
+
+	<!-- "根据"ParamKey"删除" -->
+	<delete id="deleteByParamKey">
+		DELETE FROM `tz_sys_config` WHERE param_key=#{paramKey};
+	</delete>
+
+	<!-- "根据"ParamKey"更新" -->
+	<update id="updateByParamKey" parameterType="com.mall.entity.po.SysConfig">
+		UPDATE `tz_sys_config`
+		<set>
+			<if test="bean.id != null">
+				`id` = #{bean.id}, 
+			</if>
+			<if test="bean.paramKey != null">
+				`param_key` = #{bean.paramKey}, 
+			</if>
+			<if test="bean.paramValue != null">
+				`param_value` = #{bean.paramValue}, 
+			</if>
+			<if test="bean.remark != null">
+				`remark` = #{bean.remark}, 
+			</if>
+		</set>
+		WHERE param_key=#{paramKey};
+	</update>
+
+</mapper>

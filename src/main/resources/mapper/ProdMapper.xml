@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.ProdMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.Prod">
+		<!-- 产品ID -->
+		<result column="prod_id" property="prodId" />
+		<!-- 商品名称 -->
+		<result column="prod_name" property="prodName" />
+		<!-- 店铺id -->
+		<result column="shop_id" property="shopId" />
+		<!-- 原价 -->
+		<result column="ori_price" property="oriPrice" />
+		<!-- 现价 -->
+		<result column="price" property="price" />
+		<!-- 简要描述,卖点等 -->
+		<result column="brief" property="brief" />
+		<!-- 详细描述 -->
+		<result column="content" property="content" />
+		<!-- 商品主图 -->
+		<result column="pic" property="pic" />
+		<!-- 商品图片，以,分割 -->
+		<result column="imgs" property="imgs" />
+		<!-- 默认是1，表示正常状态, -1表示删除, 0下架 -->
+		<result column="status" property="status" />
+		<!-- 商品分类 -->
+		<result column="category_id" property="categoryId" />
+		<!-- 销量 -->
+		<result column="sold_num" property="soldNum" />
+		<!-- 总库存 -->
+		<result column="total_stocks" property="totalStocks" />
+		<!-- 配送方式json见TransportModeVO -->
+		<result column="delivery_mode" property="deliveryMode" />
+		<!-- 运费模板id -->
+		<result column="delivery_template_id" property="deliveryTemplateId" />
+		<!-- 录入时间 -->
+		<result column="create_time" property="createTime" />
+		<!-- 修改时间 -->
+		<result column="update_time" property="updateTime" />
+		<!-- 上架时间 -->
+		<result column="putaway_time" property="putawayTime" />
+		<!-- 版本 乐观锁 -->
+		<result column="version" property="version" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		prod_id,prod_name,shop_id,ori_price,price,brief,content,pic,imgs,status,category_id,sold_num,total_stocks,delivery_mode,delivery_template_id,create_time,update_time,putaway_time,version
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.prodId != null ">
+			and prod_id = #{query.prodId}
+		</if>
+		<if test="query.prodName != null and query.prodName != ''">
+			and prod_name = #{query.prodName}
+		</if>
+		<if test="query.shopId != null ">
+			and shop_id = #{query.shopId}
+		</if>
+		<if test="query.oriPrice != null ">
+			and ori_price = #{query.oriPrice}
+		</if>
+		<if test="query.price != null ">
+			and price = #{query.price}
+		</if>
+		<if test="query.brief != null and query.brief != ''">
+			and brief = #{query.brief}
+		</if>
+		<if test="query.content != null and query.content != ''">
+			and content = #{query.content}
+		</if>
+		<if test="query.pic != null and query.pic != ''">
+			and pic = #{query.pic}
+		</if>
+		<if test="query.imgs != null and query.imgs != ''">
+			and imgs = #{query.imgs}
+		</if>
+		<if test="query.status != null ">
+			and status = #{query.status}
+		</if>
+		<if test="query.categoryId != null ">
+			and category_id = #{query.categoryId}
+		</if>
+		<if test="query.soldNum != null ">
+			and sold_num = #{query.soldNum}
+		</if>
+		<if test="query.totalStocks != null ">
+			and total_stocks = #{query.totalStocks}
+		</if>
+		<if test="query.deliveryMode != null and query.deliveryMode != ''">
+			and delivery_mode = #{query.deliveryMode}
+		</if>
+		<if test="query.deliveryTemplateId != null ">
+			and delivery_template_id = #{query.deliveryTemplateId}
+		</if>
+		<if test="query.createTime != null ">
+			and create_time = #{query.createTime}
+		</if>
+		<if test="query.updateTime != null ">
+			and update_time = #{query.updateTime}
+		</if>
+		<if test="query.putawayTime != null ">
+			and putaway_time = #{query.putawayTime}
+		</if>
+		<if test="query.version != null ">
+			and version = #{query.version}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+		<if test="query.prodNameFuzzy != null and query.prodNameFuzzy != ''">
+			and prodNameFuzzy like concat('%',#{query.prodNameFuzzy}, '%')
+		</if>
+		<if test="query.briefFuzzy != null and query.briefFuzzy != ''">
+			and briefFuzzy like concat('%',#{query.briefFuzzy}, '%')
+		</if>
+		<if test="query.contentFuzzy != null and query.contentFuzzy != ''">
+			and contentFuzzy like concat('%',#{query.contentFuzzy}, '%')
+		</if>
+		<if test="query.picFuzzy != null and query.picFuzzy != ''">
+			and picFuzzy like concat('%',#{query.picFuzzy}, '%')
+		</if>
+		<if test="query.imgsFuzzy != null and query.imgsFuzzy != ''">
+			and imgsFuzzy like concat('%',#{query.imgsFuzzy}, '%')
+		</if>
+		<if test="query.deliveryModeFuzzy != null and query.deliveryModeFuzzy != ''">
+			and deliveryModeFuzzy like concat('%',#{query.deliveryModeFuzzy}, '%')
+		</if>
+		<if test="query.createTimeStart != null and query.createTimeStart != ''">
+			<![CDATA[and create_time >= str_to_date(#{createTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.createTimeEnd != null and query.createTimeEnd != ''">
+			<![CDATA[and create_time >= str_to_date(#{createTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.updateTimeStart != null and query.updateTimeStart != ''">
+			<![CDATA[and update_time >= str_to_date(#{updateTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.updateTimeEnd != null and query.updateTimeEnd != ''">
+			<![CDATA[and update_time >= str_to_date(#{updateTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+		<if test="query.putawayTimeStart != null and query.putawayTimeStart != ''">
+			<![CDATA[and putaway_time >= str_to_date(#{putawayTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.putawayTimeEnd != null and query.putawayTimeEnd != ''">
+			<![CDATA[and putaway_time >= str_to_date(#{putawayTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_prod <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_prod <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.Prod">
+		<selectKey keyProperty="bean.prod_id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_prod
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.prodId != null">
+				`prod_id`,
+			</if>
+			<if test="bean.prodName != null">
+				`prod_name`,
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id`,
+			</if>
+			<if test="bean.oriPrice != null">
+				`ori_price`,
+			</if>
+			<if test="bean.price != null">
+				`price`,
+			</if>
+			<if test="bean.brief != null">
+				`brief`,
+			</if>
+			<if test="bean.content != null">
+				`content`,
+			</if>
+			<if test="bean.pic != null">
+				`pic`,
+			</if>
+			<if test="bean.imgs != null">
+				`imgs`,
+			</if>
+			<if test="bean.status != null">
+				`status`,
+			</if>
+			<if test="bean.categoryId != null">
+				`category_id`,
+			</if>
+			<if test="bean.soldNum != null">
+				`sold_num`,
+			</if>
+			<if test="bean.totalStocks != null">
+				`total_stocks`,
+			</if>
+			<if test="bean.deliveryMode != null">
+				`delivery_mode`,
+			</if>
+			<if test="bean.deliveryTemplateId != null">
+				`delivery_template_id`,
+			</if>
+			<if test="bean.createTime != null">
+				`create_time`,
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time`,
+			</if>
+			<if test="bean.putawayTime != null">
+				`putaway_time`,
+			</if>
+			<if test="bean.version != null">
+				`version`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.prodId != null">
+				#{bean.prodId},
+			</if>
+			<if test="bean.prodName != null">
+				#{bean.prodName},
+			</if>
+			<if test="bean.shopId != null">
+				#{bean.shopId},
+			</if>
+			<if test="bean.oriPrice != null">
+				#{bean.oriPrice},
+			</if>
+			<if test="bean.price != null">
+				#{bean.price},
+			</if>
+			<if test="bean.brief != null">
+				#{bean.brief},
+			</if>
+			<if test="bean.content != null">
+				#{bean.content},
+			</if>
+			<if test="bean.pic != null">
+				#{bean.pic},
+			</if>
+			<if test="bean.imgs != null">
+				#{bean.imgs},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+			<if test="bean.categoryId != null">
+				#{bean.categoryId},
+			</if>
+			<if test="bean.soldNum != null">
+				#{bean.soldNum},
+			</if>
+			<if test="bean.totalStocks != null">
+				#{bean.totalStocks},
+			</if>
+			<if test="bean.deliveryMode != null">
+				#{bean.deliveryMode},
+			</if>
+			<if test="bean.deliveryTemplateId != null">
+				#{bean.deliveryTemplateId},
+			</if>
+			<if test="bean.createTime != null">
+				#{bean.createTime},
+			</if>
+			<if test="bean.updateTime != null">
+				#{bean.updateTime},
+			</if>
+			<if test="bean.putawayTime != null">
+				#{bean.putawayTime},
+			</if>
+			<if test="bean.version != null">
+				#{bean.version},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.Prod">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.prodId != null">
+				`prod_id`,
+			</if>
+			<if test="bean.prodName != null">
+				`prod_name`,
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id`,
+			</if>
+			<if test="bean.oriPrice != null">
+				`ori_price`,
+			</if>
+			<if test="bean.price != null">
+				`price`,
+			</if>
+			<if test="bean.brief != null">
+				`brief`,
+			</if>
+			<if test="bean.content != null">
+				`content`,
+			</if>
+			<if test="bean.pic != null">
+				`pic`,
+			</if>
+			<if test="bean.imgs != null">
+				`imgs`,
+			</if>
+			<if test="bean.status != null">
+				`status`,
+			</if>
+			<if test="bean.categoryId != null">
+				`category_id`,
+			</if>
+			<if test="bean.soldNum != null">
+				`sold_num`,
+			</if>
+			<if test="bean.totalStocks != null">
+				`total_stocks`,
+			</if>
+			<if test="bean.deliveryMode != null">
+				`delivery_mode`,
+			</if>
+			<if test="bean.deliveryTemplateId != null">
+				`delivery_template_id`,
+			</if>
+			<if test="bean.createTime != null">
+				`create_time`,
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time`,
+			</if>
+			<if test="bean.putawayTime != null">
+				`putaway_time`,
+			</if>
+			<if test="bean.version != null">
+				`version`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.prodId != null">
+				#{bean.prodId},
+			</if>
+			<if test="bean.prodName != null">
+				#{bean.prodName},
+			</if>
+			<if test="bean.shopId != null">
+				#{bean.shopId},
+			</if>
+			<if test="bean.oriPrice != null">
+				#{bean.oriPrice},
+			</if>
+			<if test="bean.price != null">
+				#{bean.price},
+			</if>
+			<if test="bean.brief != null">
+				#{bean.brief},
+			</if>
+			<if test="bean.content != null">
+				#{bean.content},
+			</if>
+			<if test="bean.pic != null">
+				#{bean.pic},
+			</if>
+			<if test="bean.imgs != null">
+				#{bean.imgs},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+			<if test="bean.categoryId != null">
+				#{bean.categoryId},
+			</if>
+			<if test="bean.soldNum != null">
+				#{bean.soldNum},
+			</if>
+			<if test="bean.totalStocks != null">
+				#{bean.totalStocks},
+			</if>
+			<if test="bean.deliveryMode != null">
+				#{bean.deliveryMode},
+			</if>
+			<if test="bean.deliveryTemplateId != null">
+				#{bean.deliveryTemplateId},
+			</if>
+			<if test="bean.createTime != null">
+				#{bean.createTime},
+			</if>
+			<if test="bean.updateTime != null">
+				#{bean.updateTime},
+			</if>
+			<if test="bean.putawayTime != null">
+				#{bean.putawayTime},
+			</if>
+			<if test="bean.version != null">
+				#{bean.version},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.prodName != null">
+				`prod_name` = VALUES(`prod_name`),
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id` = VALUES(`shop_id`),
+			</if>
+			<if test="bean.oriPrice != null">
+				`ori_price` = VALUES(`ori_price`),
+			</if>
+			<if test="bean.price != null">
+				`price` = VALUES(`price`),
+			</if>
+			<if test="bean.brief != null">
+				`brief` = VALUES(`brief`),
+			</if>
+			<if test="bean.content != null">
+				`content` = VALUES(`content`),
+			</if>
+			<if test="bean.pic != null">
+				`pic` = VALUES(`pic`),
+			</if>
+			<if test="bean.imgs != null">
+				`imgs` = VALUES(`imgs`),
+			</if>
+			<if test="bean.status != null">
+				`status` = VALUES(`status`),
+			</if>
+			<if test="bean.categoryId != null">
+				`category_id` = VALUES(`category_id`),
+			</if>
+			<if test="bean.soldNum != null">
+				`sold_num` = VALUES(`sold_num`),
+			</if>
+			<if test="bean.totalStocks != null">
+				`total_stocks` = VALUES(`total_stocks`),
+			</if>
+			<if test="bean.deliveryMode != null">
+				`delivery_mode` = VALUES(`delivery_mode`),
+			</if>
+			<if test="bean.deliveryTemplateId != null">
+				`delivery_template_id` = VALUES(`delivery_template_id`),
+			</if>
+			<if test="bean.createTime != null">
+				`create_time` = VALUES(`create_time`),
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time` = VALUES(`update_time`),
+			</if>
+			<if test="bean.putawayTime != null">
+				`putaway_time` = VALUES(`putaway_time`),
+			</if>
+			<if test="bean.version != null">
+				`version` = VALUES(`version`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.Prod">
+		INSERT INTO tz_prod (`prod_name`,`shop_id`,`ori_price`,`price`,`brief`,`content`,`pic`,`imgs`,`status`,`category_id`,`sold_num`,`total_stocks`,`delivery_mode`,`delivery_template_id`,`create_time`,`update_time`,`putaway_time`,`version`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.prodName},#{bean.shopId},#{bean.oriPrice},#{bean.price},#{bean.brief},#{bean.content},#{bean.pic},#{bean.imgs},#{bean.status},#{bean.categoryId},#{bean.soldNum},#{bean.totalStocks},#{bean.deliveryMode},#{bean.deliveryTemplateId},#{bean.createTime},#{bean.updateTime},#{bean.putawayTime},#{bean.version})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.Prod">
+		INSERT INTO tz_prod (`prod_name`,`shop_id`,`ori_price`,`price`,`brief`,`content`,`pic`,`imgs`,`status`,`category_id`,`sold_num`,`total_stocks`,`delivery_mode`,`delivery_template_id`,`create_time`,`update_time`,`putaway_time`,`version`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.prodName},#{bean.shopId},#{bean.oriPrice},#{bean.price},#{bean.brief},#{bean.content},#{bean.pic},#{bean.imgs},#{bean.status},#{bean.categoryId},#{bean.soldNum},#{bean.totalStocks},#{bean.deliveryMode},#{bean.deliveryTemplateId},#{bean.createTime},#{bean.updateTime},#{bean.putawayTime},#{bean.version})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `prod_id`=VALUES(`prod_id`), `prod_name`=VALUES(`prod_name`), `shop_id`=VALUES(`shop_id`), `ori_price`=VALUES(`ori_price`), `price`=VALUES(`price`), `brief`=VALUES(`brief`), `content`=VALUES(`content`), `pic`=VALUES(`pic`), `imgs`=VALUES(`imgs`), `status`=VALUES(`status`), `category_id`=VALUES(`category_id`), `sold_num`=VALUES(`sold_num`), `total_stocks`=VALUES(`total_stocks`), `delivery_mode`=VALUES(`delivery_mode`), `delivery_template_id`=VALUES(`delivery_template_id`), `create_time`=VALUES(`create_time`), `update_time`=VALUES(`update_time`), `putaway_time`=VALUES(`putaway_time`), `version`=VALUES(`version`)
+	</insert>
+
+	<!-- "根据"ProdId"查询" -->
+	<select id="selectByProdId" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_prod` WHERE prod_id=#{prodId};
+	</select>
+
+	<!-- "根据"ProdId"删除" -->
+	<delete id="deleteByProdId">
+		DELETE FROM `tz_prod` WHERE prod_id=#{prodId};
+	</delete>
+
+	<!-- "根据"ProdId"更新" -->
+	<update id="updateByProdId" parameterType="com.mall.entity.po.Prod">
+		UPDATE `tz_prod`
+		<set>
+			<if test="bean.prodId != null">
+				`prod_id` = #{bean.prodId}, 
+			</if>
+			<if test="bean.prodName != null">
+				`prod_name` = #{bean.prodName}, 
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id` = #{bean.shopId}, 
+			</if>
+			<if test="bean.oriPrice != null">
+				`ori_price` = #{bean.oriPrice}, 
+			</if>
+			<if test="bean.price != null">
+				`price` = #{bean.price}, 
+			</if>
+			<if test="bean.brief != null">
+				`brief` = #{bean.brief}, 
+			</if>
+			<if test="bean.content != null">
+				`content` = #{bean.content}, 
+			</if>
+			<if test="bean.pic != null">
+				`pic` = #{bean.pic}, 
+			</if>
+			<if test="bean.imgs != null">
+				`imgs` = #{bean.imgs}, 
+			</if>
+			<if test="bean.status != null">
+				`status` = #{bean.status}, 
+			</if>
+			<if test="bean.categoryId != null">
+				`category_id` = #{bean.categoryId}, 
+			</if>
+			<if test="bean.soldNum != null">
+				`sold_num` = #{bean.soldNum}, 
+			</if>
+			<if test="bean.totalStocks != null">
+				`total_stocks` = #{bean.totalStocks}, 
+			</if>
+			<if test="bean.deliveryMode != null">
+				`delivery_mode` = #{bean.deliveryMode}, 
+			</if>
+			<if test="bean.deliveryTemplateId != null">
+				`delivery_template_id` = #{bean.deliveryTemplateId}, 
+			</if>
+			<if test="bean.createTime != null">
+				`create_time` = #{bean.createTime}, 
+			</if>
+			<if test="bean.updateTime != null">
+				`update_time` = #{bean.updateTime}, 
+			</if>
+			<if test="bean.putawayTime != null">
+				`putaway_time` = #{bean.putawayTime}, 
+			</if>
+			<if test="bean.version != null">
+				`version` = #{bean.version}, 
+			</if>
+		</set>
+		WHERE prod_id=#{prodId};
+	</update>
+
+</mapper>

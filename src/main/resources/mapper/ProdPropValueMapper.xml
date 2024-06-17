@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.ProdPropValueMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.ProdPropValue">
+		<!-- 属性值ID -->
+		<result column="value_id" property="valueId" />
+		<!-- 属性值名称 -->
+		<result column="prop_value" property="propValue" />
+		<!-- 属性ID -->
+		<result column="prop_id" property="propId" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		value_id,prop_value,prop_id
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.valueId != null ">
+			and value_id = #{query.valueId}
+		</if>
+		<if test="query.propValue != null and query.propValue != ''">
+			and prop_value = #{query.propValue}
+		</if>
+		<if test="query.propId != null ">
+			and prop_id = #{query.propId}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+		<if test="query.propValueFuzzy != null and query.propValueFuzzy != ''">
+			and propValueFuzzy like concat('%',#{query.propValueFuzzy}, '%')
+		</if>
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_prod_prop_value <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_prod_prop_value <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.ProdPropValue">
+		<selectKey keyProperty="bean.value_id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_prod_prop_value
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.valueId != null">
+				`value_id`,
+			</if>
+			<if test="bean.propValue != null">
+				`prop_value`,
+			</if>
+			<if test="bean.propId != null">
+				`prop_id`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.valueId != null">
+				#{bean.valueId},
+			</if>
+			<if test="bean.propValue != null">
+				#{bean.propValue},
+			</if>
+			<if test="bean.propId != null">
+				#{bean.propId},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.ProdPropValue">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.valueId != null">
+				`value_id`,
+			</if>
+			<if test="bean.propValue != null">
+				`prop_value`,
+			</if>
+			<if test="bean.propId != null">
+				`prop_id`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.valueId != null">
+				#{bean.valueId},
+			</if>
+			<if test="bean.propValue != null">
+				#{bean.propValue},
+			</if>
+			<if test="bean.propId != null">
+				#{bean.propId},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.propValue != null">
+				`prop_value` = VALUES(`prop_value`),
+			</if>
+			<if test="bean.propId != null">
+				`prop_id` = VALUES(`prop_id`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.ProdPropValue">
+		INSERT INTO tz_prod_prop_value (`prop_value`,`prop_id`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.propValue},#{bean.propId})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.ProdPropValue">
+		INSERT INTO tz_prod_prop_value (`prop_value`,`prop_id`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.propValue},#{bean.propId})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `value_id`=VALUES(`value_id`), `prop_value`=VALUES(`prop_value`), `prop_id`=VALUES(`prop_id`)
+	</insert>
+
+	<!-- "根据"ValueId"查询" -->
+	<select id="selectByValueId" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_prod_prop_value` WHERE value_id=#{valueId};
+	</select>
+
+	<!-- "根据"ValueId"删除" -->
+	<delete id="deleteByValueId">
+		DELETE FROM `tz_prod_prop_value` WHERE value_id=#{valueId};
+	</delete>
+
+	<!-- "根据"ValueId"更新" -->
+	<update id="updateByValueId" parameterType="com.mall.entity.po.ProdPropValue">
+		UPDATE `tz_prod_prop_value`
+		<set>
+			<if test="bean.valueId != null">
+				`value_id` = #{bean.valueId}, 
+			</if>
+			<if test="bean.propValue != null">
+				`prop_value` = #{bean.propValue}, 
+			</if>
+			<if test="bean.propId != null">
+				`prop_id` = #{bean.propId}, 
+			</if>
+		</set>
+		WHERE value_id=#{valueId};
+	</update>
+
+</mapper>

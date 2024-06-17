@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.TransportMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.Transport">
+		<!-- 运费模板id -->
+		<result column="transport_id" property="transportId" />
+		<!-- 运费模板名称 -->
+		<result column="trans_name" property="transName" />
+		<!-- 创建时间 -->
+		<result column="create_time" property="createTime" />
+		<!-- 店铺id -->
+		<result column="shop_id" property="shopId" />
+		<!-- 收费方式（0 按件数,1 按重量 2 按体积） -->
+		<result column="charge_type" property="chargeType" />
+		<!-- 是否包邮 0:不包邮 1:包邮 -->
+		<result column="is_free_fee" property="isFreeFee" />
+		<!-- 是否含有包邮条件 0 否 1是 -->
+		<result column="has_free_condition" property="hasFreeCondition" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		transport_id,trans_name,create_time,shop_id,charge_type,is_free_fee,has_free_condition
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.transportId != null ">
+			and transport_id = #{query.transportId}
+		</if>
+		<if test="query.transName != null and query.transName != ''">
+			and trans_name = #{query.transName}
+		</if>
+		<if test="query.createTime != null ">
+			and create_time = #{query.createTime}
+		</if>
+		<if test="query.shopId != null ">
+			and shop_id = #{query.shopId}
+		</if>
+		<if test="query.chargeType != null ">
+			and charge_type = #{query.chargeType}
+		</if>
+		<if test="query.isFreeFee != null ">
+			and is_free_fee = #{query.isFreeFee}
+		</if>
+		<if test="query.hasFreeCondition != null ">
+			and has_free_condition = #{query.hasFreeCondition}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+		<if test="query.transNameFuzzy != null and query.transNameFuzzy != ''">
+			and transNameFuzzy like concat('%',#{query.transNameFuzzy}, '%')
+		</if>
+		<if test="query.createTimeStart != null and query.createTimeStart != ''">
+			<![CDATA[and create_time >= str_to_date(#{createTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.createTimeEnd != null and query.createTimeEnd != ''">
+			<![CDATA[and create_time >= str_to_date(#{createTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_transport <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_transport <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.Transport">
+		<selectKey keyProperty="bean.transport_id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_transport
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.transportId != null">
+				`transport_id`,
+			</if>
+			<if test="bean.transName != null">
+				`trans_name`,
+			</if>
+			<if test="bean.createTime != null">
+				`create_time`,
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id`,
+			</if>
+			<if test="bean.chargeType != null">
+				`charge_type`,
+			</if>
+			<if test="bean.isFreeFee != null">
+				`is_free_fee`,
+			</if>
+			<if test="bean.hasFreeCondition != null">
+				`has_free_condition`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.transportId != null">
+				#{bean.transportId},
+			</if>
+			<if test="bean.transName != null">
+				#{bean.transName},
+			</if>
+			<if test="bean.createTime != null">
+				#{bean.createTime},
+			</if>
+			<if test="bean.shopId != null">
+				#{bean.shopId},
+			</if>
+			<if test="bean.chargeType != null">
+				#{bean.chargeType},
+			</if>
+			<if test="bean.isFreeFee != null">
+				#{bean.isFreeFee},
+			</if>
+			<if test="bean.hasFreeCondition != null">
+				#{bean.hasFreeCondition},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.Transport">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.transportId != null">
+				`transport_id`,
+			</if>
+			<if test="bean.transName != null">
+				`trans_name`,
+			</if>
+			<if test="bean.createTime != null">
+				`create_time`,
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id`,
+			</if>
+			<if test="bean.chargeType != null">
+				`charge_type`,
+			</if>
+			<if test="bean.isFreeFee != null">
+				`is_free_fee`,
+			</if>
+			<if test="bean.hasFreeCondition != null">
+				`has_free_condition`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.transportId != null">
+				#{bean.transportId},
+			</if>
+			<if test="bean.transName != null">
+				#{bean.transName},
+			</if>
+			<if test="bean.createTime != null">
+				#{bean.createTime},
+			</if>
+			<if test="bean.shopId != null">
+				#{bean.shopId},
+			</if>
+			<if test="bean.chargeType != null">
+				#{bean.chargeType},
+			</if>
+			<if test="bean.isFreeFee != null">
+				#{bean.isFreeFee},
+			</if>
+			<if test="bean.hasFreeCondition != null">
+				#{bean.hasFreeCondition},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.transName != null">
+				`trans_name` = VALUES(`trans_name`),
+			</if>
+			<if test="bean.createTime != null">
+				`create_time` = VALUES(`create_time`),
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id` = VALUES(`shop_id`),
+			</if>
+			<if test="bean.chargeType != null">
+				`charge_type` = VALUES(`charge_type`),
+			</if>
+			<if test="bean.isFreeFee != null">
+				`is_free_fee` = VALUES(`is_free_fee`),
+			</if>
+			<if test="bean.hasFreeCondition != null">
+				`has_free_condition` = VALUES(`has_free_condition`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.Transport">
+		INSERT INTO tz_transport (`trans_name`,`create_time`,`shop_id`,`charge_type`,`is_free_fee`,`has_free_condition`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.transName},#{bean.createTime},#{bean.shopId},#{bean.chargeType},#{bean.isFreeFee},#{bean.hasFreeCondition})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.Transport">
+		INSERT INTO tz_transport (`trans_name`,`create_time`,`shop_id`,`charge_type`,`is_free_fee`,`has_free_condition`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.transName},#{bean.createTime},#{bean.shopId},#{bean.chargeType},#{bean.isFreeFee},#{bean.hasFreeCondition})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `transport_id`=VALUES(`transport_id`), `trans_name`=VALUES(`trans_name`), `create_time`=VALUES(`create_time`), `shop_id`=VALUES(`shop_id`), `charge_type`=VALUES(`charge_type`), `is_free_fee`=VALUES(`is_free_fee`), `has_free_condition`=VALUES(`has_free_condition`)
+	</insert>
+
+	<!-- "根据"TransportId"查询" -->
+	<select id="selectByTransportId" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_transport` WHERE transport_id=#{transportId};
+	</select>
+
+	<!-- "根据"TransportId"删除" -->
+	<delete id="deleteByTransportId">
+		DELETE FROM `tz_transport` WHERE transport_id=#{transportId};
+	</delete>
+
+	<!-- "根据"TransportId"更新" -->
+	<update id="updateByTransportId" parameterType="com.mall.entity.po.Transport">
+		UPDATE `tz_transport`
+		<set>
+			<if test="bean.transportId != null">
+				`transport_id` = #{bean.transportId}, 
+			</if>
+			<if test="bean.transName != null">
+				`trans_name` = #{bean.transName}, 
+			</if>
+			<if test="bean.createTime != null">
+				`create_time` = #{bean.createTime}, 
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id` = #{bean.shopId}, 
+			</if>
+			<if test="bean.chargeType != null">
+				`charge_type` = #{bean.chargeType}, 
+			</if>
+			<if test="bean.isFreeFee != null">
+				`is_free_fee` = #{bean.isFreeFee}, 
+			</if>
+			<if test="bean.hasFreeCondition != null">
+				`has_free_condition` = #{bean.hasFreeCondition}, 
+			</if>
+		</set>
+		WHERE transport_id=#{transportId};
+	</update>
+
+</mapper>

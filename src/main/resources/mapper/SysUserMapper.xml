@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.SysUserMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.SysUser">
+		<!--  -->
+		<result column="user_id" property="userId" />
+		<!-- 用户名 -->
+		<result column="username" property="username" />
+		<!-- 密码 -->
+		<result column="password" property="password" />
+		<!-- 邮箱 -->
+		<result column="email" property="email" />
+		<!-- 手机号 -->
+		<result column="mobile" property="mobile" />
+		<!-- 状态  0：禁用   1：正常 -->
+		<result column="status" property="status" />
+		<!-- 创建者ID -->
+		<result column="create_user_id" property="createUserId" />
+		<!-- 创建时间 -->
+		<result column="create_time" property="createTime" />
+		<!-- 用户所在的商城Id -->
+		<result column="shop_id" property="shopId" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		user_id,username,password,email,mobile,status,create_user_id,create_time,shop_id
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.userId != null ">
+			and user_id = #{query.userId}
+		</if>
+		<if test="query.username != null and query.username != ''">
+			and username = #{query.username}
+		</if>
+		<if test="query.password != null and query.password != ''">
+			and password = #{query.password}
+		</if>
+		<if test="query.email != null and query.email != ''">
+			and email = #{query.email}
+		</if>
+		<if test="query.mobile != null and query.mobile != ''">
+			and mobile = #{query.mobile}
+		</if>
+		<if test="query.status != null ">
+			and status = #{query.status}
+		</if>
+		<if test="query.createUserId != null ">
+			and create_user_id = #{query.createUserId}
+		</if>
+		<if test="query.createTime != null ">
+			and create_time = #{query.createTime}
+		</if>
+		<if test="query.shopId != null ">
+			and shop_id = #{query.shopId}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+		<if test="query.usernameFuzzy != null and query.usernameFuzzy != ''">
+			and usernameFuzzy like concat('%',#{query.usernameFuzzy}, '%')
+		</if>
+		<if test="query.passwordFuzzy != null and query.passwordFuzzy != ''">
+			and passwordFuzzy like concat('%',#{query.passwordFuzzy}, '%')
+		</if>
+		<if test="query.emailFuzzy != null and query.emailFuzzy != ''">
+			and emailFuzzy like concat('%',#{query.emailFuzzy}, '%')
+		</if>
+		<if test="query.mobileFuzzy != null and query.mobileFuzzy != ''">
+			and mobileFuzzy like concat('%',#{query.mobileFuzzy}, '%')
+		</if>
+		<if test="query.createTimeStart != null and query.createTimeStart != ''">
+			<![CDATA[and create_time >= str_to_date(#{createTimeStart}, '%Y-%m-%d')]]>
+		</if>
+		<if test="query.createTimeEnd != null and query.createTimeEnd != ''">
+			<![CDATA[and create_time >= str_to_date(#{createTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
+		</if>
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_sys_user <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_sys_user <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.SysUser">
+		<selectKey keyProperty="bean.user_id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_sys_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.userId != null">
+				`user_id`,
+			</if>
+			<if test="bean.username != null">
+				`username`,
+			</if>
+			<if test="bean.password != null">
+				`password`,
+			</if>
+			<if test="bean.email != null">
+				`email`,
+			</if>
+			<if test="bean.mobile != null">
+				`mobile`,
+			</if>
+			<if test="bean.status != null">
+				`status`,
+			</if>
+			<if test="bean.createUserId != null">
+				`create_user_id`,
+			</if>
+			<if test="bean.createTime != null">
+				`create_time`,
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.userId != null">
+				#{bean.userId},
+			</if>
+			<if test="bean.username != null">
+				#{bean.username},
+			</if>
+			<if test="bean.password != null">
+				#{bean.password},
+			</if>
+			<if test="bean.email != null">
+				#{bean.email},
+			</if>
+			<if test="bean.mobile != null">
+				#{bean.mobile},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+			<if test="bean.createUserId != null">
+				#{bean.createUserId},
+			</if>
+			<if test="bean.createTime != null">
+				#{bean.createTime},
+			</if>
+			<if test="bean.shopId != null">
+				#{bean.shopId},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.SysUser">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.userId != null">
+				`user_id`,
+			</if>
+			<if test="bean.username != null">
+				`username`,
+			</if>
+			<if test="bean.password != null">
+				`password`,
+			</if>
+			<if test="bean.email != null">
+				`email`,
+			</if>
+			<if test="bean.mobile != null">
+				`mobile`,
+			</if>
+			<if test="bean.status != null">
+				`status`,
+			</if>
+			<if test="bean.createUserId != null">
+				`create_user_id`,
+			</if>
+			<if test="bean.createTime != null">
+				`create_time`,
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.userId != null">
+				#{bean.userId},
+			</if>
+			<if test="bean.username != null">
+				#{bean.username},
+			</if>
+			<if test="bean.password != null">
+				#{bean.password},
+			</if>
+			<if test="bean.email != null">
+				#{bean.email},
+			</if>
+			<if test="bean.mobile != null">
+				#{bean.mobile},
+			</if>
+			<if test="bean.status != null">
+				#{bean.status},
+			</if>
+			<if test="bean.createUserId != null">
+				#{bean.createUserId},
+			</if>
+			<if test="bean.createTime != null">
+				#{bean.createTime},
+			</if>
+			<if test="bean.shopId != null">
+				#{bean.shopId},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.password != null">
+				`password` = VALUES(`password`),
+			</if>
+			<if test="bean.email != null">
+				`email` = VALUES(`email`),
+			</if>
+			<if test="bean.mobile != null">
+				`mobile` = VALUES(`mobile`),
+			</if>
+			<if test="bean.status != null">
+				`status` = VALUES(`status`),
+			</if>
+			<if test="bean.createUserId != null">
+				`create_user_id` = VALUES(`create_user_id`),
+			</if>
+			<if test="bean.createTime != null">
+				`create_time` = VALUES(`create_time`),
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id` = VALUES(`shop_id`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.SysUser">
+		INSERT INTO tz_sys_user (`username`,`password`,`email`,`mobile`,`status`,`create_user_id`,`create_time`,`shop_id`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.username},#{bean.password},#{bean.email},#{bean.mobile},#{bean.status},#{bean.createUserId},#{bean.createTime},#{bean.shopId})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.SysUser">
+		INSERT INTO tz_sys_user (`username`,`password`,`email`,`mobile`,`status`,`create_user_id`,`create_time`,`shop_id`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.username},#{bean.password},#{bean.email},#{bean.mobile},#{bean.status},#{bean.createUserId},#{bean.createTime},#{bean.shopId})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `user_id`=VALUES(`user_id`), `username`=VALUES(`username`), `password`=VALUES(`password`), `email`=VALUES(`email`), `mobile`=VALUES(`mobile`), `status`=VALUES(`status`), `create_user_id`=VALUES(`create_user_id`), `create_time`=VALUES(`create_time`), `shop_id`=VALUES(`shop_id`)
+	</insert>
+
+	<!-- "根据"UserId"查询" -->
+	<select id="selectByUserId" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_sys_user` WHERE user_id=#{userId};
+	</select>
+
+	<!-- "根据"UserId"删除" -->
+	<delete id="deleteByUserId">
+		DELETE FROM `tz_sys_user` WHERE user_id=#{userId};
+	</delete>
+
+	<!-- "根据"UserId"更新" -->
+	<update id="updateByUserId" parameterType="com.mall.entity.po.SysUser">
+		UPDATE `tz_sys_user`
+		<set>
+			<if test="bean.userId != null">
+				`user_id` = #{bean.userId}, 
+			</if>
+			<if test="bean.username != null">
+				`username` = #{bean.username}, 
+			</if>
+			<if test="bean.password != null">
+				`password` = #{bean.password}, 
+			</if>
+			<if test="bean.email != null">
+				`email` = #{bean.email}, 
+			</if>
+			<if test="bean.mobile != null">
+				`mobile` = #{bean.mobile}, 
+			</if>
+			<if test="bean.status != null">
+				`status` = #{bean.status}, 
+			</if>
+			<if test="bean.createUserId != null">
+				`create_user_id` = #{bean.createUserId}, 
+			</if>
+			<if test="bean.createTime != null">
+				`create_time` = #{bean.createTime}, 
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id` = #{bean.shopId}, 
+			</if>
+		</set>
+		WHERE user_id=#{userId};
+	</update>
+
+	<!-- "根据"Username"查询" -->
+	<select id="selectByUsername" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_sys_user` WHERE username=#{username};
+	</select>
+
+	<!-- "根据"Username"删除" -->
+	<delete id="deleteByUsername">
+		DELETE FROM `tz_sys_user` WHERE username=#{username};
+	</delete>
+
+	<!-- "根据"Username"更新" -->
+	<update id="updateByUsername" parameterType="com.mall.entity.po.SysUser">
+		UPDATE `tz_sys_user`
+		<set>
+			<if test="bean.userId != null">
+				`user_id` = #{bean.userId}, 
+			</if>
+			<if test="bean.username != null">
+				`username` = #{bean.username}, 
+			</if>
+			<if test="bean.password != null">
+				`password` = #{bean.password}, 
+			</if>
+			<if test="bean.email != null">
+				`email` = #{bean.email}, 
+			</if>
+			<if test="bean.mobile != null">
+				`mobile` = #{bean.mobile}, 
+			</if>
+			<if test="bean.status != null">
+				`status` = #{bean.status}, 
+			</if>
+			<if test="bean.createUserId != null">
+				`create_user_id` = #{bean.createUserId}, 
+			</if>
+			<if test="bean.createTime != null">
+				`create_time` = #{bean.createTime}, 
+			</if>
+			<if test="bean.shopId != null">
+				`shop_id` = #{bean.shopId}, 
+			</if>
+		</set>
+		WHERE username=#{username};
+	</update>
+
+</mapper>

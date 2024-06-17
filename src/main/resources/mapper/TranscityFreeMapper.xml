@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.mapper.TranscityFreeMapper">
+
+	<!-- 实体映射 -->
+	<resultMap id="base_result_map" type="com.mall.entity.po.TranscityFree">
+		<!-- 指定条件包邮城市项id -->
+		<result column="transcity_free_id" property="transcityFreeId" />
+		<!-- 指定条件包邮项id -->
+		<result column="transfee_free_id" property="transfeeFreeId" />
+		<!-- 城市id -->
+		<result column="free_city_id" property="freeCityId" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="base_column_list">
+		transcity_free_id,transfee_free_id,free_city_id
+	</sql>
+
+	<!-- 基础查询条件 -->
+	<sql id="base_query_condition">
+		<if test="query.transcityFreeId != null ">
+			and transcity_free_id = #{query.transcityFreeId}
+		</if>
+		<if test="query.transfeeFreeId != null ">
+			and transfee_free_id = #{query.transfeeFreeId}
+		</if>
+		<if test="query.freeCityId != null ">
+			and free_city_id = #{query.freeCityId}
+		</if>
+	</sql>
+
+	<!-- 扩展查询条件 -->
+	<sql id="base_query_condition_extend">
+	</sql>
+
+
+	<!-- 通用查询条件 -->
+	<sql id="query_condition">
+		<where>
+			<include refid="base_query_condition" />
+			<include refid="base_query_condition_extend" />
+		</where>
+	</sql>
+
+	<!-- 通用查询集合 -->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list" />
+		FROM tz_transcity_free <include refid="query_condition" />
+		<if test="query.orderBy != null">order by ${query.orderBy}</if>
+		<if test="query.simplePage != null">limit #{query.simplePage.start}, #{query.simplePage.end}</if>
+	</select>
+
+	<!-- 通用查询数量 -->
+	<select id="selectCount" resultType="java.lang.Long">
+		SELECT count(1) FROM tz_transcity_free <include refid="query_condition" />
+	</select>
+
+	<!-- 单个插入（匹配有值的字段） -->
+	<insert id="insert" parameterType="com.mall.entity.po.TranscityFree">
+		<selectKey keyProperty="bean.transcity_free_id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+			INSERT INTO tz_transcity_free
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.transcityFreeId != null">
+				`transcity_free_id`,
+			</if>
+			<if test="bean.transfeeFreeId != null">
+				`transfee_free_id`,
+			</if>
+			<if test="bean.freeCityId != null">
+				`free_city_id`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.transcityFreeId != null">
+				#{bean.transcityFreeId},
+			</if>
+			<if test="bean.transfeeFreeId != null">
+				#{bean.transfeeFreeId},
+			</if>
+			<if test="bean.freeCityId != null">
+				#{bean.freeCityId},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdate" parameterType="com.mall.entity.po.TranscityFree">
+		INSERT INTO user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.transcityFreeId != null">
+				`transcity_free_id`,
+			</if>
+			<if test="bean.transfeeFreeId != null">
+				`transfee_free_id`,
+			</if>
+			<if test="bean.freeCityId != null">
+				`free_city_id`,
+			</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bean.transcityFreeId != null">
+				#{bean.transcityFreeId},
+			</if>
+			<if test="bean.transfeeFreeId != null">
+				#{bean.transfeeFreeId},
+			</if>
+			<if test="bean.freeCityId != null">
+				#{bean.freeCityId},
+			</if>
+		</trim>
+		ON DUPLICATE KEY UPDATE 
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.transfeeFreeId != null">
+				`transfee_free_id` = VALUES(`transfee_free_id`),
+			</if>
+			<if test="bean.freeCityId != null">
+				`free_city_id` = VALUES(`free_city_id`),
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 批量插入（添加） -->
+	<insert id="insertBatch" parameterType="com.mall.entity.po.TranscityFree">
+		INSERT INTO tz_transcity_free (`transfee_free_id`,`free_city_id`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.transfeeFreeId},#{bean.freeCityId})
+		</foreach>
+	</insert>
+
+	<!-- 批量插入或者更新 （匹配有值的字段） -->
+	<insert id="insertOrUpdateBatch" parameterType="com.mall.entity.po.TranscityFree">
+		INSERT INTO tz_transcity_free (`transfee_free_id`,`free_city_id`) VALUES 
+		<foreach collection="beans" item="bean" index="index" separator=",">
+			(#{bean.transfeeFreeId},#{bean.freeCityId})
+		</foreach>
+		ON DUPLICATE KEY UPDATE `transcity_free_id`=VALUES(`transcity_free_id`), `transfee_free_id`=VALUES(`transfee_free_id`), `free_city_id`=VALUES(`free_city_id`)
+	</insert>
+
+	<!-- "根据"TranscityFreeId"查询" -->
+	<select id="selectByTranscityFreeId" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM `tz_transcity_free` WHERE transcity_free_id=#{transcityFreeId};
+	</select>
+
+	<!-- "根据"TranscityFreeId"删除" -->
+	<delete id="deleteByTranscityFreeId">
+		DELETE FROM `tz_transcity_free` WHERE transcity_free_id=#{transcityFreeId};
+	</delete>
+
+	<!-- "根据"TranscityFreeId"更新" -->
+	<update id="updateByTranscityFreeId" parameterType="com.mall.entity.po.TranscityFree">
+		UPDATE `tz_transcity_free`
+		<set>
+			<if test="bean.transcityFreeId != null">
+				`transcity_free_id` = #{bean.transcityFreeId}, 
+			</if>
+			<if test="bean.transfeeFreeId != null">
+				`transfee_free_id` = #{bean.transfeeFreeId}, 
+			</if>
+			<if test="bean.freeCityId != null">
+				`free_city_id` = #{bean.freeCityId}, 
+			</if>
+		</set>
+		WHERE transcity_free_id=#{transcityFreeId};
+	</update>
+
+</mapper>

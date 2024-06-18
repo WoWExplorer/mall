@@ -1,0 +1,37 @@
+.filtrate {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  // padding: var(--wow-page-padding);
+  .filtrate-item {
+    width: calc(100% / 8);
+    display: grid;
+    grid-template-areas:
+    "label blank"
+    "label feedback";
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    align-items: center;
+    box-sizing: border-box;
+    padding: var(--wow-page-padding);
+    &.date-picker {
+      width: calc(100% / 8 * 2);
+    }
+    .filtrate-label {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      height: auto;
+      box-sizing: border-box;
+      grid-template-areas:
+      "text mark"
+      "text .";
+      grid-area: label;
+      align-items: center;
+      line-height: 1.25;
+      font-size: 14px;
+      box-sizing: border-box;
+      padding-right: var(--wow-page-padding);
+      color: var(--wow-text-2);
+    }
+  }
+}

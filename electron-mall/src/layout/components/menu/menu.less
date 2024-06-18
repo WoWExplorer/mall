@@ -1,0 +1,23 @@
+.menu {
+  width: 200px;
+  height: 100%;
+  background: var(--wow-bg);
+  border-top-left-radius: var(--wow-modules-border-radius);
+  border-bottom-left-radius: var(--wow-modules-border-radius);
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: var(--wow-bg-mute);
+  }
+  &::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px var(--wow-divider);
+    border-radius: 10px;
+    background-color: var(--wow-bg-mute);
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px var(--wow-divider);
+    background-color: var(--wow-gray-light-2);
+  }
+}

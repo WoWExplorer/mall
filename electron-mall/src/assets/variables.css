@@ -1,0 +1,176 @@
+/**
+ * Colors Base
+ *
+ * These are the pure base color presets. Most of the time, you should not be
+ * using these colors directly in the theme but rather use "Colors Theme"
+ * instead because those are "Theme (light or dark)" dependant.
+ * -------------------------------------------------------------------------- */
+
+ :root {
+  --wow-white: #ffffff;
+  --wow-white-soft: #f9f9f9;
+  --wow-white-mute: #f1f1f1;
+
+  --wow-black: #1a1a1a;
+  --wow-black-pure: #000000;
+  --wow-black-soft: #242424;
+  --wow-black-mute: #2f2f2f;
+
+  --wow-indigo: #213547;
+  --wow-indigo-soft: #476582;
+  --wow-indigo-light: #aac8e4;
+
+  --wow-gray: #8e8e8e;
+  --wow-gray-light-1: #aeaeae;
+  --wow-gray-light-2: #c7c7c7;
+  --wow-gray-light-3: #d1d1d1;
+  --wow-gray-light-4: #e5e5e5;
+  --wow-gray-light-5: #f2f2f2;
+  --wow-gray-dark-1: #636363;
+  --wow-gray-dark-2: #484848;
+  --wow-gray-dark-3: #3a3a3a;
+  --wow-gray-dark-4: #282828;
+  --wow-gray-dark-5: #202020;
+
+  --wow-divider-light-1: rgba(60, 60, 60, 0.29);
+  --wow-divider-light-2: rgba(60, 60, 60, 0.12);
+  --wow-divider-dark-1: rgba(84, 84, 84, 0.65);
+  --wow-divider-dark-2: rgba(84, 84, 84, 0.48);
+
+  --wow-text-light-1: var(--wow-indigo);
+  --wow-text-light-2: rgba(60, 60, 60, 0.70);
+  --wow-text-light-3: rgba(60, 60, 60, 0.33);
+  --wow-text-light-4: rgba(60, 60, 60, 0.18);
+  --wow-text-light-code: var(--wow-indigo-soft);
+
+  --wow-text-dark-1: rgba(255, 255, 255, 0.87);
+  --wow-text-dark-2: rgba(235, 235, 235, 0.60);
+  --wow-text-dark-3: rgba(235, 235, 235, 0.38);
+  --wow-text-dark-4: rgba(235, 235, 235, 0.18);
+  --wow-text-dark-code: var(--wow-indigo-light);
+
+  --wow-green: #42b883;
+  --wow-green-light: #42d392;
+  --wow-green-lighter: #35eb9a;
+  --wow-green-dark: #33a06f;
+  --wow-green-darker: #155f3e;
+
+  --wow-blue: #3b8eed;
+  --wow-blue-light: #549ced;
+  --wow-blue-lighter: #50a2ff;
+  --wow-blue-dark: #3468a3;
+  --wow-blue-darker: #255489;
+
+  --wow-yellow: #ffc517;
+  --wow-yellow-light: #ffe417;
+  --wow-yellow-lighter: #ffff17;
+  --wow-yellow-dark: #e0ad15;
+  --wow-yellow-darker: #bc9112;
+
+  --wow-red: #ed3c50;
+  --wow-red-light: #f43771;
+  --wow-red-lighter: #fd1d7c;
+  --wow-red-dark: #cd2d3f;
+  --wow-red-darker: #ab2131;
+
+  --wow-purple: #de41e0;
+  --wow-purple-light: #e936eb;
+  --wow-purple-lighter: #f616f8;
+  --wow-purple-dark: #823c83;
+  --wow-purple-darker: #602960;
+
+  --wow-border-radius: 6px;
+}
+
+/**
+ * Colors Theme
+ * -------------------------------------------------------------------------- */
+
+:root {
+  --wow-bg: var(--wow-white);
+  --wow-bg-soft: var(--wow-white-soft);
+  --wow-bg-mute: var(--wow-white-mute);
+
+  --wow-divider: var(--wow-divider-light-1);
+  --wow-divider-light: var(--wow-divider-light-2);
+
+  --wow-divider-inverse: var(--wow-divider-dark-1);
+  --wow-divider-inverse-light: var(--wow-divider-dark-2);
+
+  --wow-text-1: var(--wow-text-light-1);
+  --wow-text-2: var(--wow-text-light-2);
+  --wow-text-3: var(--wow-text-light-3);
+  --wow-text-4: var(--wow-text-light-4);
+  --wow-text-code: var(--wow-text-light-code);
+
+  --wow-text-inverse-1: var(--wow-text-dark-1);
+  --wow-text-inverse-2: var(--wow-text-dark-2);
+  --wow-text-inverse-3: var(--wow-text-dark-3);
+  --wow-text-inverse-4: var(--wow-text-dark-4);
+
+  --wow-brand: var(--wow-green);
+  --wow-brand-light: var(--wow-green-light);
+  --wow-brand-dark: var(--wow-green-dark);
+  --wow-brand-highlight: var(--wow-brand-dark);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --wow-bg: var(--wow-black);
+    --wow-bg-soft: var(--wow-black-soft);
+    --wow-bg-mute: var(--wow-black-mute);
+  
+    --wow-divider: var(--wow-divider-dark-1);
+    --wow-divider-light: var(--wow-divider-dark-2);
+  
+    --wow-divider-inverse: var(--wow-divider-light-1);
+    --wow-divider-inverse-light: var(--wow-divider-light-2);
+  
+    --wow-text-1: var(--wow-text-dark-1);
+    --wow-text-2: var(--wow-text-dark-2);
+    --wow-text-3: var(--wow-text-dark-3);
+    --wow-text-4: var(--wow-text-dark-4);
+    --wow-text-code: var(--wow-text-dark-code);
+  
+    --wow-text-inverse-1: var(--wow-text-light-1);
+    --wow-text-inverse-2: var(--wow-text-light-2);
+    --wow-text-inverse-3: var(--wow-text-light-3);
+    --wow-text-inverse-4: var(--wow-text-light-4);
+  
+    --wow-brand-highlight: var(--wow-brand-light);
+  }
+}
+
+/**
+ * Typography
+ * -------------------------------------------------------------------------- */
+
+:root {
+  --wow-font-family-base: 'Inter var experimental', 'Inter var', Inter,
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --wow-font-family-mono: Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/**
+ * Shadows
+ * -------------------------------------------------------------------------- */
+
+:root {
+  --wow-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --wow-shadow-2: 0 3px 12px rgba(0, 0, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.07);
+  --wow-shadow-3: 0 12px 32px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.08);
+  --wow-shadow-4: 0 14px 44px rgba(0, 0, 0, 0.12), 0 3px 9px rgba(0, 0, 0, 0.12);
+  --wow-shadow-5: 0 18px 56px rgba(0, 0, 0, 0.16), 0 4px 12px rgba(0, 0, 0, 0.16);
+}
+
+/**
+ * Magic Numbers
+ * -------------------------------------------------------------------------- */
+
+:root {
+  --wow-nav-height: 55px;
+  --wow-page-padding: 10px;
+  --wow-page-padding-2: 20px;
+  --wow-page-padding-3: 40px;
+  --wow-modules-border-radius: 15px;
+}

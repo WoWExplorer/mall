@@ -488,7 +488,7 @@
 	</insert>
 
 	<!-- "根据"UserId"查询" -->
-	<select id="selectByUserId" resultMap="base_result_map">
+	<select id="selectByUserId" resultType="com.mall.entity.po.User">
 		SELECT <include refid="base_column_list"/> FROM `tz_user` WHERE user_id=#{userId};
 	</select>
 

@@ -1,15 +1,14 @@
 package com.mall.controller;
 
+import com.alibaba.fastjson2.JSON;
 import com.mall.entity.vo.PaginationResultVo;
 import com.mall.service.impl.UserServiceImpl;
 import com.mall.entity.po.User;
 import com.mall.entity.vo.ResultVo;
 import com.mall.entity.query.UserQuery;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -22,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 public class UserController extends BaseController {
+	private static final Logger log = LoggerFactory.getLogger(UserController.class);
 	@Autowired
 	private UserServiceImpl userServiceImpl;
 
@@ -94,8 +94,9 @@ public class UserController extends BaseController {
 	 * 根据UserId查询
 	 */
 	@PostMapping("/selectByUserId")
-	public ResultVo<?> selectByUserId(String userId) {
+	public ResultVo<?> selectByUserId(@RequestBody String userId) {
 		User  userQuery = userServiceImpl.selectByUserId(userId);
+		log.info("userQuery:{}", JSON.toJSONString(userQuery));
 		return getSuccessResultVo(userQuery);
 	}
 
@@ -129,7 +130,7 @@ public class UserController extends BaseController {
 	 * 根据UserMail查询
 	 */
 	@PostMapping("/selectByUserMail")
-	public ResultVo<?> selectByUserMail(String userMail) {
+	public ResultVo<?> selectByUserMail(@RequestBody String userMail) {
 		User  userQuery = userServiceImpl.selectByUserMail(userMail);
 		return getSuccessResultVo(userQuery);
 	}
@@ -164,7 +165,8 @@ public class UserController extends BaseController {
 	 * 根据UserMobile查询
 	 */
 	@PostMapping("/selectByUserMobile")
-	public ResultVo<?> selectByUserMobile(String userMobile) {
+	public ResultVo<?> selectByUserMobile(@RequestBody String userMobile) {
+		log.info("======userMobile:{}, ===> {}", JSON.toJSONString(userMobile), userMobile);
 		User  userQuery = userServiceImpl.selectByUserMobile(userMobile);
 		return getSuccessResultVo(userQuery);
 	}

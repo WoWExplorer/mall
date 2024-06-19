@@ -1,11 +1,9 @@
-package com.mall.entity.po;
+package com.mall.entity.query;
 
 import lombok.Data;
 
-import java.io.Serializable;
-
 @Data
-public class Register implements Serializable {
+public class RegisterQuery {
 
     /**
      * 用户昵称

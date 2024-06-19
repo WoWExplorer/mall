@@ -7,6 +7,8 @@ import com.mall.entity.query.UserQuery;
 import com.mall.entity.vo.PaginationResultVo;
 import com.mall.enums.PageSize;
 import com.mall.entity.query.SimplePage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ import java.util.List;
  */
 @Service("userServiceImpl")
 public class UserServiceImpl implements UserService {
+	private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 	@Autowired
 	private UserMapper<User, UserQuery> userMapper;
 
@@ -78,6 +81,7 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public User selectByUserId(String userId) {
+		log.info("user{}", userMapper.selectByUserId(userId));
 		return userMapper.selectByUserId(userId);
 	}
 

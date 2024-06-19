@@ -1,5 +1,6 @@
 <template>
   <div class="view">
+    <n-button @click="ss()">按钮请求</n-button>
   <n-result
     status="500"
     title="500 服务器错误"
@@ -16,6 +17,12 @@
 <script lang="ts" setup>
 // import { unref } from 'vue'
 import echarts from '@/components/echarts/index.vue'
+import { selectByUserMobile } from '@/api/account'
+const ss = () => {
+  selectByUserMobile('15130422583').then(res => {
+    console.log(res)
+  })
+}
 </script>
 
 <style scoped lang="less">

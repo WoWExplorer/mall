@@ -57,6 +57,7 @@ public class CommonController {
      */
     @GetMapping("/logout")
     public ResultVo<?> logout() {
+        logger.info("token{}", StpUtil.getTokenValue());
         StpUtil.logoutByTokenValue(StpUtil.getTokenValue());
         return ResultVo.success(200,"退出登录成功");
     }

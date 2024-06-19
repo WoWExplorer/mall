@@ -17,6 +17,7 @@ class Http {
       timeout: 5000, // 设置超时时间
       headers: {
         'Content-Type': 'application/json', // 设置请求头
+        'token': 'f28af5eb-4cea-4694-8498-b964359d8ec2'
       },
     });
 

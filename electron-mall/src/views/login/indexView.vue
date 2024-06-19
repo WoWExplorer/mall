@@ -77,9 +77,7 @@ const handleValidateClick = (e: MouseEvent) => {
   e.preventDefault();
   formRef.value?.validate((errors) => {
     if (!errors) {
-      // login({name: formValue.value.user.name, password: formValue.value.user.password}).then((res: any) => {
-      login('15130422583').then((res: any) => {
-        console.log(res)
+      login({userMobile: formValue.value.user.name, loginPassword: formValue.value.user.password}).then((res: any) => {
         if (res.code == 200) {
           userStore.setToken(res.data)
           message.success(res.message)
@@ -87,7 +85,6 @@ const handleValidateClick = (e: MouseEvent) => {
           message.error(res.message)
         }
       })
-      // router.push({ name: "Home" });
     } else {
       message.warning("请输入账号和密码");
     }

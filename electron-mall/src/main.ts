@@ -1,4 +1,4 @@
-cimport './assets/main.css'
+import './assets/main.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router, { setupRouter } from './router'

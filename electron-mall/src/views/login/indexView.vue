@@ -77,7 +77,12 @@ const handleValidateClick = (e: MouseEvent) => {
   e.preventDefault();
   formRef.value?.validate((errors) => {
     if (!errors) {
-      login({name: formValue.value.user.name, password: formValue.value.user.password}).then((res: any) => {
+      // login({name: formValue.value.user.name, password: formValue.value.user.password}).then((res: any) => {
+      login({
+        "userMobile": "15130422583",
+    "loginPassword": "Wyz0908@",
+    "realName": "李白",
+    "nickName": "嗷嗷"}).then((res: any) => {
         console.log(res)
         if (res.code == 200) {
           userStore.setToken(res.data)

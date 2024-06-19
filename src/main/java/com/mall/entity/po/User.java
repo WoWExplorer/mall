@@ -69,7 +69,7 @@ public class User implements Serializable {
 	/**
 	 * 注册IP
 	 */
-	private String userRegip;
+		private String userRegip;
 
 	/**
 	 * 最后登录时间

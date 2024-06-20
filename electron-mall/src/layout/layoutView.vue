@@ -20,7 +20,13 @@
 <script setup lang="ts">
 import headerView from './components/header/headerView.vue'
 import mainView from './components/main/mainView.vue'
+import { useUserStore } from '@/stores/modules/useUser';
+const userStore = useUserStore();
+
 const handler = (type: string) => {
+  if (type === 'close') {
+    userStore.loginOut();
+  }
     window.ipcRenderer.send(type);
 }
 </script>
@@ -59,7 +65,7 @@ const handler = (type: string) => {
         transition: all .4s;
       }
       &:hover {
-        cursor: pointer; 
+        cursor: pointer;
       }
       &:nth-child(2) {
         background-color: #ffbd2e;

@@ -12,7 +12,7 @@ spring:
         suffix: .html
     web:
         resources:
-            static-locations: classpath:/static/
+            static-locations: classpath:/static/**
 server:
     port: 8000
 mybatis:
@@ -32,3 +32,4 @@ sa-token:
     token-style: uuid
     # 是否输出操作日志
     is-log: true
+

@@ -47,7 +47,7 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import { useUserStore } from '@/stores/modules/useUser'
-import { login } from '@/api/account'
+import { login } from '@/api/user'
 import { type FormInst, useMessage } from "naive-ui";
 const userStore = useUserStore();
 const formRef = ref<FormInst | null>(null);

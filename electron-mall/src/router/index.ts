@@ -10,7 +10,7 @@ const routeModuleList: RouteRecordRaw[] = Object.keys(modules).reduce((list: Rou
 
   // console.log(key)
 
-  const regex = /\.\/modules\/([^.]+)\./; // 匹配.modules/之后和.之前的任何内容  
+  const regex = /\.\/modules\/([^.]+)\./; // 匹配.modules/之后和.之前的任何内容
   const match = key.match(regex);
   const name: any = match?.[1]
 
@@ -25,7 +25,7 @@ function sortRoute(a:any, b: any) {
 }
 
 routeModuleList.sort(sortRoute);
-/* 
+/*
 
   title: string;
   // 是否忽略权限
@@ -101,7 +101,7 @@ export function setupRouter(app: App) {
   // 创建路由守卫
   router.beforeEach((to, from, next) => {
     const token = storage.get('token');
-    if (to.path == '/login') {
+    if (to.path === '/login') {
       return next();
     }
     if (!token) {

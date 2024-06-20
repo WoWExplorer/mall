@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { darkTheme } from "naive-ui";
 import { useUserStore } from "./stores/modules/useUser";
+import { darkTheme } from 'naive-ui'
 const userStore = useUserStore();
 if (userStore.token) {
   window.ipcRenderer.send('login-success');

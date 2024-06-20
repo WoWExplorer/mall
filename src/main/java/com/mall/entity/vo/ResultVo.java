@@ -47,6 +47,12 @@ public class ResultVo<T> {
     public static <T> ResultVo<T> fail(String massage) {
         return buildResult(101, null, massage);
     }
+    public static <T> ResultVo<T> fail(T data, String massage) {
+        return buildResult(101, data, massage);
+    }
+    public static <T> ResultVo<T> fail(int code, T data, String massage) {
+        return buildResult(code, data, massage);
+    }
 
     public int getCode() {
         return code;

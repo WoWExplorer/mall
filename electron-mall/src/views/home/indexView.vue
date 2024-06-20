@@ -17,7 +17,7 @@
 <script lang="ts" setup>
 // import { unref } from 'vue'
 import echarts from '@/components/echarts/index.vue'
-import { selectByUserMobile } from '@/api/account'
+import { selectByUserMobile } from '@/api/user'
 const ss = () => {
   selectByUserMobile('15130422583').then(res => {
     console.log(res)

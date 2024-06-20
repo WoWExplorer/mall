@@ -4,11 +4,12 @@ import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.IdUtil;
-import com.alibaba.fastjson2.JSON;
 import com.mall.entity.query.LoginQuery;
 import com.mall.entity.query.RegisterQuery;
 import com.mall.entity.po.User;
 import com.mall.entity.vo.ResultVo;
+import com.mall.enums.DurationEnum;
+import com.mall.enums.ResultCodeEnum;
 import com.mall.service.impl.UserServiceImpl;
 import com.mall.utils.ValidatorUtils;
 import com.mall.utils.WOWNicknameGenerator;
@@ -39,14 +40,15 @@ public class CommonController {
         User user = userServiceImpl.selectByUserMobile(loginQuery.getUserMobile());
 
         if (user == null) {
-            return ResultVo.fail("此账号尚未注册");
+            return ResultVo.fail(ResultCodeEnum.CODE_1002.getCode(), ResultCodeEnum.CODE_1002.getMessage());
         }
         if (user.getLoginPassword().equals(SaSecureUtil.aesEncrypt(key, loginQuery.getLoginPassword()))) {
-            StpUtil.login(user.getUserId());
+            // 设置时长
+            StpUtil.login(user.getUserId(), DurationEnum.MINUTES_30.getSeconds());
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-            return ResultVo.success(tokenInfo,"登录成功");
+            return ResultVo.success(ResultCodeEnum.CODE_200.getCode() ,tokenInfo, ResultCodeEnum.CODE_200.getMessage());
         } else {
-            return ResultVo.fail("密码错误");
+            return ResultVo.fail(ResultCodeEnum.CODE_1000.getCode(), ResultCodeEnum.CODE_1000.getMessage());
         }
     }
 
@@ -59,7 +61,12 @@ public class CommonController {
     public ResultVo<?> logout() {
         logger.info("token{}", StpUtil.getTokenValue());
         StpUtil.logoutByTokenValue(StpUtil.getTokenValue());
-        return ResultVo.success(200,"退出登录成功");
+        boolean login = StpUtil.isLogin();
+        if (login) {
+            return ResultVo.fail(ResultCodeEnum.CODE_1002.getCode(),"请重新操作");
+        } else {
+            return ResultVo.success(ResultCodeEnum.CODE_200,"退出登录成功");
+        }
     }
 
     /**
@@ -79,10 +86,10 @@ public class CommonController {
                 register.setNickName(WOWNicknameGenerator.generateWOWNickname());
         }
         if (!ValidatorUtils.isPasswordStrongValid(register.getLoginPassword())) {
-            return ResultVo.fail("密码必须包含大写字母、小写字母、数字和(#?!@$%^&*-)且8-32位");
+            return ResultVo.fail(ResultCodeEnum.CODE_1028.getCode(),ResultCodeEnum.CODE_1028.getMessage());
         }
         if (userServiceImpl.selectByUserMobile(register.getUserMobile()) != null) {
-            return ResultVo.fail("此手机号已注册");
+            return ResultVo.fail(ResultCodeEnum.CODE_1001.getCode(), ResultCodeEnum.CODE_1001.getMessage());
         }
         User user = new User();
         user.setUserId(IdUtil.simpleUUID());
@@ -95,12 +102,11 @@ public class CommonController {
         user.setUserRegtime(Date.from(Instant.now()));
         Integer insert = userServiceImpl.insert(user);
 
-        logger.info("注册成功，用户：{}", JSON.toJSONString(user));
-
         if (insert == 1) {
-            return ResultVo.success("注册成功");
+            return ResultVo.success(ResultCodeEnum.CODE_200, ResultCodeEnum.CODE_200.getMessage());
         } else {
             return ResultVo.fail("注册失败");
         }
     }
+
 }

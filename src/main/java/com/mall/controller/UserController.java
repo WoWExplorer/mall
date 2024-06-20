@@ -6,10 +6,12 @@ import com.mall.service.impl.UserServiceImpl;
 import com.mall.entity.po.User;
 import com.mall.entity.vo.ResultVo;
 import com.mall.entity.query.UserQuery;
+import com.mall.utils.FileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,6 +26,13 @@ public class UserController extends BaseController {
 	private static final Logger log = LoggerFactory.getLogger(UserController.class);
 	@Autowired
 	private UserServiceImpl userServiceImpl;
+	@Autowired
+	private FileService fileService;
+
+	@PostMapping("/uploadAvatar")
+	public ResultVo<?> uploadAvatar(@RequestParam("file") MultipartFile file) {
+		return 	fileService.fileUpload(file, "/user/avatar", "img");
+	}
 
 	/**
 	 * 根据条件查询列表

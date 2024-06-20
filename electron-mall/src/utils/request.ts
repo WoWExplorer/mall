@@ -1,7 +1,9 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import { useUserStore } from '@/stores/modules/useUser'
-
+import { useUserStore } from '@/stores/modules/useUser';
 const userStore = useUserStore();
+
+const $message = window['$message'];
+const pattern: RegExp = /^\/(login|register)$/;
 // 创建一个 Axios 实例
 const service: AxiosInstance = axios.create({
   // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
@@ -17,12 +19,16 @@ const service: AxiosInstance = axios.create({
 service.interceptors.request.use(
   (config: any) => {
     // 在发送请求之前做些什么
-    if (userStore.$state.token) {
-      // 让每个请求携带 token
-      // ['X-Token'] 是一个自定义的 headers key，请根据实际情况修改
-      config.headers['token'] = userStore.$state.token.tokenValue;
-      // config.headers['token'] = 'f28af5eb-4cea-4694-8498-b964359d8ec2';
-    }
+      if (!pattern.test(config.url)) {
+        if (userStore.$state.token) {
+          // 让每个请求携带 token
+          config.headers['token'] = userStore.$state.token.tokenValue;
+        } else {
+            window.$message.warning('认证超时');
+           return userStore.loginOut();
+        }
+      }
+
     return config;
   },
   (error: any) => {
@@ -40,9 +46,10 @@ service.interceptors.response.use(
     // 如果自定义 code 不是 20000，则判断为错误
     if (res.code !== 200) {
 
-      // 50008: 非法的 token; 50012: 其他客户端登录了; 50014: Token 过期了;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
+      // 400: 非法的 token; 50012: 其他客户端登录了; 1025: Token 过期了;
+      if (res.code === 50008 || res.code === 50012 || res.code === 1025) {
         // 重新登录
+          userStore.loginOut();
       }
       return Promise.reject(new Error(res.message || 'Error'));
     } else {

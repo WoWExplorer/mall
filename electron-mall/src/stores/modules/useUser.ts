@@ -18,14 +18,21 @@ export const useUserStore = defineStore({
     increment() {
       this.count++
     },
-    setToken(token: string) {
+    setToken(token: any) {
       this.$state.token = token;
-      storage.set('token', token);
+      console.log(token.tokenTimeout)
+      storage.set('token', token, token.tokenTimeout);
       router.push({path: '/home'});
       window.ipcRenderer.send('login-success');
     },
+    loginOut() {
+      this.$state.token = '';
+      storage.clear();
+      router.replace({path: '/login'})
+      window.ipcRenderer.send('no-login');
+    },
     setInfo() {
-      
+
     }
   }
 })

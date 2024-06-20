@@ -14,7 +14,6 @@ public class ActivityController {
 
     @GetMapping("/index")
     public String test(Model model){
-        System.out.println("activity");
         model.addAttribute("name","张三");
         return "index";
     }

@@ -56,6 +56,23 @@ export default class Storage {
     }
     return def;
   }
+  getExpire(key: string, def: any = null) {
+    const item = this.storage.getItem(this.getKey(key));
+    if (item) {
+      try {
+        const data = JSON.parse(item);
+        const { value, expire } = data;
+        // 在有效期内直接返回
+        if (expire === null || expire >= Date.now()) {
+          return expire;
+        }
+        this.remove(key);
+      } catch (e) {
+        return def;
+      }
+    }
+    return def;
+  }
 
   /**
    * 从缓存删除某项

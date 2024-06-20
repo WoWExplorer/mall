@@ -20,10 +20,11 @@ const service: AxiosInstance = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
   (config: any) => {
-      console.log(userStore.$state.token.tokenTimeout * 1000 + 10000 , Date.now())
     // 在发送请求之前做些什么
       if (!pattern.test(config.url)) {
-          if (userStore.$state.token.tokenTimeout * 1000 + 10000 >= Date.now()) {
+          var expire = storage.getExpire('token');
+      console.log(expire - 20000 <= Date.now())
+          if (expire - 20000 <= Date.now()) {
               renewTimeout('').then((res: any) => {
                   if (res.code == 200) {
                       userStore.setToken(res.data)

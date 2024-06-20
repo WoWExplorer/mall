@@ -12,7 +12,7 @@ spring:
         suffix: .html
     web:
         resources:
-            static-locations: classpath:/static/**
+            static-locations: classpath:/static/
 server:
     port: 8000
 mybatis:

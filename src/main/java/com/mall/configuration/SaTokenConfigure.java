@@ -21,7 +21,7 @@ public class SaTokenConfigure implements WebMvcConfigurer {
     public SaServletFilter saServletFilter() {
         return new SaServletFilter()
                 .addInclude("/**") // 拦截所有路径
-                .addExclude("/favicon.ico", "/activity/**", "/login", "/static/*") // 排除路径
+                .addExclude("/favicon.ico", "/activity/**", "/login") // 排除路径
                 .setAuth(obj -> {
                     // 配置需要登录认证的路径
 //                    SaRouter.match("/**", "/activity/**", StpUtil::checkLogin);

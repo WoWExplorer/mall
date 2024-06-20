@@ -19,6 +19,13 @@ export function login(data: any){
         data
     })
 }
+export function renewTimeout(data: any){
+    return request({
+        url: '/renewTimeout',
+        method: 'POST',
+        data
+    })
+}
 
 
 /**

@@ -1,9 +1,11 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { useUserStore } from '@/stores/modules/useUser';
+import { renewTimeout } from '@/api/user'
+import {storage} from "@/utils/Storage";
 const userStore = useUserStore();
 
 const $message = window['$message'];
-const pattern: RegExp = /^\/(login|register)$/;
+const pattern: RegExp = /^\/(login|register, renewTimeout)$/;
 // 创建一个 Axios 实例
 const service: AxiosInstance = axios.create({
   // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
@@ -18,8 +20,19 @@ const service: AxiosInstance = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
   (config: any) => {
+      console.log(userStore.$state.token.tokenTimeout * 1000 + 10000 , Date.now())
     // 在发送请求之前做些什么
       if (!pattern.test(config.url)) {
+          if (userStore.$state.token.tokenTimeout * 1000 + 10000 >= Date.now()) {
+              renewTimeout('').then((res: any) => {
+                  if (res.code == 200) {
+                      userStore.setToken(res.data)
+                      // message.success(res.message)
+                  } else {
+                      // message.error(res.message)
+                  }
+              })
+          }
         if (userStore.$state.token) {
           // 让每个请求携带 token
           config.headers['token'] = userStore.$state.token.tokenValue;

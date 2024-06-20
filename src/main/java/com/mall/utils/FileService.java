@@ -40,9 +40,9 @@ public class FileService {
         Path pathDir = Paths.get("");
 
         if (!path.isEmpty()) {
-            pathDir = Paths.get("src/main/resources/data" + path + "/" + extName);
+            pathDir = Paths.get("src/main/resources/static/data" + path + "/" + extName);
         } else {
-            pathDir = Paths.get("src/main/resources/data/"+ extName);
+            pathDir = Paths.get("src/main/resources/static/data/"+ extName);
         }
 
 

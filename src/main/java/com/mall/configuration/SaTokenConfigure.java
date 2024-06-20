@@ -2,14 +2,19 @@ package com.mall.configuration;
 
 import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.filter.SaServletFilter;
+import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.router.SaHttpMethod;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSON;
 import com.mall.entity.vo.ResultVo;
 import com.mall.enums.ResultCodeEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -17,20 +22,22 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class SaTokenConfigure implements WebMvcConfigurer {
+
+    private static final Logger log = LoggerFactory.getLogger(SaTokenConfigure.class);
+
     @Bean
     public SaServletFilter saServletFilter() {
         return new SaServletFilter()
                 .addInclude("/**") // 拦截所有路径
-                .addExclude("/favicon.ico", "/activity/**", "/login") // 排除路径
+                .addExclude("/favicon.ico") // 排除路径
                 .setAuth(obj -> {
-                    // 配置需要登录认证的路径
-//                    SaRouter.match("/**", "/activity/**", StpUtil::checkLogin);
-//                    SaRouter.match("/**", "/login", StpUtil::checkLogin);
-                    SaRouter.match("/**", "/register", StpUtil::checkLogin);
-//                    SaRouter.match("/**", "/logout", StpUtil::checkLogin);
+                    SaRouter
+                            .match("/**")
+                            .notMatch("/activity/**", "/login", "/register", "/js/**", "/css/**", "/bootstrap/**")
+                            .check(r -> StpUtil.checkLogin());
                 })
                 // 异常处理函数：每次认证函数发生异常时执行此函数
-                .setError(e -> JSONUtil.toJsonStr(ResultVo.fail(ResultCodeEnum.CODE_1025.getCode(), null, ResultCodeEnum.CODE_1025.getMessage())))
+                .setError(e -> JSONUtil.toJsonStr(ResultVo.fail(ResultCodeEnum.CODE_1022.getCode(), null, ResultCodeEnum.CODE_1022.getMessage())))
                 // 前置函数：在每次认证函数之前执行
                 .setBeforeAuth(obj -> {
                     SaHolder.getResponse()
@@ -49,6 +56,4 @@ public class SaTokenConfigure implements WebMvcConfigurer {
                             .back();
                 });
     }
-
 }
-

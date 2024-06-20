@@ -44,7 +44,7 @@ public class CommonController {
         }
         if (user.getLoginPassword().equals(SaSecureUtil.aesEncrypt(key, loginQuery.getLoginPassword()))) {
             // 设置时长
-            StpUtil.login(user.getUserId(), DurationEnum.MINUTES_30.getSeconds());
+            StpUtil.login(user.getUserId(), DurationEnum.SECONDS_30.getSeconds());
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
             return ResultVo.success(ResultCodeEnum.CODE_200.getCode() ,tokenInfo, ResultCodeEnum.CODE_200.getMessage());
         } else {
@@ -52,6 +52,13 @@ public class CommonController {
         }
     }
 
+//    StpUtil.renewTimeout(token, timeout);
+    @PostMapping("/renewTimeout")
+    public ResultVo<?> renewTimeout(String token) {
+        StpUtil.renewTimeout(token, DurationEnum.SECONDS_30.getSeconds());
+        SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+        return ResultVo.success(ResultCodeEnum.CODE_200.getCode(), tokenInfo, ResultCodeEnum.CODE_200.getMessage());
+    }
 
     /**
      * 退出登录

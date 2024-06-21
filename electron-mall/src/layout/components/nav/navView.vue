@@ -25,8 +25,9 @@ const route = useRoute();
 const router = useRouter();
 
 const refresh = () => {
+  location.reload()
   console.log('刷新')
-  console.log(route.fullPath)
+  // console.log(route.fullPath)
   router.push({
     path: route.fullPath,
   });

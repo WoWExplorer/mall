@@ -24,6 +24,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@types/echarts": "^4.9.22",
     "@types/electron": "^1.6.10",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vitejs/plugin-vue-jsx": "^4.0.0",

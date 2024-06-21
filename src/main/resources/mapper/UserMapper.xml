@@ -111,7 +111,7 @@
 			and userIdFuzzy like concat('%',#{query.userIdFuzzy}, '%')
 		</if>
 		<if test="query.nickNameFuzzy != null and query.nickNameFuzzy != ''">
-			and nickNameFuzzy like concat('%',#{query.nickNameFuzzy}, '%')
+			and nick_name like concat('%',#{query.nickNameFuzzy}, '%')
 		</if>
 		<if test="query.realNameFuzzy != null and query.realNameFuzzy != ''">
 			and realNameFuzzy like concat('%',#{query.realNameFuzzy}, '%')

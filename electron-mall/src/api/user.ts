@@ -27,6 +27,28 @@ export function renewTimeout(data: any){
     })
 }
 
+/**
+ * 根据条件查询列表
+ * {
+ *     userId
+ *     userIdFuzzy
+ *     nickName
+ *     nickNameFuzzy
+ *     realName
+ *     realNameFuzzy
+ *     userMail
+ *     userMailFuzzy
+ * }
+ * @param data
+ */
+export function selectListByCondition(data: UserParam){
+    return request({
+        url: '/user/selectListByCondition',
+        method: 'POST',
+        data
+    })
+}
+
 
 /**
  * {"value":"f28af5eb-4cea-4694-8498-b964359d8ec2","expire":1719393496941}

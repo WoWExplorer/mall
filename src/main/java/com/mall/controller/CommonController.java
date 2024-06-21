@@ -4,6 +4,7 @@ import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.IdUtil;
+import com.alibaba.fastjson2.JSON;
 import com.mall.entity.query.LoginQuery;
 import com.mall.entity.query.RegisterQuery;
 import com.mall.entity.po.User;
@@ -44,7 +45,7 @@ public class CommonController {
         }
         if (user.getLoginPassword().equals(SaSecureUtil.aesEncrypt(key, loginQuery.getLoginPassword()))) {
             // 设置时长
-            StpUtil.login(user.getUserId(), DurationEnum.SECONDS_30.getSeconds());
+            StpUtil.login(user.getUserId(), DurationEnum.MINUTES_30.getSeconds());
             SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
             return ResultVo.success(ResultCodeEnum.CODE_200.getCode() ,tokenInfo, ResultCodeEnum.CODE_200.getMessage());
         } else {
@@ -52,10 +53,14 @@ public class CommonController {
         }
     }
 
-//    StpUtil.renewTimeout(token, timeout);
     @PostMapping("/renewTimeout")
-    public ResultVo<?> renewTimeout(String token) {
-        StpUtil.renewTimeout(token, DurationEnum.SECONDS_30.getSeconds());
+    public ResultVo<?> renewTimeout(@RequestBody String token) {
+        Object loginId = StpUtil.getLoginId();
+        if (loginId == null) {
+            return ResultVo.fail(ResultCodeEnum.CODE_1025.getCode(), ResultCodeEnum.CODE_1025.getMessage());
+        }
+        StpUtil.login(loginId, DurationEnum.MINUTES_30.getSeconds());
+
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
         return ResultVo.success(ResultCodeEnum.CODE_200.getCode(), tokenInfo, ResultCodeEnum.CODE_200.getMessage());
     }

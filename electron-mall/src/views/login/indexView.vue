@@ -17,13 +17,13 @@
     >
       <n-form-item path="user.name" label-align="left">
         <n-input
-          v-model:value="formValue.user.name"
+          v-model:value="formValue.user.userMobile"
           placeholder="输入账号"
         />
       </n-form-item>
       <n-form-item path="user.password">
         <n-input
-          v-model:value="formValue.user.password"
+          v-model:value="formValue.user.loginPassword"
           type="password"
           show-password-on="mousedown"
           placeholder="输入密码"
@@ -45,28 +45,32 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import {ref, unref} from "vue";
 import { useUserStore } from '@/stores/modules/useUser'
-import { login } from '@/api/user'
+import { useRoute, useRouter } from 'vue-router'
 import { type FormInst, useMessage } from "naive-ui";
 const userStore = useUserStore();
 const formRef = ref<FormInst | null>(null);
 const size = ref<"small" | "medium" | "large">("medium");
 const message = useMessage();
+const route = useRoute();
+const router = useRouter();
+const redirect = ref<any>(route.query.redirect);
+const query = ref<any>();
 const formValue = ref({
   user: {
-    name: "",
-    password: "",
+    userMobile: "",
+    loginPassword: "",
   }
 });
 const rules = {
   user: {
-    name: {
+    userMobile: {
       required: true,
       message: "请输入账号",
       trigger: "blur",
     },
-    password: {
+    loginPassword: {
       required: true,
       message: "请输入密码",
       trigger: ["input", "blur"],
@@ -77,13 +81,10 @@ const handleValidateClick = (e: MouseEvent) => {
   e.preventDefault();
   formRef.value?.validate((errors) => {
     if (!errors) {
-      login({userMobile: formValue.value.user.name, loginPassword: formValue.value.user.password}).then((res: any) => {
-        if (res.code == 200) {
-          userStore.setToken(res.data)
-          message.success(res.message)
-        } else {
-          message.error(res.message)
-        }
+      userStore.login(unref(formValue).user).then((res: any) => {
+        router.push({ path: unref(redirect) || '/', query: unref(query) })
+      }).catch((res) => {
+
       })
     } else {
       message.warning("请输入账号和密码");
@@ -93,6 +94,17 @@ const handleValidateClick = (e: MouseEvent) => {
 const handler = (type: string) => {
   window.ipcRenderer.send(type);
 };
+
+// 获取参数
+const getOtherQuery = (query: any) => {
+  return Object.keys(query).reduce((acc: any, cur: any) => {
+    if (cur !== 'redirect') {
+      acc[cur] = query[cur]
+    }
+    query.value = acc
+  }, {})
+}
+getOtherQuery(route.query)
 </script>
 
 <style lang="less" scoped>

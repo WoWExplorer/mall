@@ -95,22 +95,29 @@ const router = createRouter({
   strict: true,
   scrollBehavior: () => ({ left: 0, top: 0 }),
 });
-
 export function setupRouter(app: App) {
   app.use(router);
   // 创建路由守卫
   router.beforeEach((to, from, next) => {
     const token = storage.get('token');
-    if (to.path === '/login') {
-      return next();
-    }
-    if (!token) {
-      window.ipcRenderer.send('no-login');
-      router.replace({path: '/login'})
-    } else {
-     return next();
-    }
 
+
+    if (token) {
+      window.ipcRenderer.send('login-success');
+      if (to.path === '/login') {
+        return next({ path: '/' });
+      } else {
+        return next();
+      }
+    } else {
+      if (to.path === '/login') {
+        next();
+      } else {
+        next(`/login?redirect=${to.path}`)
+      }
+      window.$message.error('请重新登录')
+      window.ipcRenderer.send('no-login');
+    }
   })
 }
 

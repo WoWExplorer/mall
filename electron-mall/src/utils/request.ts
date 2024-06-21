@@ -1,11 +1,9 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import { useUserStore } from '@/stores/modules/useUser';
 import { renewTimeout } from '@/api/user'
 import {storage} from "@/utils/Storage";
-const userStore = useUserStore();
+import { useUserStore } from "@/stores/modules/useUser";
 
-const $message = window['$message'];
-const pattern: RegExp = /^\/(login|register, renewTimeout)$/;
+const pattern: RegExp = /^\/(login|register|renewTimeout)$/;
 // 创建一个 Axios 实例
 const service: AxiosInstance = axios.create({
   // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
@@ -19,25 +17,27 @@ const service: AxiosInstance = axios.create({
 
 // 请求拦截器
 service.interceptors.request.use(
-  (config: any) => {
+    async (config: any) => {
+        const token = storage.get('token');
     // 在发送请求之前做些什么
       if (!pattern.test(config.url)) {
-          var expire = storage.getExpire('token');
-      console.log(expire - 20000 <= Date.now())
-          if (expire - 20000 <= Date.now()) {
-              renewTimeout('').then((res: any) => {
-                  if (res.code == 200) {
-                      userStore.setToken(res.data)
-                      // message.success(res.message)
+          const expire = storage.getExpire('token');
+          // 10分钟之内
+          if (expire - 600000 <= Date.now()) {
+              await renewTimeout(token).then((res: any) => {
+                  const { code, data, message } = res
+                  if (code === 200) {
+                      storage.set('token', data, data.tokenTimeout)
                   } else {
-                      // message.error(res.message)
                   }
               })
           }
-        if (userStore.$state.token) {
+        if (token) {
           // 让每个请求携带 token
-          config.headers['token'] = userStore.$state.token.tokenValue;
+          config.headers['token'] = token;
         } else {
+            const userStore = useUserStore();
+            location.reload();
             window.$message.warning('认证超时');
            return userStore.loginOut();
         }
@@ -47,7 +47,6 @@ service.interceptors.request.use(
   },
   (error: any) => {
     // 处理请求错误
-    console.log(error); // 调试用
     return Promise.reject(error);
   }
 );
@@ -61,17 +60,20 @@ service.interceptors.response.use(
     if (res.code !== 200) {
 
       // 400: 非法的 token; 50012: 其他客户端登录了; 1025: Token 过期了;
-      if (res.code === 50008 || res.code === 50012 || res.code === 1025) {
+      if (res.code === 400 || res.code === 1022 || res.code === 1025) {
         // 重新登录
-          userStore.loginOut();
+        //   userStore.loginOut();
       }
-      return Promise.reject(new Error(res.message || 'Error'));
+      const userStore = useUserStore();
+      userStore.loginOut();
+      location.reload()
+      return window.$message.error(res.message);
+      // return Promise.reject(new Error(res.message || 'Error'));
     } else {
       return res;
     }
   },
   (error: any) => {
-    console.log('err' + error); // 调试用
     return Promise.reject(error);
   }
 );

@@ -9,3 +9,13 @@ declare module 'virtual:*' {
   const result: any;
   export default result;
 }
+
+declare global {
+  interface Window {
+    $message: {
+      error: (msg: string) => void;
+      success: (msg: string) => void;
+      warning: (msg: string) => void;
+    };
+  }
+}

@@ -6,6 +6,7 @@
         description="生活总归带点荒谬"
       >
         <template #footer>
+          <n-button @click="ss()">按钮请求</n-button>
           <n-button>找点乐子吧</n-button>
         </template>
       </n-result>
@@ -14,7 +15,13 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { selectByUserMobile } from '@/api/user'
 const value = ref<any>();
+const ss = () => {
+  selectByUserMobile('15130422583').then(res => {
+    console.log(res)
+  })
+}
 </script>
 
 <style scoped lang="less">

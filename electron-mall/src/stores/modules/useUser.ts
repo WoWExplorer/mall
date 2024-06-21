@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { storage } from '@/utils/Storage';
-import router from "@/router";
+// import router from "@/router";
+import { login } from '@/api/user';
 
 export const useUserStore = defineStore({
   id: 'user',
@@ -18,21 +19,31 @@ export const useUserStore = defineStore({
     increment() {
       this.count++
     },
-    setToken(token: any) {
+    setToken(token: any, expire: number) {
       this.$state.token = token;
-      console.log(token.tokenTimeout)
-      storage.set('token', token, token.tokenTimeout);
-      router.push({path: '/home'});
-      window.ipcRenderer.send('login-success');
+      storage.set('token', token, expire);
     },
     loginOut() {
       this.$state.token = '';
       storage.clear();
-      router.replace({path: '/login'})
       window.ipcRenderer.send('no-login');
     },
-    setInfo() {
-
+    // 登录
+    login(data: any) {
+      return new Promise((resolve: any, reject: any) => {
+        login(data).then((res: any) =>{
+          const { code, data, message } = res;
+          if (code === 200) {
+            window.$message.success(message)
+            this.setToken(data.tokenValue, data.tokenTimeout)
+            window.ipcRenderer.send('login-success');
+            resolve()
+          } else {
+            reject(message)
+            window.$message.error(message)
+          }
+        })
+      })
     }
   }
 })

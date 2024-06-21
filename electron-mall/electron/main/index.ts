@@ -78,7 +78,7 @@ async function createWindow() {
     win.loadFile(indexHtml)
   }
 
-  
+
 
   // Test actively push message to the Electron-Renderer
   win.webContents.on('did-finish-load', () => {
@@ -90,7 +90,6 @@ async function createWindow() {
     if (url.startsWith('https:')) shell.openExternal(url)
     return { action: 'deny' }
   })
-
   globalShortcut.register('Ctrl+Shift+A', () => {
     // 发送键盘事件到渲染进程
     win?.webContents.send('global-shortcut', 'CommandOrControl+X pressed');
@@ -161,8 +160,11 @@ ipcMain.on('no-login', () => {
   win.center()
 })
 ipcMain.on('login-success', (event, arg) => {
-  win.setSize(1200, 800, true) // 设置窗口
-  win.center()
+  const size = win.getSize();
+  if (size[0] <= 480 || size[1] <= 580) {
+    win.setSize(1200, 800, true) // 设置窗口
+    win.center()
+  }
   // win.setFullScreen(true) // 全屏
   // win.maximize() // 最大化
   // win.minimize() // 最小化

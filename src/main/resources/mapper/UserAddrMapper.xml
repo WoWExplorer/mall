@@ -103,28 +103,28 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.userIdFuzzy != null and query.userIdFuzzy != ''">
-			and userIdFuzzy like concat('%',#{query.userIdFuzzy}, '%')
+			and user_id like concat('%',#{query.userIdFuzzy}, '%')
 		</if>
 		<if test="query.receiverFuzzy != null and query.receiverFuzzy != ''">
-			and receiverFuzzy like concat('%',#{query.receiverFuzzy}, '%')
+			and receiver like concat('%',#{query.receiverFuzzy}, '%')
 		</if>
 		<if test="query.provinceFuzzy != null and query.provinceFuzzy != ''">
-			and provinceFuzzy like concat('%',#{query.provinceFuzzy}, '%')
+			and province like concat('%',#{query.provinceFuzzy}, '%')
 		</if>
 		<if test="query.cityFuzzy != null and query.cityFuzzy != ''">
-			and cityFuzzy like concat('%',#{query.cityFuzzy}, '%')
+			and city like concat('%',#{query.cityFuzzy}, '%')
 		</if>
 		<if test="query.areaFuzzy != null and query.areaFuzzy != ''">
-			and areaFuzzy like concat('%',#{query.areaFuzzy}, '%')
+			and area like concat('%',#{query.areaFuzzy}, '%')
 		</if>
 		<if test="query.postCodeFuzzy != null and query.postCodeFuzzy != ''">
-			and postCodeFuzzy like concat('%',#{query.postCodeFuzzy}, '%')
+			and post_code like concat('%',#{query.postCodeFuzzy}, '%')
 		</if>
 		<if test="query.addrFuzzy != null and query.addrFuzzy != ''">
-			and addrFuzzy like concat('%',#{query.addrFuzzy}, '%')
+			and addr like concat('%',#{query.addrFuzzy}, '%')
 		</if>
 		<if test="query.mobileFuzzy != null and query.mobileFuzzy != ''">
-			and mobileFuzzy like concat('%',#{query.mobileFuzzy}, '%')
+			and mobile like concat('%',#{query.mobileFuzzy}, '%')
 		</if>
 		<if test="query.createTimeStart != null and query.createTimeStart != ''">
 			<![CDATA[and create_time >= str_to_date(#{createTimeStart}, '%Y-%m-%d')]]>

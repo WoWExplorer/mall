@@ -73,13 +73,13 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.categoryNameFuzzy != null and query.categoryNameFuzzy != ''">
-			and categoryNameFuzzy like concat('%',#{query.categoryNameFuzzy}, '%')
+			and category_name like concat('%',#{query.categoryNameFuzzy}, '%')
 		</if>
 		<if test="query.iconFuzzy != null and query.iconFuzzy != ''">
-			and iconFuzzy like concat('%',#{query.iconFuzzy}, '%')
+			and icon like concat('%',#{query.iconFuzzy}, '%')
 		</if>
 		<if test="query.picFuzzy != null and query.picFuzzy != ''">
-			and picFuzzy like concat('%',#{query.picFuzzy}, '%')
+			and pic like concat('%',#{query.picFuzzy}, '%')
 		</if>
 		<if test="query.recTimeStart != null and query.recTimeStart != ''">
 			<![CDATA[and rec_time >= str_to_date(#{recTimeStart}, '%Y-%m-%d')]]>

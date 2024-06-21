@@ -113,7 +113,7 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.propertiesFuzzy != null and query.propertiesFuzzy != ''">
-			and propertiesFuzzy like concat('%',#{query.propertiesFuzzy}, '%')
+			and properties like concat('%',#{query.propertiesFuzzy}, '%')
 		</if>
 		<if test="query.updateTimeStart != null and query.updateTimeStart != ''">
 			<![CDATA[and update_time >= str_to_date(#{updateTimeStart}, '%Y-%m-%d')]]>
@@ -128,19 +128,19 @@
 			<![CDATA[and rec_time >= str_to_date(#{recTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
 		</if>
 		<if test="query.partyCodeFuzzy != null and query.partyCodeFuzzy != ''">
-			and partyCodeFuzzy like concat('%',#{query.partyCodeFuzzy}, '%')
+			and party_code like concat('%',#{query.partyCodeFuzzy}, '%')
 		</if>
 		<if test="query.modelIdFuzzy != null and query.modelIdFuzzy != ''">
-			and modelIdFuzzy like concat('%',#{query.modelIdFuzzy}, '%')
+			and model_id like concat('%',#{query.modelIdFuzzy}, '%')
 		</if>
 		<if test="query.picFuzzy != null and query.picFuzzy != ''">
-			and picFuzzy like concat('%',#{query.picFuzzy}, '%')
+			and pic like concat('%',#{query.picFuzzy}, '%')
 		</if>
 		<if test="query.skuNameFuzzy != null and query.skuNameFuzzy != ''">
-			and skuNameFuzzy like concat('%',#{query.skuNameFuzzy}, '%')
+			and sku_name like concat('%',#{query.skuNameFuzzy}, '%')
 		</if>
 		<if test="query.prodNameFuzzy != null and query.prodNameFuzzy != ''">
-			and prodNameFuzzy like concat('%',#{query.prodNameFuzzy}, '%')
+			and prod_name like concat('%',#{query.prodNameFuzzy}, '%')
 		</if>
 	</sql>
 

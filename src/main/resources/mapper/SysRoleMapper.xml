@@ -43,10 +43,10 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.roleNameFuzzy != null and query.roleNameFuzzy != ''">
-			and roleNameFuzzy like concat('%',#{query.roleNameFuzzy}, '%')
+			and role_name like concat('%',#{query.roleNameFuzzy}, '%')
 		</if>
 		<if test="query.remarkFuzzy != null and query.remarkFuzzy != ''">
-			and remarkFuzzy like concat('%',#{query.remarkFuzzy}, '%')
+			and remark like concat('%',#{query.remarkFuzzy}, '%')
 		</if>
 		<if test="query.createTimeStart != null and query.createTimeStart != ''">
 			<![CDATA[and create_time >= str_to_date(#{createTimeStart}, '%Y-%m-%d')]]>

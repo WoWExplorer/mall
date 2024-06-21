@@ -53,10 +53,10 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.filePathFuzzy != null and query.filePathFuzzy != ''">
-			and filePathFuzzy like concat('%',#{query.filePathFuzzy}, '%')
+			and file_path like concat('%',#{query.filePathFuzzy}, '%')
 		</if>
 		<if test="query.fileTypeFuzzy != null and query.fileTypeFuzzy != ''">
-			and fileTypeFuzzy like concat('%',#{query.fileTypeFuzzy}, '%')
+			and file_type like concat('%',#{query.fileTypeFuzzy}, '%')
 		</if>
 		<if test="query.uploadTimeStart != null and query.uploadTimeStart != ''">
 			<![CDATA[and upload_time >= str_to_date(#{uploadTimeStart}, '%Y-%m-%d')]]>

@@ -113,22 +113,22 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.prodNameFuzzy != null and query.prodNameFuzzy != ''">
-			and prodNameFuzzy like concat('%',#{query.prodNameFuzzy}, '%')
+			and prod_name like concat('%',#{query.prodNameFuzzy}, '%')
 		</if>
 		<if test="query.briefFuzzy != null and query.briefFuzzy != ''">
-			and briefFuzzy like concat('%',#{query.briefFuzzy}, '%')
+			and brief like concat('%',#{query.briefFuzzy}, '%')
 		</if>
 		<if test="query.contentFuzzy != null and query.contentFuzzy != ''">
-			and contentFuzzy like concat('%',#{query.contentFuzzy}, '%')
+			and content like concat('%',#{query.contentFuzzy}, '%')
 		</if>
 		<if test="query.picFuzzy != null and query.picFuzzy != ''">
-			and picFuzzy like concat('%',#{query.picFuzzy}, '%')
+			and pic like concat('%',#{query.picFuzzy}, '%')
 		</if>
 		<if test="query.imgsFuzzy != null and query.imgsFuzzy != ''">
-			and imgsFuzzy like concat('%',#{query.imgsFuzzy}, '%')
+			and imgs like concat('%',#{query.imgsFuzzy}, '%')
 		</if>
 		<if test="query.deliveryModeFuzzy != null and query.deliveryModeFuzzy != ''">
-			and deliveryModeFuzzy like concat('%',#{query.deliveryModeFuzzy}, '%')
+			and delivery_mode like concat('%',#{query.deliveryModeFuzzy}, '%')
 		</if>
 		<if test="query.createTimeStart != null and query.createTimeStart != ''">
 			<![CDATA[and create_time >= str_to_date(#{createTimeStart}, '%Y-%m-%d')]]>

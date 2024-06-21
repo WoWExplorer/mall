@@ -63,16 +63,16 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.usernameFuzzy != null and query.usernameFuzzy != ''">
-			and usernameFuzzy like concat('%',#{query.usernameFuzzy}, '%')
+			and username like concat('%',#{query.usernameFuzzy}, '%')
 		</if>
 		<if test="query.passwordFuzzy != null and query.passwordFuzzy != ''">
-			and passwordFuzzy like concat('%',#{query.passwordFuzzy}, '%')
+			and password like concat('%',#{query.passwordFuzzy}, '%')
 		</if>
 		<if test="query.emailFuzzy != null and query.emailFuzzy != ''">
-			and emailFuzzy like concat('%',#{query.emailFuzzy}, '%')
+			and email like concat('%',#{query.emailFuzzy}, '%')
 		</if>
 		<if test="query.mobileFuzzy != null and query.mobileFuzzy != ''">
-			and mobileFuzzy like concat('%',#{query.mobileFuzzy}, '%')
+			and mobile like concat('%',#{query.mobileFuzzy}, '%')
 		</if>
 		<if test="query.createTimeStart != null and query.createTimeStart != ''">
 			<![CDATA[and create_time >= str_to_date(#{createTimeStart}, '%Y-%m-%d')]]>

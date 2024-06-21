@@ -63,16 +63,16 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.userIdFuzzy != null and query.userIdFuzzy != ''">
-			and userIdFuzzy like concat('%',#{query.userIdFuzzy}, '%')
+			and user_id like concat('%',#{query.userIdFuzzy}, '%')
 		</if>
 		<if test="query.userPhoneFuzzy != null and query.userPhoneFuzzy != ''">
-			and userPhoneFuzzy like concat('%',#{query.userPhoneFuzzy}, '%')
+			and user_phone like concat('%',#{query.userPhoneFuzzy}, '%')
 		</if>
 		<if test="query.contentFuzzy != null and query.contentFuzzy != ''">
-			and contentFuzzy like concat('%',#{query.contentFuzzy}, '%')
+			and content like concat('%',#{query.contentFuzzy}, '%')
 		</if>
 		<if test="query.mobileCodeFuzzy != null and query.mobileCodeFuzzy != ''">
-			and mobileCodeFuzzy like concat('%',#{query.mobileCodeFuzzy}, '%')
+			and mobile_code like concat('%',#{query.mobileCodeFuzzy}, '%')
 		</if>
 		<if test="query.recDateStart != null and query.recDateStart != ''">
 			<![CDATA[and rec_date >= str_to_date(#{recDateStart}, '%Y-%m-%d')]]>
@@ -81,7 +81,7 @@
 			<![CDATA[and rec_date >= str_to_date(#{recDateEnd}, '%Y-%m-%d'), internal -1 day]]>
 		</if>
 		<if test="query.responseCodeFuzzy != null and query.responseCodeFuzzy != ''">
-			and responseCodeFuzzy like concat('%',#{query.responseCodeFuzzy}, '%')
+			and response_code like concat('%',#{query.responseCodeFuzzy}, '%')
 		</if>
 	</sql>
 

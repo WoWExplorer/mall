@@ -108,25 +108,25 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.userIdFuzzy != null and query.userIdFuzzy != ''">
-			and userIdFuzzy like concat('%',#{query.userIdFuzzy}, '%')
+			and user_id like concat('%',#{query.userIdFuzzy}, '%')
 		</if>
 		<if test="query.nickNameFuzzy != null and query.nickNameFuzzy != ''">
 			and nick_name like concat('%',#{query.nickNameFuzzy}, '%')
 		</if>
 		<if test="query.realNameFuzzy != null and query.realNameFuzzy != ''">
-			and realNameFuzzy like concat('%',#{query.realNameFuzzy}, '%')
+			and real_name like concat('%',#{query.realNameFuzzy}, '%')
 		</if>
 		<if test="query.userMailFuzzy != null and query.userMailFuzzy != ''">
-			and userMailFuzzy like concat('%',#{query.userMailFuzzy}, '%')
+			and user_mail like concat('%',#{query.userMailFuzzy}, '%')
 		</if>
 		<if test="query.loginPasswordFuzzy != null and query.loginPasswordFuzzy != ''">
-			and loginPasswordFuzzy like concat('%',#{query.loginPasswordFuzzy}, '%')
+			and login_password like concat('%',#{query.loginPasswordFuzzy}, '%')
 		</if>
 		<if test="query.payPasswordFuzzy != null and query.payPasswordFuzzy != ''">
-			and payPasswordFuzzy like concat('%',#{query.payPasswordFuzzy}, '%')
+			and pay_password like concat('%',#{query.payPasswordFuzzy}, '%')
 		</if>
 		<if test="query.userMobileFuzzy != null and query.userMobileFuzzy != ''">
-			and userMobileFuzzy like concat('%',#{query.userMobileFuzzy}, '%')
+			and user_mobile like concat('%',#{query.userMobileFuzzy}, '%')
 		</if>
 		<if test="query.modifyTimeStart != null and query.modifyTimeStart != ''">
 			<![CDATA[and modify_time >= str_to_date(#{modifyTimeStart}, '%Y-%m-%d')]]>
@@ -141,7 +141,7 @@
 			<![CDATA[and user_regtime >= str_to_date(#{userRegtimeEnd}, '%Y-%m-%d'), internal -1 day]]>
 		</if>
 		<if test="query.userRegipFuzzy != null and query.userRegipFuzzy != ''">
-			and userRegipFuzzy like concat('%',#{query.userRegipFuzzy}, '%')
+			and user_regip like concat('%',#{query.userRegipFuzzy}, '%')
 		</if>
 		<if test="query.userLasttimeStart != null and query.userLasttimeStart != ''">
 			<![CDATA[and user_lasttime >= str_to_date(#{userLasttimeStart}, '%Y-%m-%d')]]>
@@ -150,19 +150,19 @@
 			<![CDATA[and user_lasttime >= str_to_date(#{userLasttimeEnd}, '%Y-%m-%d'), internal -1 day]]>
 		</if>
 		<if test="query.userLastipFuzzy != null and query.userLastipFuzzy != ''">
-			and userLastipFuzzy like concat('%',#{query.userLastipFuzzy}, '%')
+			and user_lastip like concat('%',#{query.userLastipFuzzy}, '%')
 		</if>
 		<if test="query.userMemoFuzzy != null and query.userMemoFuzzy != ''">
-			and userMemoFuzzy like concat('%',#{query.userMemoFuzzy}, '%')
+			and user_memo like concat('%',#{query.userMemoFuzzy}, '%')
 		</if>
 		<if test="query.sexFuzzy != null and query.sexFuzzy != ''">
-			and sexFuzzy like concat('%',#{query.sexFuzzy}, '%')
+			and sex like concat('%',#{query.sexFuzzy}, '%')
 		</if>
 		<if test="query.birthDateFuzzy != null and query.birthDateFuzzy != ''">
-			and birthDateFuzzy like concat('%',#{query.birthDateFuzzy}, '%')
+			and birth_date like concat('%',#{query.birthDateFuzzy}, '%')
 		</if>
 		<if test="query.picFuzzy != null and query.picFuzzy != ''">
-			and picFuzzy like concat('%',#{query.picFuzzy}, '%')
+			and pic like concat('%',#{query.picFuzzy}, '%')
 		</if>
 	</sql>
 
@@ -488,7 +488,7 @@
 	</insert>
 
 	<!-- "根据"UserId"查询" -->
-	<select id="selectByUserId" resultType="com.mall.entity.po.User">
+	<select id="selectByUserId" resultMap="base_result_map">
 		SELECT <include refid="base_column_list"/> FROM `tz_user` WHERE user_id=#{userId};
 	</select>
 

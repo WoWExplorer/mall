@@ -83,19 +83,19 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.payNoFuzzy != null and query.payNoFuzzy != ''">
-			and payNoFuzzy like concat('%',#{query.payNoFuzzy}, '%')
+			and pay_no like concat('%',#{query.payNoFuzzy}, '%')
 		</if>
 		<if test="query.bizPayNoFuzzy != null and query.bizPayNoFuzzy != ''">
-			and bizPayNoFuzzy like concat('%',#{query.bizPayNoFuzzy}, '%')
+			and biz_pay_no like concat('%',#{query.bizPayNoFuzzy}, '%')
 		</if>
 		<if test="query.orderNumberFuzzy != null and query.orderNumberFuzzy != ''">
-			and orderNumberFuzzy like concat('%',#{query.orderNumberFuzzy}, '%')
+			and order_number like concat('%',#{query.orderNumberFuzzy}, '%')
 		</if>
 		<if test="query.payTypeNameFuzzy != null and query.payTypeNameFuzzy != ''">
-			and payTypeNameFuzzy like concat('%',#{query.payTypeNameFuzzy}, '%')
+			and pay_type_name like concat('%',#{query.payTypeNameFuzzy}, '%')
 		</if>
 		<if test="query.userIdFuzzy != null and query.userIdFuzzy != ''">
-			and userIdFuzzy like concat('%',#{query.userIdFuzzy}, '%')
+			and user_id like concat('%',#{query.userIdFuzzy}, '%')
 		</if>
 		<if test="query.createTimeStart != null and query.createTimeStart != ''">
 			<![CDATA[and create_time >= str_to_date(#{createTimeStart}, '%Y-%m-%d')]]>

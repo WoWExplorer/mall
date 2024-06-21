@@ -58,16 +58,16 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.nameFuzzy != null and query.nameFuzzy != ''">
-			and nameFuzzy like concat('%',#{query.nameFuzzy}, '%')
+			and name like concat('%',#{query.nameFuzzy}, '%')
 		</if>
 		<if test="query.urlFuzzy != null and query.urlFuzzy != ''">
-			and urlFuzzy like concat('%',#{query.urlFuzzy}, '%')
+			and url like concat('%',#{query.urlFuzzy}, '%')
 		</if>
 		<if test="query.permsFuzzy != null and query.permsFuzzy != ''">
-			and permsFuzzy like concat('%',#{query.permsFuzzy}, '%')
+			and perms like concat('%',#{query.permsFuzzy}, '%')
 		</if>
 		<if test="query.iconFuzzy != null and query.iconFuzzy != ''">
-			and iconFuzzy like concat('%',#{query.iconFuzzy}, '%')
+			and icon like concat('%',#{query.iconFuzzy}, '%')
 		</if>
 	</sql>
 

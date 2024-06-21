@@ -38,7 +38,7 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.userIdFuzzy != null and query.userIdFuzzy != ''">
-			and userIdFuzzy like concat('%',#{query.userIdFuzzy}, '%')
+			and user_id like concat('%',#{query.userIdFuzzy}, '%')
 		</if>
 		<if test="query.createTimeStart != null and query.createTimeStart != ''">
 			<![CDATA[and create_time >= str_to_date(#{createTimeStart}, '%Y-%m-%d')]]>

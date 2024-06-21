@@ -64,19 +64,19 @@
 			<![CDATA[and create_time >= str_to_date(#{createTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
 		</if>
 		<if test="query.userNameFuzzy != null and query.userNameFuzzy != ''">
-			and userNameFuzzy like concat('%',#{query.userNameFuzzy}, '%')
+			and user_name like concat('%',#{query.userNameFuzzy}, '%')
 		</if>
 		<if test="query.emailFuzzy != null and query.emailFuzzy != ''">
-			and emailFuzzy like concat('%',#{query.emailFuzzy}, '%')
+			and email like concat('%',#{query.emailFuzzy}, '%')
 		</if>
 		<if test="query.contactFuzzy != null and query.contactFuzzy != ''">
-			and contactFuzzy like concat('%',#{query.contactFuzzy}, '%')
+			and contact like concat('%',#{query.contactFuzzy}, '%')
 		</if>
 		<if test="query.contentFuzzy != null and query.contentFuzzy != ''">
-			and contentFuzzy like concat('%',#{query.contentFuzzy}, '%')
+			and content like concat('%',#{query.contentFuzzy}, '%')
 		</if>
 		<if test="query.replyFuzzy != null and query.replyFuzzy != ''">
-			and replyFuzzy like concat('%',#{query.replyFuzzy}, '%')
+			and reply like concat('%',#{query.replyFuzzy}, '%')
 		</if>
 	</sql>
 

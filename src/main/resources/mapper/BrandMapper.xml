@@ -78,22 +78,22 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.brandNameFuzzy != null and query.brandNameFuzzy != ''">
-			and brandNameFuzzy like concat('%',#{query.brandNameFuzzy}, '%')
+			and brand_name like concat('%',#{query.brandNameFuzzy}, '%')
 		</if>
 		<if test="query.brandPicFuzzy != null and query.brandPicFuzzy != ''">
-			and brandPicFuzzy like concat('%',#{query.brandPicFuzzy}, '%')
+			and brand_pic like concat('%',#{query.brandPicFuzzy}, '%')
 		</if>
 		<if test="query.userIdFuzzy != null and query.userIdFuzzy != ''">
-			and userIdFuzzy like concat('%',#{query.userIdFuzzy}, '%')
+			and user_id like concat('%',#{query.userIdFuzzy}, '%')
 		</if>
 		<if test="query.memoFuzzy != null and query.memoFuzzy != ''">
-			and memoFuzzy like concat('%',#{query.memoFuzzy}, '%')
+			and memo like concat('%',#{query.memoFuzzy}, '%')
 		</if>
 		<if test="query.briefFuzzy != null and query.briefFuzzy != ''">
-			and briefFuzzy like concat('%',#{query.briefFuzzy}, '%')
+			and brief like concat('%',#{query.briefFuzzy}, '%')
 		</if>
 		<if test="query.contentFuzzy != null and query.contentFuzzy != ''">
-			and contentFuzzy like concat('%',#{query.contentFuzzy}, '%')
+			and content like concat('%',#{query.contentFuzzy}, '%')
 		</if>
 		<if test="query.recTimeStart != null and query.recTimeStart != ''">
 			<![CDATA[and rec_time >= str_to_date(#{recTimeStart}, '%Y-%m-%d')]]>
@@ -108,7 +108,7 @@
 			<![CDATA[and update_time >= str_to_date(#{updateTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
 		</if>
 		<if test="query.firstCharFuzzy != null and query.firstCharFuzzy != ''">
-			and firstCharFuzzy like concat('%',#{query.firstCharFuzzy}, '%')
+			and first_char like concat('%',#{query.firstCharFuzzy}, '%')
 		</if>
 	</sql>
 

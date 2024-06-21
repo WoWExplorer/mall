@@ -48,10 +48,10 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.dvyNameFuzzy != null and query.dvyNameFuzzy != ''">
-			and dvyNameFuzzy like concat('%',#{query.dvyNameFuzzy}, '%')
+			and dvy_name like concat('%',#{query.dvyNameFuzzy}, '%')
 		</if>
 		<if test="query.companyHomeUrlFuzzy != null and query.companyHomeUrlFuzzy != ''">
-			and companyHomeUrlFuzzy like concat('%',#{query.companyHomeUrlFuzzy}, '%')
+			and company_home_url like concat('%',#{query.companyHomeUrlFuzzy}, '%')
 		</if>
 		<if test="query.recTimeStart != null and query.recTimeStart != ''">
 			<![CDATA[and rec_time >= str_to_date(#{recTimeStart}, '%Y-%m-%d')]]>
@@ -66,7 +66,7 @@
 			<![CDATA[and modify_time >= str_to_date(#{modifyTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
 		</if>
 		<if test="query.queryUrlFuzzy != null and query.queryUrlFuzzy != ''">
-			and queryUrlFuzzy like concat('%',#{query.queryUrlFuzzy}, '%')
+			and query_url like concat('%',#{query.queryUrlFuzzy}, '%')
 		</if>
 	</sql>
 

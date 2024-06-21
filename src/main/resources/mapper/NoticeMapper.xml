@@ -58,10 +58,10 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.titleFuzzy != null and query.titleFuzzy != ''">
-			and titleFuzzy like concat('%',#{query.titleFuzzy}, '%')
+			and title like concat('%',#{query.titleFuzzy}, '%')
 		</if>
 		<if test="query.contentFuzzy != null and query.contentFuzzy != ''">
-			and contentFuzzy like concat('%',#{query.contentFuzzy}, '%')
+			and content like concat('%',#{query.contentFuzzy}, '%')
 		</if>
 		<if test="query.publishTimeStart != null and query.publishTimeStart != ''">
 			<![CDATA[and publish_time >= str_to_date(#{publishTimeStart}, '%Y-%m-%d')]]>

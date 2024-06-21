@@ -63,7 +63,7 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.userIdFuzzy != null and query.userIdFuzzy != ''">
-			and userIdFuzzy like concat('%',#{query.userIdFuzzy}, '%')
+			and user_id like concat('%',#{query.userIdFuzzy}, '%')
 		</if>
 		<if test="query.basketDateStart != null and query.basketDateStart != ''">
 			<![CDATA[and basket_date >= str_to_date(#{basketDateStart}, '%Y-%m-%d')]]>
@@ -72,7 +72,7 @@
 			<![CDATA[and basket_date >= str_to_date(#{basketDateEnd}, '%Y-%m-%d'), internal -1 day]]>
 		</if>
 		<if test="query.distributionCardNoFuzzy != null and query.distributionCardNoFuzzy != ''">
-			and distributionCardNoFuzzy like concat('%',#{query.distributionCardNoFuzzy}, '%')
+			and distribution_card_no like concat('%',#{query.distributionCardNoFuzzy}, '%')
 		</if>
 	</sql>
 

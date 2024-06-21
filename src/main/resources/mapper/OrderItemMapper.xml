@@ -98,19 +98,19 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.orderNumberFuzzy != null and query.orderNumberFuzzy != ''">
-			and orderNumberFuzzy like concat('%',#{query.orderNumberFuzzy}, '%')
+			and order_number like concat('%',#{query.orderNumberFuzzy}, '%')
 		</if>
 		<if test="query.prodNameFuzzy != null and query.prodNameFuzzy != ''">
-			and prodNameFuzzy like concat('%',#{query.prodNameFuzzy}, '%')
+			and prod_name like concat('%',#{query.prodNameFuzzy}, '%')
 		</if>
 		<if test="query.skuNameFuzzy != null and query.skuNameFuzzy != ''">
-			and skuNameFuzzy like concat('%',#{query.skuNameFuzzy}, '%')
+			and sku_name like concat('%',#{query.skuNameFuzzy}, '%')
 		</if>
 		<if test="query.picFuzzy != null and query.picFuzzy != ''">
-			and picFuzzy like concat('%',#{query.picFuzzy}, '%')
+			and pic like concat('%',#{query.picFuzzy}, '%')
 		</if>
 		<if test="query.userIdFuzzy != null and query.userIdFuzzy != ''">
-			and userIdFuzzy like concat('%',#{query.userIdFuzzy}, '%')
+			and user_id like concat('%',#{query.userIdFuzzy}, '%')
 		</if>
 		<if test="query.recTimeStart != null and query.recTimeStart != ''">
 			<![CDATA[and rec_time >= str_to_date(#{recTimeStart}, '%Y-%m-%d')]]>
@@ -119,7 +119,7 @@
 			<![CDATA[and rec_time >= str_to_date(#{recTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
 		</if>
 		<if test="query.distributionCardNoFuzzy != null and query.distributionCardNoFuzzy != ''">
-			and distributionCardNoFuzzy like concat('%',#{query.distributionCardNoFuzzy}, '%')
+			and distribution_card_no like concat('%',#{query.distributionCardNoFuzzy}, '%')
 		</if>
 		<if test="query.basketDateStart != null and query.basketDateStart != ''">
 			<![CDATA[and basket_date >= str_to_date(#{basketDateStart}, '%Y-%m-%d')]]>

@@ -58,19 +58,19 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.usernameFuzzy != null and query.usernameFuzzy != ''">
-			and usernameFuzzy like concat('%',#{query.usernameFuzzy}, '%')
+			and username like concat('%',#{query.usernameFuzzy}, '%')
 		</if>
 		<if test="query.operationFuzzy != null and query.operationFuzzy != ''">
-			and operationFuzzy like concat('%',#{query.operationFuzzy}, '%')
+			and operation like concat('%',#{query.operationFuzzy}, '%')
 		</if>
 		<if test="query.methodFuzzy != null and query.methodFuzzy != ''">
-			and methodFuzzy like concat('%',#{query.methodFuzzy}, '%')
+			and method like concat('%',#{query.methodFuzzy}, '%')
 		</if>
 		<if test="query.paramsFuzzy != null and query.paramsFuzzy != ''">
-			and paramsFuzzy like concat('%',#{query.paramsFuzzy}, '%')
+			and params like concat('%',#{query.paramsFuzzy}, '%')
 		</if>
 		<if test="query.ipFuzzy != null and query.ipFuzzy != ''">
-			and ipFuzzy like concat('%',#{query.ipFuzzy}, '%')
+			and ip like concat('%',#{query.ipFuzzy}, '%')
 		</if>
 		<if test="query.createDateStart != null and query.createDateStart != ''">
 			<![CDATA[and create_date >= str_to_date(#{createDateStart}, '%Y-%m-%d')]]>

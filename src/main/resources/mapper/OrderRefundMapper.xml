@@ -158,22 +158,22 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.orderNumberFuzzy != null and query.orderNumberFuzzy != ''">
-			and orderNumberFuzzy like concat('%',#{query.orderNumberFuzzy}, '%')
+			and order_number like concat('%',#{query.orderNumberFuzzy}, '%')
 		</if>
 		<if test="query.refundSnFuzzy != null and query.refundSnFuzzy != ''">
-			and refundSnFuzzy like concat('%',#{query.refundSnFuzzy}, '%')
+			and refund_sn like concat('%',#{query.refundSnFuzzy}, '%')
 		</if>
 		<if test="query.flowTradeNoFuzzy != null and query.flowTradeNoFuzzy != ''">
-			and flowTradeNoFuzzy like concat('%',#{query.flowTradeNoFuzzy}, '%')
+			and flow_trade_no like concat('%',#{query.flowTradeNoFuzzy}, '%')
 		</if>
 		<if test="query.outRefundNoFuzzy != null and query.outRefundNoFuzzy != ''">
-			and outRefundNoFuzzy like concat('%',#{query.outRefundNoFuzzy}, '%')
+			and out_refund_no like concat('%',#{query.outRefundNoFuzzy}, '%')
 		</if>
 		<if test="query.payTypeNameFuzzy != null and query.payTypeNameFuzzy != ''">
-			and payTypeNameFuzzy like concat('%',#{query.payTypeNameFuzzy}, '%')
+			and pay_type_name like concat('%',#{query.payTypeNameFuzzy}, '%')
 		</if>
 		<if test="query.userIdFuzzy != null and query.userIdFuzzy != ''">
-			and userIdFuzzy like concat('%',#{query.userIdFuzzy}, '%')
+			and user_id like concat('%',#{query.userIdFuzzy}, '%')
 		</if>
 		<if test="query.applyTimeStart != null and query.applyTimeStart != ''">
 			<![CDATA[and apply_time >= str_to_date(#{applyTimeStart}, '%Y-%m-%d')]]>
@@ -194,19 +194,19 @@
 			<![CDATA[and refund_time >= str_to_date(#{refundTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
 		</if>
 		<if test="query.photoFilesFuzzy != null and query.photoFilesFuzzy != ''">
-			and photoFilesFuzzy like concat('%',#{query.photoFilesFuzzy}, '%')
+			and photo_files like concat('%',#{query.photoFilesFuzzy}, '%')
 		</if>
 		<if test="query.buyerMsgFuzzy != null and query.buyerMsgFuzzy != ''">
-			and buyerMsgFuzzy like concat('%',#{query.buyerMsgFuzzy}, '%')
+			and buyer_msg like concat('%',#{query.buyerMsgFuzzy}, '%')
 		</if>
 		<if test="query.sellerMsgFuzzy != null and query.sellerMsgFuzzy != ''">
-			and sellerMsgFuzzy like concat('%',#{query.sellerMsgFuzzy}, '%')
+			and seller_msg like concat('%',#{query.sellerMsgFuzzy}, '%')
 		</if>
 		<if test="query.expressNameFuzzy != null and query.expressNameFuzzy != ''">
-			and expressNameFuzzy like concat('%',#{query.expressNameFuzzy}, '%')
+			and express_name like concat('%',#{query.expressNameFuzzy}, '%')
 		</if>
 		<if test="query.expressNoFuzzy != null and query.expressNoFuzzy != ''">
-			and expressNoFuzzy like concat('%',#{query.expressNoFuzzy}, '%')
+			and express_no like concat('%',#{query.expressNoFuzzy}, '%')
 		</if>
 		<if test="query.shipTimeStart != null and query.shipTimeStart != ''">
 			<![CDATA[and ship_time >= str_to_date(#{shipTimeStart}, '%Y-%m-%d')]]>
@@ -221,7 +221,7 @@
 			<![CDATA[and receive_time >= str_to_date(#{receiveTimeEnd}, '%Y-%m-%d'), internal -1 day]]>
 		</if>
 		<if test="query.receiveMessageFuzzy != null and query.receiveMessageFuzzy != ''">
-			and receiveMessageFuzzy like concat('%',#{query.receiveMessageFuzzy}, '%')
+			and receive_message like concat('%',#{query.receiveMessageFuzzy}, '%')
 		</if>
 	</sql>
 

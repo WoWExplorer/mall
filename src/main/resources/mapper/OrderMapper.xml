@@ -158,22 +158,22 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.prodNameFuzzy != null and query.prodNameFuzzy != ''">
-			and prodNameFuzzy like concat('%',#{query.prodNameFuzzy}, '%')
+			and prod_name like concat('%',#{query.prodNameFuzzy}, '%')
 		</if>
 		<if test="query.userIdFuzzy != null and query.userIdFuzzy != ''">
-			and userIdFuzzy like concat('%',#{query.userIdFuzzy}, '%')
+			and user_id like concat('%',#{query.userIdFuzzy}, '%')
 		</if>
 		<if test="query.orderNumberFuzzy != null and query.orderNumberFuzzy != ''">
-			and orderNumberFuzzy like concat('%',#{query.orderNumberFuzzy}, '%')
+			and order_number like concat('%',#{query.orderNumberFuzzy}, '%')
 		</if>
 		<if test="query.remarksFuzzy != null and query.remarksFuzzy != ''">
-			and remarksFuzzy like concat('%',#{query.remarksFuzzy}, '%')
+			and remarks like concat('%',#{query.remarksFuzzy}, '%')
 		</if>
 		<if test="query.dvyTypeFuzzy != null and query.dvyTypeFuzzy != ''">
-			and dvyTypeFuzzy like concat('%',#{query.dvyTypeFuzzy}, '%')
+			and dvy_type like concat('%',#{query.dvyTypeFuzzy}, '%')
 		</if>
 		<if test="query.dvyFlowIdFuzzy != null and query.dvyFlowIdFuzzy != ''">
-			and dvyFlowIdFuzzy like concat('%',#{query.dvyFlowIdFuzzy}, '%')
+			and dvy_flow_id like concat('%',#{query.dvyFlowIdFuzzy}, '%')
 		</if>
 		<if test="query.createTimeStart != null and query.createTimeStart != ''">
 			<![CDATA[and create_time >= str_to_date(#{createTimeStart}, '%Y-%m-%d')]]>

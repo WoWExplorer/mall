@@ -53,7 +53,7 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.contentFuzzy != null and query.contentFuzzy != ''">
-			and contentFuzzy like concat('%',#{query.contentFuzzy}, '%')
+			and content like concat('%',#{query.contentFuzzy}, '%')
 		</if>
 		<if test="query.recDateStart != null and query.recDateStart != ''">
 			<![CDATA[and rec_date >= str_to_date(#{recDateStart}, '%Y-%m-%d')]]>
@@ -62,7 +62,7 @@
 			<![CDATA[and rec_date >= str_to_date(#{recDateEnd}, '%Y-%m-%d'), internal -1 day]]>
 		</if>
 		<if test="query.titleFuzzy != null and query.titleFuzzy != ''">
-			and titleFuzzy like concat('%',#{query.titleFuzzy}, '%')
+			and title like concat('%',#{query.titleFuzzy}, '%')
 		</if>
 	</sql>
 

@@ -73,22 +73,22 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.addrNameFuzzy != null and query.addrNameFuzzy != ''">
-			and addrNameFuzzy like concat('%',#{query.addrNameFuzzy}, '%')
+			and addr_name like concat('%',#{query.addrNameFuzzy}, '%')
 		</if>
 		<if test="query.addrFuzzy != null and query.addrFuzzy != ''">
-			and addrFuzzy like concat('%',#{query.addrFuzzy}, '%')
+			and addr like concat('%',#{query.addrFuzzy}, '%')
 		</if>
 		<if test="query.mobileFuzzy != null and query.mobileFuzzy != ''">
-			and mobileFuzzy like concat('%',#{query.mobileFuzzy}, '%')
+			and mobile like concat('%',#{query.mobileFuzzy}, '%')
 		</if>
 		<if test="query.provinceFuzzy != null and query.provinceFuzzy != ''">
-			and provinceFuzzy like concat('%',#{query.provinceFuzzy}, '%')
+			and province like concat('%',#{query.provinceFuzzy}, '%')
 		</if>
 		<if test="query.cityFuzzy != null and query.cityFuzzy != ''">
-			and cityFuzzy like concat('%',#{query.cityFuzzy}, '%')
+			and city like concat('%',#{query.cityFuzzy}, '%')
 		</if>
 		<if test="query.areaFuzzy != null and query.areaFuzzy != ''">
-			and areaFuzzy like concat('%',#{query.areaFuzzy}, '%')
+			and area like concat('%',#{query.areaFuzzy}, '%')
 		</if>
 	</sql>
 

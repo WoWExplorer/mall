@@ -33,7 +33,7 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.propValueFuzzy != null and query.propValueFuzzy != ''">
-			and propValueFuzzy like concat('%',#{query.propValueFuzzy}, '%')
+			and prop_value like concat('%',#{query.propValueFuzzy}, '%')
 		</if>
 	</sql>
 

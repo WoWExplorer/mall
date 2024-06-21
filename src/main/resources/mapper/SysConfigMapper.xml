@@ -38,13 +38,13 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.paramKeyFuzzy != null and query.paramKeyFuzzy != ''">
-			and paramKeyFuzzy like concat('%',#{query.paramKeyFuzzy}, '%')
+			and param_key like concat('%',#{query.paramKeyFuzzy}, '%')
 		</if>
 		<if test="query.paramValueFuzzy != null and query.paramValueFuzzy != ''">
-			and paramValueFuzzy like concat('%',#{query.paramValueFuzzy}, '%')
+			and param_value like concat('%',#{query.paramValueFuzzy}, '%')
 		</if>
 		<if test="query.remarkFuzzy != null and query.remarkFuzzy != ''">
-			and remarkFuzzy like concat('%',#{query.remarkFuzzy}, '%')
+			and remark like concat('%',#{query.remarkFuzzy}, '%')
 		</if>
 	</sql>
 

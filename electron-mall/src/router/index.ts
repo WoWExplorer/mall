@@ -114,8 +114,8 @@ export function setupRouter(app: App) {
         next();
       } else {
         next(`/login?redirect=${to.path}`)
+        window.$message.error('请重新登录')
       }
-      window.$message.error('请重新登录')
       window.ipcRenderer.send('no-login');
     }
   })

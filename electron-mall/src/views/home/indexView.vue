@@ -1,6 +1,27 @@
 <template>
   <div class="view">
     <n-button @click="ss()">按钮请求</n-button>
+
+    <n-upload
+    multiple
+    directory-dnd
+    action="http://localhost:8000/file/banner"
+    :max="5"
+  >
+    <n-upload-dragger>
+      <div style="margin-bottom: 12px">
+        <n-icon size="48" :depth="3">
+          <archive-icon />
+        </n-icon>
+      </div>
+      <n-text style="font-size: 16px">
+        点击或者拖动文件到该区域来上传
+      </n-text>
+      <n-p depth="3" style="margin: 8px 0 0 0">
+        请不要上传敏感数据，比如你的银行卡号和密码，信用卡号有效期和安全码
+      </n-p>
+    </n-upload-dragger>
+  </n-upload>
 <!--  <n-result-->
 <!--    status="500"-->
 <!--    title="500 服务器错误"-->
@@ -20,6 +41,7 @@
 // import echarts from '@/components/echarts/index.vue'
 import { areaSelectListByCondition } from '@/api/area'
 import { userselectByUserMobile, userSelectListByCondition } from '@/api/user'
+import { ArchiveOutline as ArchiveIcon } from '@vicons/ionicons5'
 const ss = () => {
   // selectByUserMobile('15130422583').then(res => {
   //   console.log(res)

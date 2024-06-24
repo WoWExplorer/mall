@@ -5,6 +5,56 @@ import request from '@/utils/request';
  *	@Author: wow
  *	@Date: 2024年06月24日
  */
+export function login(data: UserParam){
+	return request({
+		url: '/login',
+		method: 'POST',
+		data
+	})
+}
+
+/**
+ *	@Description: 根据条件查询列表
+ *	@Author: wow
+ *	@Date: 2024年06月24日
+ */
+export function renewTimeout(data: UserParam){
+	return request({
+		url: '/renewTimeout',
+		method: 'POST',
+		data
+	})
+}
+/**
+ *	@Description: 根据条件查询列表
+ *	@Author: wow
+ *	@Date: 2024年06月24日
+ */
+export function register(data: UserParam){
+	return request({
+		url: '/register',
+		method: 'POST',
+		data
+	})
+}
+
+/**
+ *	@Description: 根据条件查询列表
+ *	@Author: wow
+ *	@Date: 2024年06月24日
+ */
+export function logout(data: UserParam){
+	return request({
+		url: '/logout',
+		method: 'GET'
+	})
+}
+
+/**
+ *	@Description: 根据条件查询列表
+ *	@Author: wow
+ *	@Date: 2024年06月24日
+ */
 export function userSelectListByCondition(data: UserParam){
 	return request({
 		url: '/user/selectListByCondition',

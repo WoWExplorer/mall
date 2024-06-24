@@ -27,7 +27,7 @@ public class FileController {
     /**
      * 公共上传接口
      */
-    @PostMapping("/common")
+    @PostMapping("/banner")
     public ResultVo<?> banner(@RequestParam("file") MultipartFile file) {
         return 	fileService.fileUpload(file, "/banner", "img");
     }

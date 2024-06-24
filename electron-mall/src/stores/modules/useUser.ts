@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { storage } from '@/utils/Storage';
-// import router from "@/router";
-import { login } from '@/api/user';
+import { login } from '@/api/user'
 
 export const useUserStore = defineStore({
   id: 'user',

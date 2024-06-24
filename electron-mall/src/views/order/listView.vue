@@ -15,10 +15,10 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { selectByUserMobile } from '@/api/user'
+import { userselectByUserMobile } from '@/api/user'
 const value = ref<any>();
 const ss = () => {
-  selectByUserMobile('15130422583').then(res => {
+  userselectByUserMobile('15130422583').then(res => {
     console.log(res)
   })
 }

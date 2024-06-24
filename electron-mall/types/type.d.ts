@@ -2,7 +2,7 @@ declare interface Window {
   ipcRenderer: any
 }
 declare global {
-  interface Window {
+  interface window {
     $message: {
       error: (msg: string) => void;
       success: (msg: string) => void;
@@ -10,6 +10,8 @@ declare global {
     };
   }
 }
+
+
 
 interface AreaParam {
   /**

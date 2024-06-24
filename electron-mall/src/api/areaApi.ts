@@ -53,7 +53,7 @@ export function areaInsert(data: AreaParam){
  *	@Author: wow
  *	@Date: 2024年06月24日
  */
-export function areaInsertBatch(data: AreaParam){
+export function areaInsertBatch(data: AreaParam[]){
 	return request({
 		url: '/area/insertBatch',
 		method: 'POST',
@@ -65,7 +65,7 @@ export function areaInsertBatch(data: AreaParam){
  *	@Author: wow
  *	@Date: 2024年06月24日
  */
-export function areaInsertOrUpdateBatch(data: AreaParam){
+export function areaInsertOrUpdateBatch(data: AreaParam[]){
 	return request({
 		url: '/area/insertOrUpdateBatch',
 		method: 'POST',

@@ -38,7 +38,7 @@
 	<!-- 扩展查询条件 -->
 	<sql id="base_query_condition_extend">
 		<if test="query.areaNameFuzzy != null and query.areaNameFuzzy != ''">
-			and areaNameFuzzy like concat('%',#{query.areaNameFuzzy}, '%')
+			and area_name like concat('%',#{query.areaNameFuzzy}, '%')
 		</if>
 	</sql>
 

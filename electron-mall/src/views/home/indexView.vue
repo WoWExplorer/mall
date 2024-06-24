@@ -18,9 +18,13 @@
 <script lang="ts" setup>
 // import { unref } from 'vue'
 import echarts from '@/components/echarts/index.vue'
+import { areaSelectListByCondition } from '@/api/areaApi'
 import { selectByUserMobile, selectListByCondition } from '@/api/user'
 const ss = () => {
-  selectByUserMobile('15130422583').then(res => {
+  // selectByUserMobile('15130422583').then(res => {
+  //   console.log(res)
+  // })
+  areaSelectListByCondition({ level: 1 }).then(res => {
     console.log(res)
   })
 }

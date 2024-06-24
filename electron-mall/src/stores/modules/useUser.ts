@@ -34,7 +34,7 @@ export const useUserStore = defineStore({
         login(data).then((res: any) =>{
           const { code, data, message } = res;
           if (code === 200) {
-            window.$message.success(message)
+            window.$message.success('登录成功')
             this.setToken(data.tokenValue, data.tokenTimeout)
             window.ipcRenderer.send('login-success');
             resolve()

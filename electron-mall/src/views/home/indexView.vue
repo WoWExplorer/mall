@@ -17,9 +17,9 @@
 
 <script lang="ts" setup>
 // import { unref } from 'vue'
-import echarts from '@/components/echarts/index.vue'
-import { areaSelectListByCondition } from '@/api/areaApi'
-import { selectByUserMobile, selectListByCondition } from '@/api/user'
+// import echarts from '@/components/echarts/index.vue'
+import { areaSelectListByCondition } from '@/api/area'
+import { userselectByUserMobile, userSelectListByCondition } from '@/api/user'
 const ss = () => {
   // selectByUserMobile('15130422583').then(res => {
   //   console.log(res)
@@ -68,7 +68,7 @@ const getUserList = () => {
     status: undefined,
     score: undefined,
   };
-  selectListByCondition(requestData).then((res: any) => {
+  userSelectListByCondition(requestData).then((res: any) => {
     console.log(res)
   })
 }

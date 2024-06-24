@@ -2443,3 +2443,28 @@ interface UserParam {
    */
   score?: number;
 }
+
+interface UserCollectionParam{
+  	/**
+	 * 收藏表
+	 */
+	id?: string;
+
+	/**
+	 * 商品id
+	 */
+	prodId?: number;
+
+	/**
+	 * 用户id
+	 */
+	userId?: string;
+	userIdFuzzy?: string;
+
+	/**
+	 * 收藏时间
+	 */
+	createTime?: string;
+	createTimeStart?: string;
+	createTimeEnd?: string;
+}

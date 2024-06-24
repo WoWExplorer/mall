@@ -29,6 +29,9 @@ public class UserController extends BaseController {
 	@Autowired
 	private FileService fileService;
 
+	/**
+	 * 上传头像
+	 */
 	@PostMapping("/uploadAvatar")
 	public ResultVo<?> uploadAvatar(@RequestParam("file") MultipartFile file) {
 		return 	fileService.fileUpload(file, "/user/avatar", "img");

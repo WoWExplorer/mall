@@ -13,6 +13,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class FileService {
@@ -39,10 +41,11 @@ public class FileService {
 
         Path pathDir = Paths.get("");
 
+
         if (!path.isEmpty()) {
-            pathDir = Paths.get("src/main/resources/static/data" + path + "/" + extName);
+            pathDir = Paths.get("/uploads/"+ path + "/" + extName);
         } else {
-            pathDir = Paths.get("src/main/resources/static/data/"+ extName);
+            pathDir = Paths.get("/uploads/"+ extName);
         }
 
 
@@ -57,6 +60,7 @@ public class FileService {
         try {
             byte[] bytes = file.getBytes();
             Files.write(filePath, bytes);
+
             return ResultVo.success(200, filePath,"上传成功！");
         } catch (IOException e) {
             e.printStackTrace();

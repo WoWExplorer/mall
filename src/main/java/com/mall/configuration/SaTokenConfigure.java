@@ -33,7 +33,7 @@ public class SaTokenConfigure implements WebMvcConfigurer {
                 .setAuth(obj -> {
                     SaRouter
                             .match("/**")
-                            .notMatch("/activity/**", "/login", "/register", "/js/**", "/css/**", "/bootstrap/**", "/data/**")
+                            .notMatch("/activity/**", "/login", "/register", "/js/**", "/css/**", "/bootstrap/**", "/uploads/**")
                             .check(r -> StpUtil.checkLogin());
                 })
                 // 异常处理函数：每次认证函数发生异常时执行此函数

@@ -8,6 +8,7 @@ import com.mall.entity.vo.PaginationResultVo;
 import com.mall.enums.PageSize;
 import com.mall.entity.query.SimplePage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -53,6 +54,7 @@ public class OrderServiceImpl implements OrderService {
 	 * 新增
 	 */
 	@Override
+//	@Async
 	public Integer insert(Order order) {
 		return orderMapper.insert(order);
 	}

@@ -5,6 +5,7 @@ import com.mall.service.impl.OrderServiceImpl;
 import com.mall.entity.po.Order;
 import com.mall.entity.vo.ResultVo;
 import com.mall.entity.query.OrderQuery;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;

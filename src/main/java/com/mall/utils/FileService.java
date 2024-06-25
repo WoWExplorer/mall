@@ -41,11 +41,14 @@ public class FileService {
 
         Path pathDir = Paths.get("");
 
+        String resultFilePath = "";
 
         if (!path.isEmpty()) {
             pathDir = Paths.get("/uploads/"+ path + "/" + extName);
+            resultFilePath = "/uploads/"+ path + "/" + extName;
         } else {
             pathDir = Paths.get("/uploads/"+ extName);
+            resultFilePath = "/uploads/"+ extName;
         }
 
 
@@ -56,12 +59,13 @@ public class FileService {
         String simpleUUID = IdUtil.simpleUUID();
 
         Path filePath = Paths.get(pathDir+ "/" + simpleUUID + "." + extName);
+        resultFilePath = resultFilePath + "/" + simpleUUID + "." + extName;
 
         try {
             byte[] bytes = file.getBytes();
             Files.write(filePath, bytes);
 
-            return ResultVo.success(200, filePath,"上传成功！");
+            return ResultVo.success(200, resultFilePath,"上传成功！");
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println(e + "==============");

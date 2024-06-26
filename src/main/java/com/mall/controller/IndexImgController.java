@@ -11,10 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+
+import static com.mall.utils.isValid.isValidImageUrl;
 
 /**
  *  @Description: 主页轮播图IndexImgController
@@ -22,7 +23,7 @@ import java.util.List;
  *  @Date: 2024年06月17日
  */
 @RestController
-@RequestMapping("/indexImg")
+@RequestMapping("/banner")
 public class IndexImgController extends BaseController {
 	@Autowired
 	private IndexImgServiceImpl indexImgServiceImpl;
@@ -61,10 +62,14 @@ public class IndexImgController extends BaseController {
 		if (indexImgQuery.getImgUrl() == null) {
 			return ResultVo.fail(ResultCodeEnum.CODE_428.getCode(), "图片地址不能为空");
 		}
+		if (!isValidImageUrl(indexImgQuery.getImgUrl())) {
+			return ResultVo.fail(ResultCodeEnum.CODE_428.getCode(), "图片地址格式不正确");
+		}
+
 		indexImgQuery.setUploadTime(DateUtil.date(System.currentTimeMillis()));
 		Integer insert = indexImgServiceImpl.insert(indexImgQuery);
 		if (insert > 0) {
-			return getSuccessResultVo(insert);
+			return ResultVo.success(ResultCodeEnum.CODE_200.getCode(), "新增成功");
 		} else {
 			return ResultVo.fail("新增失败");
 		}
@@ -73,28 +78,28 @@ public class IndexImgController extends BaseController {
 	/**
 	 * 批量新增
 	 */
-	@PostMapping("/insertBatch")
-	public ResultVo<?> insertBatch(@RequestBody List<IndexImg> indexImgList) {
-		Integer insert = indexImgServiceImpl.insertBatch(indexImgList);
-		if (insert > 0) {
-			return getSuccessResultVo(insert);
-		} else {
-			return ResultVo.fail("新增失败");
-		}
-	}
+//	@PostMapping("/insertBatch")
+//	public ResultVo<?> insertBatch(@RequestBody List<IndexImg> indexImgList) {
+//		Integer insert = indexImgServiceImpl.insertBatch(indexImgList);
+//		if (insert > 0) {
+//			return getSuccessResultVo(insert);
+//		} else {
+//			return ResultVo.fail("新增失败");
+//		}
+//	}
 
 	/**
 	 * 批量新增或修改
 	 */
-	@PostMapping("/insertOrUpdateBatch")
-	public ResultVo<?> insertOrUpdateBatch(@RequestBody List<IndexImg> indexImgList) {
-		Integer insert = indexImgServiceImpl.insertOrUpdateBatch(indexImgList);
-		if (insert > 0) {
-			return getSuccessResultVo(insert);
-		} else {
-			return ResultVo.fail("新增或修改失败");
-		}
-	}
+//	@PostMapping("/insertOrUpdateBatch")
+//	public ResultVo<?> insertOrUpdateBatch(@RequestBody List<IndexImg> indexImgList) {
+//		Integer insert = indexImgServiceImpl.insertOrUpdateBatch(indexImgList);
+//		if (insert > 0) {
+//			return getSuccessResultVo(insert);
+//		} else {
+//			return ResultVo.fail("新增或修改失败");
+//		}
+//	}
 
 	/**
 	 * 根据ImgId查询

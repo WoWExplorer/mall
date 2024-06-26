@@ -36,7 +36,6 @@ public class AreaController extends BaseController {
 
 	/**
 	 * 返回所有
-	 * @return
 	 */
 	@GetMapping("/getAllRegions")
 	public ResultVo<?> getAllRegions() {

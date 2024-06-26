@@ -249,7 +249,7 @@
 
 	<!-- 单个插入（匹配有值的字段） -->
 	<insert id="insert" parameterType="com.mall.entity.po.OrderRefund">
-		<selectKey keyProperty="bean.refund_id" resultType="Long" order="AFTER">
+		<selectKey keyProperty="bean.refundId" resultType="Long" order="AFTER">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 			INSERT INTO tz_order_refund

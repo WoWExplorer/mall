@@ -80,7 +80,7 @@
 
 	<!-- 单个插入（匹配有值的字段） -->
 	<insert id="insert" parameterType="com.mall.entity.po.SysRole">
-		<selectKey keyProperty="bean.role_id" resultType="Long" order="AFTER">
+		<selectKey keyProperty="bean.roleId" resultType="Long" order="AFTER">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 			INSERT INTO tz_sys_role

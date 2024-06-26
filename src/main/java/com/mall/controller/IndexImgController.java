@@ -1,6 +1,8 @@
 package com.mall.controller;
 
+import cn.hutool.core.date.DateUtil;
 import com.mall.entity.vo.PaginationResultVo;
+import com.mall.enums.ResultCodeEnum;
 import com.mall.service.impl.IndexImgServiceImpl;
 import com.mall.entity.po.IndexImg;
 import com.mall.entity.vo.ResultVo;
@@ -56,6 +58,10 @@ public class IndexImgController extends BaseController {
 	 */
 	@PostMapping("/insert")
 	public ResultVo<?> insert(@RequestBody IndexImg indexImgQuery) {
+		if (indexImgQuery.getImgUrl() == null) {
+			return ResultVo.fail(ResultCodeEnum.CODE_428.getCode(), "图片地址不能为空");
+		}
+		indexImgQuery.setUploadTime(DateUtil.date(System.currentTimeMillis()));
 		Integer insert = indexImgServiceImpl.insert(indexImgQuery);
 		if (insert > 0) {
 			return getSuccessResultVo(insert);

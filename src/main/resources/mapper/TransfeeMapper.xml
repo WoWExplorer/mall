@@ -73,7 +73,7 @@
 
 	<!-- 单个插入（匹配有值的字段） -->
 	<insert id="insert" parameterType="com.mall.entity.po.Transfee">
-		<selectKey keyProperty="bean.transfee_id" resultType="Long" order="AFTER">
+		<selectKey keyProperty="bean.transfeeId" resultType="Long" order="AFTER">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 			INSERT INTO tz_transfee

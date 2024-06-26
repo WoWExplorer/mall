@@ -116,7 +116,7 @@
 
 	<!-- 单个插入（匹配有值的字段） -->
 	<insert id="insert" parameterType="com.mall.entity.po.IndexImg">
-		<selectKey keyProperty="bean.img_id" resultType="Long" order="AFTER">
+		<selectKey keyProperty="bean.imgId" resultType="Long" order="AFTER">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 			INSERT INTO tz_index_img

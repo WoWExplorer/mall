@@ -148,7 +148,7 @@
 
 	<!-- 单个插入（匹配有值的字段） -->
 	<insert id="insert" parameterType="com.mall.entity.po.UserAddrOrder">
-		<selectKey keyProperty="bean.addr_order_id" resultType="Long" order="AFTER">
+		<selectKey keyProperty="bean.addrOrderId" resultType="Long" order="AFTER">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 			INSERT INTO tz_user_addr_order

@@ -83,7 +83,7 @@
 
 	<!-- 单个插入（匹配有值的字段） -->
 	<insert id="insert" parameterType="com.mall.entity.po.Area">
-		<selectKey keyProperty="bean.area_id" resultType="Long" order="AFTER">
+		<selectKey keyProperty="bean.areaId" resultType="Long" order="AFTER">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 			INSERT INTO tz_area

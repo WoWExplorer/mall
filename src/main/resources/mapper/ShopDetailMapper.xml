@@ -241,7 +241,7 @@
 
 	<!-- 单个插入（匹配有值的字段） -->
 	<insert id="insert" parameterType="com.mall.entity.po.ShopDetail">
-		<selectKey keyProperty="bean.shop_id" resultType="Long" order="AFTER">
+		<selectKey keyProperty="bean.shopId" resultType="Long" order="AFTER">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 			INSERT INTO tz_shop_detail

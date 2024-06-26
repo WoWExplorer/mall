@@ -34,6 +34,10 @@ public class AreaController extends BaseController {
 		return getSuccessResultVo(tz_area);
 	}
 
+	/**
+	 * 返回所有
+	 * @return
+	 */
 	@GetMapping("/getAllRegions")
 	public ResultVo<?> getAllRegions() {
 		List<Area> tz_area = areaServiceImpl.getAllRegions();

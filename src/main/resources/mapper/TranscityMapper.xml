@@ -58,7 +58,7 @@
 
 	<!-- 单个插入（匹配有值的字段） -->
 	<insert id="insert" parameterType="com.mall.entity.po.Transcity">
-		<selectKey keyProperty="bean.transcity_id" resultType="Long" order="AFTER">
+		<selectKey keyProperty="bean.transcityId" resultType="Long" order="AFTER">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 			INSERT INTO tz_transcity

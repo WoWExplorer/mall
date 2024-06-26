@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public User selectByUserId(String userId) {
-		log.info("user{}", userMapper.selectByUserId(userId));
+		log.info("userId:{}", userId);
 		return userMapper.selectByUserId(userId);
 	}
 

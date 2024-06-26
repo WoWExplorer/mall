@@ -7,6 +7,7 @@
       >
         <template #footer>
           <n-button @click="ss()">按钮请求</n-button>
+          <n-button @click="deleteHandler()">删除</n-button>
           <n-button>找点乐子吧</n-button>
         </template>
       </n-result>
@@ -15,10 +16,15 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { userselectByUserMobile } from '@/api/user'
+import { userselectByUserMobile, userdeleteByUserId } from '@/api/user'
 const value = ref<any>();
 const ss = () => {
   userselectByUserMobile('15130422583').then(res => {
+    console.log(res)
+  })
+}
+const deleteHandler = () => {
+  userdeleteByUserId('6b3b95aa13dc4a8d85c4f0bfa8f592f3').then(res => {
     console.log(res)
   })
 }

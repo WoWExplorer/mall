@@ -119,7 +119,7 @@
 
 	<!-- 单个插入（匹配有值的字段） -->
 	<insert id="insert" parameterType="com.mall.entity.po.Category">
-		<selectKey keyProperty="bean.category_id" resultType="Long" order="AFTER">
+		<selectKey keyProperty="bean.categoryId" resultType="Long" order="AFTER">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 			INSERT INTO tz_category

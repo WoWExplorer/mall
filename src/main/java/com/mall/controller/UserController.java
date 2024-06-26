@@ -215,12 +215,18 @@ public class UserController extends BaseController {
 	 * 根据UserId删除
 	 */
 	@PostMapping("/deleteByUserId")
-	public ResultVo<?> deleteByUserId(String userId) {
-		Integer delete = userServiceImpl.deleteByUserId(userId);
-		if (delete > 0) {
-			return getSuccessResultVo(delete);
+	public ResultVo<?> deleteByUserId(@RequestBody String userId) {
+		User user = userServiceImpl.selectByUserId(userId);
+		if (user != null) {
+			user.setStatus(0);
+			Integer i = userServiceImpl.updateByUserId(user, userId);
+			if (i > 0) {
+				return ResultVo.success(ResultCodeEnum.CODE_200.getCode(), "删除成功!");
+			} else {
+				return ResultVo.fail("删除失败");
+			}
 		} else {
-			return ResultVo.fail("删除失败");
+			return ResultVo.fail(ResultCodeEnum.CODE_200.getCode(),"用户不存在");
 		}
 	}
 

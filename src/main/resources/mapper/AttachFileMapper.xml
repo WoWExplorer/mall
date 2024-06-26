@@ -90,7 +90,7 @@
 
 	<!-- 单个插入（匹配有值的字段） -->
 	<insert id="insert" parameterType="com.mall.entity.po.AttachFile">
-		<selectKey keyProperty="bean.file_id" resultType="Long" order="AFTER">
+		<selectKey keyProperty="bean.fileId" resultType="Long" order="AFTER">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 			INSERT INTO tz_attach_file
